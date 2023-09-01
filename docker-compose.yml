@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  nexus.auth.api:
+    image: ${DOCKER_REGISTRY-}nexusauthapi
+    build:
+      context: .
+      dockerfile: src/Nexus.Auth.Api/Dockerfile
+    ports:
+      - "44385:443"
