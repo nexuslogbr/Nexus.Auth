@@ -24,6 +24,7 @@ namespace Nexus.Auth.API.Dependency
             services.AddScoped<IServiceService<ServiceDto>, ServiceService>();
             services.AddScoped<ICustomerService<CustomerDto>, CustomerService>();
             services.AddScoped<IManufacturerService<ManufacturerDto>, ManufacturerService>();
+            services.AddScoped<IModelService, ModelService>();
             services.AddScoped<IAccessDataService, AccessDataService>();
         }
     }
