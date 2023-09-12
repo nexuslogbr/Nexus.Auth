@@ -13,11 +13,19 @@ namespace Nexus.Auth.Api.Controllers
     public class VpcItemController : ControllerBase
     {
         private readonly IVpcItemService _vpcItemService;
+        private readonly IModelService _modelService;
+        private readonly IManufacturerService<ManufacturerDto> _manufacturerService;
         private readonly IConfiguration _configuration;
 
-        public VpcItemController(IVpcItemService vpcItemService, IConfiguration configuration)
+        public VpcItemController(
+            IVpcItemService vpcItemService,
+            IModelService modelService,
+            IManufacturerService<ManufacturerDto> manufacturerService,
+            IConfiguration configuration)
         {
             _vpcItemService = vpcItemService;
+            _modelService = modelService;
+            _manufacturerService = manufacturerService;
             _configuration = configuration;
         }
 
@@ -51,7 +59,24 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Post")]
-        public async Task<IActionResult> Post(VpcItemDto obj) => Ok(await _vpcItemService.Post(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+        public async Task<IActionResult> Post(VpcItemDto obj)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Root.Errors);
+
+            var manufacturer = await _manufacturerService.GetById(
+                new GetById { Id = obj.ManufacturerId }, 
+                _configuration["ConnectionStrings:NexusCustomerApi"]);
+            if (!manufacturer.Success) return BadRequest(manufacturer);
+
+            var model = await _modelService.GetById(
+                new GetById { Id = obj.ModelId },
+                _configuration["ConnectionStrings:NexusCustomerApi"]);
+            if (!model.Success) return BadRequest(model);
+
+            var response = await _vpcItemService.Post(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
 
         /// POST: api/v1/VpcItem/Put
         /// <summary>
@@ -59,7 +84,24 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<IActionResult> Put(VpcItemDto obj) => Ok(await _vpcItemService.Put(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+        public async Task<IActionResult> Put(VpcItemDto obj)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Root.Errors);
+
+            var manufacturer = await _manufacturerService.GetById(
+                new GetById { Id = obj.ManufacturerId },
+                _configuration["ConnectionStrings:NexusCustomerApi"]);
+            if (!manufacturer.Success) return BadRequest(manufacturer);
+
+            var model = await _modelService.GetById(
+                new GetById { Id = obj.ModelId },
+                _configuration["ConnectionStrings:NexusCustomerApi"]);
+            if (!model.Success) return BadRequest(model);
+
+            var response = await _vpcItemService.Put(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
 
         /// POST: api/v1/VpcItem/Remove
         /// <summary>
@@ -67,6 +109,10 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Remove")]
-        public async Task<IActionResult> Remove(GetById obj) => Ok(await _vpcItemService.Delete(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+        public async Task<IActionResult> Remove(GetById obj)
+        {
+            var response = await _vpcItemService.Delete(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
+            return response.Success ? Ok(response) : NotFound(response);
+        }
     }
 }
