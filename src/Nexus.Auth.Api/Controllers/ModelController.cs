@@ -8,7 +8,7 @@ using Nexus.Auth.Repository.Services.Interfaces;
 
 namespace Nexus.Auth.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [Authorize]
     [ApiController]
     public class ModelController : ControllerBase
