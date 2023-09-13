@@ -8,11 +8,14 @@ public class VpcItemResponseDto
     public DateTime RegisterDate { get; set; }
 
     public string Name { get; set; }
-    public int ModelId { get; set; }
     public int Year { get; set; }
-    public int CategoryId { get; set; }
-    public int ManufacturerId { get; set; }
     public bool HasMinQuantity { get; set; }
     public int MinQuantity { get; set; }
     public string AdditionalNotes { get; set; }
+
+    public int ModelId { get; set; }
+    public string ModelName { get; set; }
+    public int ManufacturerId { get; set; }
+    public string ManufacturerName { get; set; }
+    public int CategoryId { get; set; }
 }
