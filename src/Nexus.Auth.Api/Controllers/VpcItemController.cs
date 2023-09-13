@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos;
+using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Services.Interfaces;
 
 namespace Nexus.Auth.Api.Controllers
@@ -74,6 +75,9 @@ namespace Nexus.Auth.Api.Controllers
                 _configuration["ConnectionStrings:NexusCustomerApi"]);
             if (!model.Success) return BadRequest(model);
 
+            obj.ModelName = (model.Data as ModelResponseDto).Name;
+            obj.ManufacturerName = (manufacturer.Data as ManufacturerModel).Name;
+
             var response = await _vpcItemService.Post(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : BadRequest(response);
         }
@@ -98,6 +102,9 @@ namespace Nexus.Auth.Api.Controllers
                 new GetById { Id = obj.ModelId },
                 _configuration["ConnectionStrings:NexusCustomerApi"]);
             if (!model.Success) return BadRequest(model);
+
+            obj.ModelName = (model.Data as ModelResponseDto).Name;
+            obj.ManufacturerName = (manufacturer.Data as ManufacturerModel).Name;
 
             var response = await _vpcItemService.Put(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : BadRequest(response);
