@@ -7,7 +7,7 @@ using Nexus.Auth.Repository.Services.Interfaces;
 
 namespace Nexus.Auth.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize]
     public class VpcItemController : ControllerBase

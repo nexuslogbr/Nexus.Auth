@@ -38,6 +38,14 @@ namespace Nexus.Auth.Api.Controllers
         [HttpPost("GetById")]
         public async Task<IActionResult> GetById(GetById obj) => Ok(await _modelService.GetById(obj, _configuration["ConnectionStrings:NexusCustomerApi"]));
 
+        /// POST: api/v1/Model/GetByManufacturerId
+        /// <summary>
+        /// Endpoint to get model by manufacturer id
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("GetByManufacturerId")]
+        public async Task<IActionResult> GetByManufacturerId(GetById obj) => Ok(await _modelService.GetByManufacturerId(obj, _configuration["ConnectionStrings:NexusCustomerApi"]));
+
         /// POST: api/v1/Model/GetByName
         /// <summary>
         /// Endpoint to get models by name

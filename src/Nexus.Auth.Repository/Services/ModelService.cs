@@ -34,6 +34,15 @@ public class ModelService : IModelService
         return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
     }
 
+    public async Task<GenericCommandResult> GetByManufacturerId(GetById obj, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<IEnumerable<ModelResponseDto>>(path, "api/v1/Model/GetByManufacturerId", obj);
+        if (result is not null)
+            return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+    }
+
     public async Task<GenericCommandResult> GetByName(GetByName obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<IEnumerable<ModelResponseDto>>(path, "api/v1/Model/GetByName", obj);
