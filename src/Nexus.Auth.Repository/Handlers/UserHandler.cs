@@ -104,7 +104,7 @@ namespace Nexus.Auth.Repository.Handlers
             return false;
         }
         
-        public Task<GenericCommandResult> SaveChangesAsync()
+        public Task<GenericCommandResult<object>> SaveChangesAsync()
         {
             throw new NotImplementedException();
         }

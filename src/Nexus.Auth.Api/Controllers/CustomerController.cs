@@ -14,9 +14,9 @@ namespace Nexus.Api.Web.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly ICustomerService<CustomerDto> _customerService;
+        private readonly ICustomerService _customerService;
 
-        public CustomerController(IConfiguration configuration, ICustomerService<CustomerDto> customerService)
+        public CustomerController(IConfiguration configuration, ICustomerService customerService)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));

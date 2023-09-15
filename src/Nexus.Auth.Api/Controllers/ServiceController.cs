@@ -14,9 +14,9 @@ namespace Nexus.Api.Web.Controllers
     public class ServiceController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly IServiceService<ServiceDto> _serviceService;
+        private readonly IServiceService _serviceService;
 
-        public ServiceController(IConfiguration configuration, IServiceService<ServiceDto> serviceService)
+        public ServiceController(IConfiguration configuration, IServiceService serviceService)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _serviceService = serviceService ?? throw new ArgumentNullException(nameof(serviceService));

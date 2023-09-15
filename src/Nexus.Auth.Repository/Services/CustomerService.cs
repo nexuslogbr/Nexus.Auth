@@ -8,7 +8,7 @@ using Nexus.Auth.Repository.Utils;
 
 namespace Nexus.Repository.Services
 {
-    public class CustomerService : ICustomerService<CustomerDto>
+    public class CustomerService : ICustomerService
     {
         private readonly IAccessDataService _accessDataService;
 
@@ -17,58 +17,58 @@ namespace Nexus.Repository.Services
             _accessDataService = accessDataService ?? throw new ArgumentException(nameof(accessDataService));
         }
 
-        public async Task<GenericCommandResult> GetAll(PageParams pageParams, string path)
+        public async Task<GenericCommandResult<IEnumerable<CustomerModel>>> GetAll(PageParams pageParams, string path)
         {
-            var result = await _accessDataService.PostDataAsync<CustomerModel[]>(path, "/api/v1/Customer/GetAll", pageParams);
+            var result = await _accessDataService.PostDataAsync<IEnumerable<CustomerModel>>(path, "/api/v1/Customer/GetAll", pageParams);
             if (result is not null)
-                return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+                return new GenericCommandResult<IEnumerable<CustomerModel>>(true, "Success", result, StatusCodes.Status200OK);
 
-            return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+            return new GenericCommandResult<IEnumerable<CustomerModel>>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
-        public async Task<GenericCommandResult> GetById(GetById obj, string path)
+        public async Task<GenericCommandResult<CustomerModel>> GetById(GetById obj, string path)
         {
-            var result = await _accessDataService.PostDataAsync<CustomerDto>(path, "/api/v1/Customer/GetById", obj);
+            var result = await _accessDataService.PostDataAsync<CustomerModel>(path, "/api/v1/Customer/GetById", obj);
             if (result is not null)
-                return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+                return new GenericCommandResult<CustomerModel>(true, "Success", result, StatusCodes.Status200OK);
 
-            return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+            return new GenericCommandResult<CustomerModel>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
-        public async Task<GenericCommandResult> GetByName(GetByName obj, string path)
+        public async Task<GenericCommandResult<IEnumerable<CustomerModel>>> GetByName(GetByName obj, string path)
         {
-            var result = await _accessDataService.PostDataAsync<TokenDto>(path, "/api/v1/Customer/GetByName", obj);
+            var result = await _accessDataService.PostDataAsync<IEnumerable<CustomerModel>>(path, "/api/v1/Customer/GetByName", obj);
             if (result is not null)
-                return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+                return new GenericCommandResult<IEnumerable<CustomerModel>>(true, "Success", result, StatusCodes.Status200OK);
 
-            return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+            return new GenericCommandResult<IEnumerable<CustomerModel>>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
-        public async Task<GenericCommandResult> Post(CustomerDto obj, string path)
+        public async Task<GenericCommandResult<CustomerModel>> Post(CustomerDto obj, string path)
         {
-            var result = await _accessDataService.PostDataAsync<TokenDto>(path, "/api/v1/Customer/Post", obj);
+            var result = await _accessDataService.PostDataAsync<CustomerModel>(path, "/api/v1/Customer/Post", obj);
             if (result is not null)
-                return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+                return new GenericCommandResult<CustomerModel>(true, "Success", result, StatusCodes.Status200OK);
 
-            return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+            return new GenericCommandResult<CustomerModel>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
-        public async Task<GenericCommandResult> Put(CustomerDto obj, string path)
+        public async Task<GenericCommandResult<CustomerModel>> Put(CustomerDto obj, string path)
         {
-            var result = await _accessDataService.PostDataAsync<TokenDto>(path, "/api/v1/Customer/Put", obj);
+            var result = await _accessDataService.PostDataAsync<CustomerModel>(path, "/api/v1/Customer/Put", obj);
             if (result is not null)
-                return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+                return new GenericCommandResult<CustomerModel>(true, "Success", result, StatusCodes.Status200OK);
 
-            return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+            return new GenericCommandResult<CustomerModel>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
-        public async Task<GenericCommandResult> Delete(GetById obj, string path)
+        public async Task<GenericCommandResult<TokenDto>> Delete(GetById obj, string path)
         {
             var result = await _accessDataService.PostDataAsync<TokenDto>(path, "/api/v1/Customer/Delete", obj);
             if (result is not null)
-                return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+                return new GenericCommandResult<TokenDto>(true, "Success", result, StatusCodes.Status200OK);
 
-            return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+            return new GenericCommandResult<TokenDto>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
     }

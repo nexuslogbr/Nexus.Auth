@@ -12,9 +12,9 @@ namespace Nexus.Auth.Api.Controllers
     public class ManufacturerController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly IManufacturerService<ManufacturerDto> _manufacturerService;
+        private readonly IManufacturerService _manufacturerService;
 
-        public ManufacturerController(IConfiguration configuration, IManufacturerService<ManufacturerDto> manufacturerService)
+        public ManufacturerController(IConfiguration configuration, IManufacturerService manufacturerService)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _manufacturerService = manufacturerService ?? throw new ArgumentNullException(nameof(manufacturerService));

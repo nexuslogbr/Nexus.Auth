@@ -1,7 +1,10 @@
 ﻿
+using Nexus.Auth.Repository.Dtos;
+using Nexus.Auth.Repository.Models;
+
 namespace Nexus.Auth.Repository.Interfaces
 {
-    public interface IServiceService<T> : IGenericService<T> where T : class
+    public interface IServiceService : IGenericService<ServiceDto, ServiceModel>
     {
     }
 }

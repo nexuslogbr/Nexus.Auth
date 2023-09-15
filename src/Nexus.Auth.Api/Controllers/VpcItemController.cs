@@ -15,13 +15,13 @@ namespace Nexus.Auth.Api.Controllers
     {
         private readonly IVpcItemService _vpcItemService;
         private readonly IModelService _modelService;
-        private readonly IManufacturerService<ManufacturerDto> _manufacturerService;
+        private readonly IManufacturerService _manufacturerService;
         private readonly IConfiguration _configuration;
 
         public VpcItemController(
             IVpcItemService vpcItemService,
             IModelService modelService,
-            IManufacturerService<ManufacturerDto> manufacturerService,
+            IManufacturerService manufacturerService,
             IConfiguration configuration)
         {
             _vpcItemService = vpcItemService;

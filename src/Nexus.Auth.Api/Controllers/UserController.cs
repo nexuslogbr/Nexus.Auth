@@ -34,20 +34,20 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("GetAll")]
-        public async Task<GenericCommandResult> GetAll(PageParams pageParams)
+        public async Task<GenericCommandResult<IEnumerable<UserModel>>> GetAll(PageParams pageParams)
         {
             try
             {
                 var result = await _userHandler.GetAll(pageParams);
 
                 if (result.Count > 0)
-                    return new GenericCommandResult(true, "Success", _mapper.Map<UserModel[]>(result), StatusCodes.Status200OK);
+                    return new GenericCommandResult<IEnumerable<UserModel>>(true, "Success", _mapper.Map<IEnumerable<UserModel>>(result), StatusCodes.Status200OK);
 
-                return new GenericCommandResult(false, "No data", null, StatusCodes.Status404NotFound);
+                return new GenericCommandResult<IEnumerable<UserModel>>(false, "No data", null, StatusCodes.Status404NotFound);
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<IEnumerable<UserModel>>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -57,20 +57,20 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("GetById")]
-        public async Task<GenericCommandResult> GetById(GetById dto)
+        public async Task<GenericCommandResult<UserModel>> GetById(GetById dto)
         {
             try
             {
                 var result = await _userHandler.GetById(dto.Id);
 
                 if (result is not null)
-                    return new GenericCommandResult(true, "Success", _mapper.Map<UserModel>(result), StatusCodes.Status200OK);
+                    return new GenericCommandResult<UserModel>(true, "Success", _mapper.Map<UserModel>(result), StatusCodes.Status200OK);
 
-                return new GenericCommandResult(false, "No data", null, StatusCodes.Status404NotFound);
+                return new GenericCommandResult<UserModel>(false, "No data", null, StatusCodes.Status404NotFound);
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<UserModel>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -80,20 +80,20 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("GetByName")]
-        public async Task<GenericCommandResult> GetByName(GetByName dto)
+        public async Task<GenericCommandResult<UserModel>> GetByName(GetByName dto)
         {
             try
             {
                 var result = await _userHandler.GetByName(dto.Name);
 
                 if (result is not null)
-                    return new GenericCommandResult(true, "Success", _mapper.Map<UserModel>(result), StatusCodes.Status200OK);
+                    return new GenericCommandResult<UserModel>(true, "Success", _mapper.Map<UserModel>(result), StatusCodes.Status200OK);
 
-                return new GenericCommandResult(false, "No data", null, StatusCodes.Status404NotFound);
+                return new GenericCommandResult<UserModel>(false, "No data", null, StatusCodes.Status404NotFound);
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<UserModel>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -103,14 +103,14 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Post")]
-        public async Task<GenericCommandResult> Post(UserDto dto)
+        public async Task<GenericCommandResult<UserModel>> Post(UserDto dto)
         {
             try
             {
                 if (dto.Roles.Count == 0)
-                    return new GenericCommandResult(true, "Role list is required", new object { }, StatusCodes.Status204NoContent);
+                    return new GenericCommandResult<UserModel>(true, "Role list is required", null, StatusCodes.Status204NoContent);
 
-                return new GenericCommandResult(
+                return new GenericCommandResult<UserModel>(
                     true,
                     "Success",
                     _mapper.Map<UserModel>(
@@ -121,7 +121,7 @@ namespace Nexus.Auth.Api.Controllers
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<UserModel>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -131,11 +131,11 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<GenericCommandResult> Put(UserIdDto dto)
+        public async Task<GenericCommandResult<UserModel>> Put(UserIdDto dto)
         {
             try
             {
-                return new GenericCommandResult(
+                return new GenericCommandResult<UserModel>(
                     true,
                     "Success",
                     _mapper.Map<UserModel>(await _authHandler.Update(_mapper.Map<User>(dto), dto.Password)),
@@ -144,7 +144,7 @@ namespace Nexus.Auth.Api.Controllers
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<UserModel>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -154,20 +154,20 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Delete")]
-        public async Task<GenericCommandResult> Delete(GetById dto)
+        public async Task<GenericCommandResult<object>> Delete(GetById dto)
         {
             try
             {
                 var result = await _userHandler.Delete(dto.Id);
 
                 if (result)
-                    return new GenericCommandResult(true, "Removed", result, StatusCodes.Status200OK);
+                    return new GenericCommandResult<object>(true, "Removed", result, StatusCodes.Status200OK);
 
-                return new GenericCommandResult(false, "Error in saving", null, StatusCodes.Status404NotFound);
+                return new GenericCommandResult<object>(false, "Error in saving", null, StatusCodes.Status404NotFound);
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<object>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
