@@ -15,57 +15,57 @@ public class VpcItemService : IVpcItemService
         _accessDataService = accessDataService;
     }
 
-    public async Task<GenericCommandResult> GetAll(PageParams pageParams, string path)
+    public async Task<GenericCommandResult<IEnumerable<VpcItemResponseDto>>> GetAll(PageParams pageParams, string path)
     {
         var result = await _accessDataService.PostDataAsync<IEnumerable<VpcItemResponseDto>>(path, "api/v1/VpcItem/GetAll", pageParams);
         if (result is not null)
-            return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<IEnumerable<VpcItemResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
 
-        return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+        return new GenericCommandResult<IEnumerable<VpcItemResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
-    public async Task<GenericCommandResult> GetById(GetById obj, string path)
+    public async Task<GenericCommandResult<VpcItemResponseDto>> GetById(GetById obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<VpcItemResponseDto>(path, "api/v1/VpcItem/GetById", obj);
         if (result is not null)
-            return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<VpcItemResponseDto>(true, "Success", result, StatusCodes.Status200OK);
 
-        return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+        return new GenericCommandResult<VpcItemResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
-    public async Task<GenericCommandResult> GetByName(GetByName obj, string path)
+    public async Task<GenericCommandResult<IEnumerable<VpcItemResponseDto>>> GetByName(GetByName obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<IEnumerable<VpcItemResponseDto>>(path, "api/v1/VpcItem/GetByName", obj);
         if (result is not null)
-            return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<IEnumerable<VpcItemResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
 
-        return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+        return new GenericCommandResult<IEnumerable<VpcItemResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
-    public async Task<GenericCommandResult> Post(VpcItemDto obj, string path)
+    public async Task<GenericCommandResult<VpcItemResponseDto>> Post(VpcItemDto obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<VpcItemResponseDto>(path, "api/v1/VpcItem/Post", obj);
         if (result is not null)
-            return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<VpcItemResponseDto>(true, "Success", result, StatusCodes.Status200OK);
 
-        return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+        return new GenericCommandResult<VpcItemResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
-    public async Task<GenericCommandResult> Put(VpcItemDto obj, string path)
+    public async Task<GenericCommandResult<VpcItemResponseDto>> Put(VpcItemDto obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<VpcItemResponseDto>(path, "api/v1/VpcItem/Put", obj);
         if (result is not null)
-            return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<VpcItemResponseDto>(true, "Success", result, StatusCodes.Status200OK);
 
-        return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+        return new GenericCommandResult<VpcItemResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
-    public async Task<GenericCommandResult> Delete(GetById obj, string path)
+    public async Task<GenericCommandResult<TokenDto>> Delete(GetById obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<TokenDto>(path, "api/v1/VpcItem/Delete", obj);
         if (result is not null)
-            return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<TokenDto>(true, "Success", result, StatusCodes.Status200OK);
 
-        return new GenericCommandResult(true, "Error", new object { }, StatusCodes.Status400BadRequest);
+        return new GenericCommandResult<TokenDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 }
