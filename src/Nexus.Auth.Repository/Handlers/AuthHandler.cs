@@ -71,7 +71,7 @@ namespace Nexus.Auth.Repository.Handlers
             throw new Exception("Error update of entity");
         }
 
-        public async Task<GenericCommandResult> RegisterRolesToUser(List<UserRole> entity)
+        public async Task<GenericCommandResult<object>> RegisterRolesToUser(List<UserRole> entity)
         {
             var rolesOfUser = new List<UserRole>();
 
@@ -79,11 +79,11 @@ namespace Nexus.Auth.Repository.Handlers
             {
                 var user = await _authService.FindUserByUserId(item.UserId);
                 if (user is null)
-                    return new GenericCommandResult(false, "Non-existent user", new object { }, StatusCodes.Status404NotFound);
+                    return new GenericCommandResult<object>(false, "Non-existent user", new object { }, StatusCodes.Status404NotFound);
 
                 var role = await _authService.FindRoleByRoleId(item.RoleId);
                 if (role is null)
-                    return new GenericCommandResult(false, "Non-existent role", new object { }, StatusCodes.Status404NotFound);
+                    return new GenericCommandResult<object>(false, "Non-existent role", new object { }, StatusCodes.Status404NotFound);
 
                 user.UserRoles = new List<UserRole> { new UserRole { User = user, Role = role } };
                 var result = await _authService.RegisterRoles(user);
@@ -91,11 +91,11 @@ namespace Nexus.Auth.Repository.Handlers
                 if (result.Succeeded)
                     rolesOfUser.Add(new UserRole { Role = role, User = user });
                 else
-                    return new GenericCommandResult(false, result.Errors.ToList()[0].Description, new object { }, StatusCodes.Status400BadRequest);
+                    return new GenericCommandResult<object>(false, result.Errors.ToList()[0].Description, new object { }, StatusCodes.Status400BadRequest);
 
             }
 
-            return new GenericCommandResult(true, "Successful creation", true, StatusCodes.Status200OK);
+            return new GenericCommandResult<object>(true, "Successful creation", true, StatusCodes.Status200OK);
         }
 
         public async Task<TokenDto> Login(UserLoginDto dto, bool isEmail)

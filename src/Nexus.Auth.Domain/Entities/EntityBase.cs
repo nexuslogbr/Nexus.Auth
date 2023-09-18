@@ -4,6 +4,7 @@ namespace Nexus.Auth.Domain.Entities
 {
     public class EntityBase
     {
+        public int Id { get; set; }
         private DateTime _registerDate = DateTime.Now;
 
         public DateTime RegisterDate 

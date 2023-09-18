@@ -7,6 +7,7 @@ using Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Api.Helpers;
 using Nexus.Auth.Repository.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Nexus.Auth.Repository.Utils;
 
 namespace Nexus.Auth.Api.Controllers
@@ -33,19 +34,19 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Register")]
-        public async Task<GenericCommandResult> Register(UserDto dto)
+        public async Task<GenericCommandResult<User>> Register(UserDto dto)
         {
             try
             {
                 if (dto.Roles.Count == 0)
-                    return new GenericCommandResult(true, "Role list is required", new object { }, StatusCodes.Status204NoContent);
+                    return new GenericCommandResult<User>(true, "Role list is required", null, StatusCodes.Status204NoContent);
 
                 var result = await _authHandler.Register(_mapper.Map<User>(dto), dto.Password);
-                return new GenericCommandResult(true, "User created", result, StatusCodes.Status200OK);
+                return new GenericCommandResult<User>(true, "User created", result, StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult(true, "Query error" + ex.Message, new object { }, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<User>(true, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -56,20 +57,20 @@ namespace Nexus.Auth.Api.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<GenericCommandResult> Login(UserLoginDto dto)
+        public async Task<GenericCommandResult<TokenDto>> Login(UserLoginDto dto)
         {
             try
             {
                 var result = await _authHandler.Login(dto, EmailChecker.IsValidEmail(dto.UserName));
 
                 if (result is not null)
-                    return new GenericCommandResult(true, "User logged", result, StatusCodes.Status200OK);
+                    return new GenericCommandResult<TokenDto>(true, "User logged", result, StatusCodes.Status200OK);
 
-                return new GenericCommandResult(true, "Invalid user or password", new object { }, StatusCodes.Status400BadRequest);
+                return new GenericCommandResult<TokenDto>(true, "Invalid user or password", null, StatusCodes.Status400BadRequest);
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult(true, "Invalids data" + ex.Message, new object { }, StatusCodes.Status400BadRequest);
+                return new GenericCommandResult<TokenDto>(true, "Invalids data" + ex.Message, null, StatusCodes.Status400BadRequest);
             }
         }
 
@@ -79,15 +80,15 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("Logout")]
-        public async Task<GenericCommandResult> Logout()
+        public async Task<GenericCommandResult<object>> Logout()
         {
             try
             {
-                return new GenericCommandResult(true, "Logout success", await _authHandler.Logout(), StatusCodes.Status200OK);
+                return new GenericCommandResult<object>(true, "Logout success", await _authHandler.Logout(), StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult(true, "Invalids data" + ex.Message, new object { }, StatusCodes.Status400BadRequest);
+                return new GenericCommandResult<object>(true, "Invalids data" + ex.Message, new object { }, StatusCodes.Status400BadRequest);
             }
         }
 
@@ -97,15 +98,15 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("RequestPasswordReset")]
-        public async Task<GenericCommandResult> RequestPasswordReset(RequestResetPasswordDto dto)
+        public async Task<GenericCommandResult<string>> RequestPasswordReset(RequestResetPasswordDto dto)
         {
             var user = await _userHandler.GetByEmail(dto.Email);
 
             if (user is null)
-                return new GenericCommandResult(true, "User not found", new object { }, StatusCodes.Status400BadRequest);
+                return new GenericCommandResult<string>(true, "User not found", null, StatusCodes.Status400BadRequest);
 
             var result = await _userHandler.GeneratePasswordResetTokenAsync(user);
-            return new GenericCommandResult(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<string>(true, "Success", result, StatusCodes.Status200OK);
         }
 
         /// POST: api/v1/Authentication/ResetPassword
@@ -114,16 +115,16 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("ResetPassword")]
-        public async Task<GenericCommandResult> ResetPassword(ResetPasswordDto dto)
+        public async Task<GenericCommandResult<IdentityResult>> ResetPassword(ResetPasswordDto dto)
         {
             var user = await _userHandler.GetByEmail(dto.Email);
 
             if (user is null)
-                return new GenericCommandResult(true, "User not found", new object { }, StatusCodes.Status400BadRequest);
+                return new GenericCommandResult<IdentityResult>(true, "User not found", null, StatusCodes.Status400BadRequest);
 
             var token = await _userHandler.ResetPasswordAsync(user, dto.Token, dto.Password);
 
-            return new GenericCommandResult(true, "Success", token, StatusCodes.Status200OK);
+            return new GenericCommandResult<IdentityResult>(true, "Success", token, StatusCodes.Status200OK);
         }
     }
 }
