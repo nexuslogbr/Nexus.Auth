@@ -1,5 +1,4 @@
 ﻿using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Repository.Dtos;
 using Nexus.Auth.Repository.Handlers;
 using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Interfaces;
@@ -26,6 +25,7 @@ namespace Nexus.Auth.API.Dependency
             services.AddScoped<IManufacturerService, ManufacturerService>();
             services.AddScoped<IModelService, ModelService>();
             services.AddScoped<IVpcItemService, VpcItemService>();
+            services.AddScoped<IRequesterService, RequesterService>();
             services.AddScoped<IAccessDataService, AccessDataService>();
         }
     }
