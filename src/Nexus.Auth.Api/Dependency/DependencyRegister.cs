@@ -27,6 +27,7 @@ namespace Nexus.Auth.API.Dependency
             services.AddScoped<IVpcItemService, VpcItemService>();
             services.AddScoped<IRequesterService, RequesterService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IDamageTypeService, DamageTypeService>();
             services.AddScoped<IAccessDataService, AccessDataService>();
         }
     }
