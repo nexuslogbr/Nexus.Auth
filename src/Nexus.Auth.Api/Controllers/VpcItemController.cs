@@ -67,12 +67,12 @@ namespace Nexus.Auth.Api.Controllers
 
             var manufacturer = await _manufacturerService.GetById(
                 new GetById { Id = obj.ManufacturerId }, 
-                _configuration["ConnectionStrings:NexusCustomerApi"]);
+                _configuration["ConnectionStrings:NexusVehicleApi"]);
             if (!manufacturer.Success) return BadRequest(manufacturer);
 
             var model = await _modelService.GetById(
                 new GetById { Id = obj.ModelId },
-                _configuration["ConnectionStrings:NexusCustomerApi"]);
+                _configuration["ConnectionStrings:NexusVehicleApi"]);
             if (!model.Success) return BadRequest(model);
 
             obj.ModelName = (model.Data as ModelResponseDto).Name;
@@ -95,12 +95,12 @@ namespace Nexus.Auth.Api.Controllers
 
             var manufacturer = await _manufacturerService.GetById(
                 new GetById { Id = obj.ManufacturerId },
-                _configuration["ConnectionStrings:NexusCustomerApi"]);
+                _configuration["ConnectionStrings:NexusVehicleApi"]);
             if (!manufacturer.Success) return BadRequest(manufacturer);
 
             var model = await _modelService.GetById(
                 new GetById { Id = obj.ModelId },
-                _configuration["ConnectionStrings:NexusCustomerApi"]);
+                _configuration["ConnectionStrings:NexusVehicleApi"]);
             if (!model.Success) return BadRequest(model);
 
             obj.ModelName = (model.Data as ModelResponseDto).Name;
