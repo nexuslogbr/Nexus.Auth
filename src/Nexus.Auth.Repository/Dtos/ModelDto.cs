@@ -9,5 +9,10 @@ public class ModelDto
     [Required]
     public int ManufacturerId { get; set; }
     public IEnumerable<ModelVdsDto> VdsList { get; set; }
+}
 
+public class ModelPutDto : ModelDto
+{
+    [Required] 
+    public int Id { get; set; }
 }

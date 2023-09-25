@@ -27,7 +27,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("GetAll")]
-        public async Task<IActionResult> GetAll(PageParams pageParams) => Ok(await _manufacturerService.GetAll(pageParams, _configuration["ConnectionStrings:NexusCustomerApi"]));
+        public async Task<IActionResult> GetAll(PageParams pageParams) => Ok(await _manufacturerService.GetAll(pageParams, _configuration["ConnectionStrings:NexusVehicleApi"]));
 
         /// POST: api/v1/Manufacturer/GetById
         /// <summary>
@@ -35,7 +35,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("GetById")]
-        public async Task<IActionResult> GetById(GetById obj) => Ok(await _manufacturerService.GetById(obj, _configuration["ConnectionStrings:NexusCustomerApi"]));
+        public async Task<IActionResult> GetById(GetById obj) => Ok(await _manufacturerService.GetById(obj, _configuration["ConnectionStrings:NexusVehicleApi"]));
 
         /// POST: api/v1/Manufacturer/Post
         /// <summary>
@@ -43,7 +43,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Post")]
-        public async Task<IActionResult> Post(ManufacturerDto obj) => Ok(await _manufacturerService.Post(obj, _configuration["ConnectionStrings:NexusCustomerApi"]));
+        public async Task<IActionResult> Post(ManufacturerDto obj) => Ok(await _manufacturerService.Post(obj, _configuration["ConnectionStrings:NexusVehicleApi"]));
 
         /// POST: api/v1/Manufacturer/Put
         /// <summary>
@@ -51,7 +51,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<IActionResult> Put(ManufacturerIdDto obj) => Ok(await _manufacturerService.Put(obj, _configuration["ConnectionStrings:NexusCustomerApi"]));
+        public async Task<IActionResult> Put(ManufacturerIdDto obj) => Ok(await _manufacturerService.Put(obj, _configuration["ConnectionStrings:NexusVehicleApi"]));
 
         /// POST: api/v1/Manufacturer/Remove
         /// <summary>
@@ -59,7 +59,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Remove")]
-        public async Task<IActionResult> Remove(GetById obj) => Ok(await _manufacturerService.Delete(obj, _configuration["ConnectionStrings:NexusCustomerApi"]));
+        public async Task<IActionResult> Remove(GetById obj) => Ok(await _manufacturerService.Delete(obj, _configuration["ConnectionStrings:NexusVehicleApi"]));
 
     }
 }
