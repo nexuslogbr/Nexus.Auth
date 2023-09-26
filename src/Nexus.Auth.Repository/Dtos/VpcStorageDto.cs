@@ -11,6 +11,7 @@ public class VpcStorageDto
     public int VpcItemId { get; set; }
     [Required]
     public int CustomerId { get; set; }
+    public string? CustomerName { get; set; }
     public int? RequesterId { get; set; }
     [Required]
     public bool IsSameCustomer { get; set; }
