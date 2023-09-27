@@ -75,8 +75,8 @@ namespace Nexus.Auth.Api.Controllers
                 _configuration["ConnectionStrings:NexusVehicleApi"]);
             if (!model.Success) return BadRequest(model);
 
-            obj.ModelName = (model.Data as ModelResponseDto).Name;
-            obj.ManufacturerName = (manufacturer.Data as ManufacturerModel).Name;
+            obj.ModelName = model.Data.Name;
+            obj.ManufacturerName = manufacturer.Data.Name;
 
             var response = await _vpcItemService.Post(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : BadRequest(response);
