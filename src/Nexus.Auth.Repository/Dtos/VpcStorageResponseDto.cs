@@ -14,6 +14,7 @@ public class VpcStorageResponseDto
     public int CategoryId { get; set; }
     public string CategoryName { get; set; }
     public int CustomerId { get; set; }
+    public string CustomerName { get; set; }
     public int RequesterId { get; set; }
     public string RequesterName { get; set; }
     public int StorageCount { get; set; }
