@@ -15,13 +15,18 @@ public class VpcStorageService : IVpcStorageService
         _accessDataService = accessDataService;
     }
 
-    public async Task<GenericCommandResult<IEnumerable<VpcStorageResponseDto>>> GetAll(PageParams pageParams, string path)
+    public Task<GenericCommandResult<IEnumerable<VpcStorageResponseDto>>> GetAll(PageParams pageParams, string path)
     {
-        var result = await _accessDataService.PostDataAsync<IEnumerable<VpcStorageResponseDto>>(path, "api/v1/VpcStorage/GetAll", pageParams);
-        if (result is not null)
-            return new GenericCommandResult<IEnumerable<VpcStorageResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+        throw new NotImplementedException();
+    }
 
-        return new GenericCommandResult<IEnumerable<VpcStorageResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
+    public async Task<GenericCommandResult<IEnumerable<VpcStorageFlatResponseDto>>> GetAllFlat(PageParams pageParams, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<IEnumerable<VpcStorageFlatResponseDto>>(path, "api/v1/VpcStorage/GetAll", pageParams);
+        if (result is not null)
+            return new GenericCommandResult<IEnumerable<VpcStorageFlatResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<IEnumerable<VpcStorageFlatResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
     public async Task<GenericCommandResult<VpcStorageResponseDto>> GetById(GetById obj, string path)

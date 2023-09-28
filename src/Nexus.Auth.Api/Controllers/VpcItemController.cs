@@ -66,17 +66,25 @@ namespace Nexus.Auth.Api.Controllers
                 return BadRequest(ModelState.Root.Errors);
 
             var manufacturer = await _manufacturerService.GetById(
-                new GetById { Id = obj.ManufacturerId }, 
+                new GetById { Id = obj.ManufacturerId },
                 _configuration["ConnectionStrings:NexusVehicleApi"]);
             if (!manufacturer.Success) return BadRequest(manufacturer);
 
-            var model = await _modelService.GetById(
-                new GetById { Id = obj.ModelId },
-                _configuration["ConnectionStrings:NexusVehicleApi"]);
-            if (!model.Success) return BadRequest(model);
-
-            obj.ModelName = model.Data.Name;
+            var modelList = new List<VpcItemModelDto>();
+            foreach (var model in obj.Models)
+            {
+                var currentModel = await _modelService.GetById(
+                    new GetById { Id = model.ModelId },
+                    _configuration["ConnectionStrings:NexusVehicleApi"]);
+                if (!currentModel.Success) return BadRequest(model);
+                modelList.Add(new VpcItemModelDto
+                {
+                    ModelId = model.ModelId,
+                    ModelName = currentModel.Data.Name
+                });
+            }
             obj.ManufacturerName = manufacturer.Data.Name;
+            obj.Models = modelList;
 
             var response = await _vpcItemService.Post(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : BadRequest(response);
@@ -98,13 +106,21 @@ namespace Nexus.Auth.Api.Controllers
                 _configuration["ConnectionStrings:NexusVehicleApi"]);
             if (!manufacturer.Success) return BadRequest(manufacturer);
 
-            var model = await _modelService.GetById(
-                new GetById { Id = obj.ModelId },
-                _configuration["ConnectionStrings:NexusVehicleApi"]);
-            if (!model.Success) return BadRequest(model);
-
-            obj.ModelName = (model.Data as ModelResponseDto).Name;
-            obj.ManufacturerName = (manufacturer.Data as ManufacturerModel).Name;
+            var modelList = new List<VpcItemModelDto>();
+            foreach (var model in obj.Models)
+            {
+                var currentModel = await _modelService.GetById(
+                    new GetById { Id = model.ModelId },
+                    _configuration["ConnectionStrings:NexusVehicleApi"]);
+                if (!currentModel.Success) return BadRequest(model);
+                modelList.Add(new VpcItemModelDto
+                {
+                    ModelId = model.ModelId,
+                    ModelName = currentModel.Data.Name
+                });
+            }
+            obj.ManufacturerName = manufacturer.Data.Name;
+            obj.Models = modelList;
 
             var response = await _vpcItemService.Put(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : BadRequest(response);
