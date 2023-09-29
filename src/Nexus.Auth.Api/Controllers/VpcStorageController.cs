@@ -33,7 +33,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("GetAll")]
-        public async Task<IActionResult> GetAll(PageParams pageParams) => Ok(await _vpcStorageService.GetAll(pageParams, _configuration["ConnectionStrings:NexusVpcApi"]));
+        public async Task<IActionResult> GetAll(PageParams pageParams) => Ok(await _vpcStorageService.GetAllFlat(pageParams, _configuration["ConnectionStrings:NexusVpcApi"]));
 
         /// POST: api/v1/VpcStorage/GetById
         /// <summary>
