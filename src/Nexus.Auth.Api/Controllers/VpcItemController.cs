@@ -96,7 +96,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<IActionResult> Put(VpcItemDto obj)
+        public async Task<IActionResult> Put(VpcItemPutDto obj)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Root.Errors);

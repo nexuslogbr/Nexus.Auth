@@ -2,6 +2,7 @@
 
 public class VpcStorageFlatResponseDto
 {
+    public int Id { get; set; }
     public int VpcItemId { get; set; }
     public string VpcItemName { get; set; }
     public int CustomerId { get; set; }

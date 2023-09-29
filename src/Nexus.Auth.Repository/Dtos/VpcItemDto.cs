@@ -22,3 +22,9 @@ public class VpcItemDto
     public virtual IEnumerable<VpcItemYearDto> Years { get; set; }
     public virtual IEnumerable<VpcItemModelDto> Models { get; set; }
 }
+
+public class VpcItemPutDto : VpcItemDto
+{
+    [Required]
+    public int Id { get; set; }
+}
