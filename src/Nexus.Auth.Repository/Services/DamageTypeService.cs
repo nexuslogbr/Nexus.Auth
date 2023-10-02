@@ -15,13 +15,13 @@ public class DamageTypeService : IDamageTypeService
         _accessDataService = accessDataService;
     }
 
-    public async Task<GenericCommandResult<IEnumerable<DamageTypeResponseDto>>> GetAll(PageParams pageParams, string path)
+    public async Task<GenericCommandResult<PageList<DamageTypeResponseDto>>> GetAll(PageParams pageParams, string path)
     {
-        var result = await _accessDataService.PostDataAsync<IEnumerable<DamageTypeResponseDto>>(path, "api/v1/DamageType/GetAll", pageParams);
+        var result = await _accessDataService.PostDataAsync<PageList<DamageTypeResponseDto>>(path, "api/v1/DamageType/GetAll", pageParams);
         if (result is not null)
-            return new GenericCommandResult<IEnumerable<DamageTypeResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<PageList<DamageTypeResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
 
-        return new GenericCommandResult<IEnumerable<DamageTypeResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
+        return new GenericCommandResult<PageList<DamageTypeResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
     public async Task<GenericCommandResult<DamageTypeResponseDto>> GetById(GetById obj, string path)
@@ -31,15 +31,6 @@ public class DamageTypeService : IDamageTypeService
             return new GenericCommandResult<DamageTypeResponseDto>(true, "Success", result, StatusCodes.Status200OK);
 
         return new GenericCommandResult<DamageTypeResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
-    }
-
-    public async Task<GenericCommandResult<IEnumerable<DamageTypeResponseDto>>> GetByName(GetByName obj, string path)
-    {
-        var result = await _accessDataService.PostDataAsync<IEnumerable<DamageTypeResponseDto>>(path, "api/v1/DamageType/GetByName", obj);
-        if (result is not null)
-            return new GenericCommandResult<IEnumerable<DamageTypeResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
-
-        return new GenericCommandResult<IEnumerable<DamageTypeResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
     public async Task<GenericCommandResult<DamageTypeResponseDto>> Post(DamageTypeDto obj, string path)

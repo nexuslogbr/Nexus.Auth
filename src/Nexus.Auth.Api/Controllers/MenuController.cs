@@ -35,7 +35,7 @@ namespace Nexus.Auth.Api.Controllers
             {
                 var result = await _menuHandler.GetAll(pageParams);
 
-                if (result.Count > 0)
+                if (result.TotalCount > 0)
                     return Ok(_mapper.Map<MenuIdDto[]>(result));
 
                 return BadRequest(result);

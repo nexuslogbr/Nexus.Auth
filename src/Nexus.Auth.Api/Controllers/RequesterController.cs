@@ -36,14 +36,6 @@ namespace Nexus.Auth.Api.Controllers
         [HttpPost("GetById")]
         public async Task<IActionResult> GetById(GetById obj) => Ok(await _requesterService.GetById(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
 
-        /// POST: api/v1/Requester/GetById
-        /// <summary>
-        /// Endpoint to get requesters by name
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("GetByName")]
-        public async Task<IActionResult> GetByName(GetByName obj) => Ok(await _requesterService.GetByName(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
-
         /// POST: api/v1/Requester/Post
         /// <summary>
         /// Endpoint to create new requester

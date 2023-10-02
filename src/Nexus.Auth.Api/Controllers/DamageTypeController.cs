@@ -35,14 +35,6 @@ namespace Nexus.Auth.Api.Controllers
         [HttpPost("GetById")]
         public async Task<IActionResult> GetById(GetById obj) => Ok(await _damageTypeService.GetById(obj, _configuration["ConnectionStrings:NexusVehicleApi"]));
 
-        /// POST: api/v1/DamageType/GetByName
-        /// <summary>
-        /// Endpoint to get damageTypes by name
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("GetByName")]
-        public async Task<IActionResult> GetByName(GetByName obj) => Ok(await _damageTypeService.GetByName(obj, _configuration["ConnectionStrings:NexusVehicleApi"]));
-
         /// POST: api/v1/DamageType/Post
         /// <summary>
         /// Endpoint to create new damageType

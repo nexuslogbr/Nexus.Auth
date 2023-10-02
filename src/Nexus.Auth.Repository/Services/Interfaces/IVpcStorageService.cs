@@ -7,5 +7,5 @@ namespace Nexus.Auth.Repository.Services.Interfaces;
 
 public interface IVpcStorageService : IGenericService<VpcStorageDto, VpcStorageResponseDto>
 {
-    Task<GenericCommandResult<IEnumerable<VpcStorageFlatResponseDto>>> GetAllFlat(PageParams pageParams, string path);
+    Task<GenericCommandResult<PageList<VpcStorageFlatResponseDto>>> GetAllFlat(PageParams pageParams, string path);
 }

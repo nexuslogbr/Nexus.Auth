@@ -40,7 +40,7 @@ namespace Nexus.Auth.Api.Controllers
             {
                 var result = await _userHandler.GetAll(pageParams);
 
-                if (result.Count > 0)
+                if (result.TotalCount > 0)
                     return new GenericCommandResult<IEnumerable<UserModel>>(true, "Success", _mapper.Map<IEnumerable<UserModel>>(result), StatusCodes.Status200OK);
 
                 return new GenericCommandResult<IEnumerable<UserModel>>(false, "No data", null, StatusCodes.Status404NotFound);

@@ -46,14 +46,6 @@ namespace Nexus.Auth.Api.Controllers
         [HttpPost("GetByManufacturerId")]
         public async Task<IActionResult> GetByManufacturerId(GetById obj) => Ok(await _modelService.GetByManufacturerId(obj, _configuration["ConnectionStrings:NexusVehicleApi"]));
 
-        /// POST: api/v1/Model/GetByName
-        /// <summary>
-        /// Endpoint to get models by name
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("GetByName")]
-        public async Task<IActionResult> GetByName(GetByName obj) => Ok(await _modelService.GetByName(obj, _configuration["ConnectionStrings:NexusVehicleApi"]));
-
         /// POST: api/v1/Model/Post
         /// <summary>
         /// Endpoint to create new model

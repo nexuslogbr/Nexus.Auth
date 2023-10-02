@@ -36,7 +36,7 @@ namespace Nexus.Auth.Api.Controllers
             {
                 var result = await _roleHandler.GetAll(pageParams);
 
-                if (result.Count > 0)
+                if (result.TotalCount > 0)
                     return new GenericCommandResult<IEnumerable<RoleModel>>(true, "Success", _mapper.Map<IEnumerable<RoleModel>>(result), StatusCodes.Status200OK);
 
                 return new GenericCommandResult<IEnumerable<RoleModel>>(false, "No data", null, StatusCodes.Status404NotFound);

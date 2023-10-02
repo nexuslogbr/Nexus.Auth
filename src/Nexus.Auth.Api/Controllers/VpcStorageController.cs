@@ -43,14 +43,6 @@ namespace Nexus.Auth.Api.Controllers
         [HttpPost("GetById")]
         public async Task<IActionResult> GetById(GetById obj) => Ok(await _vpcStorageService.GetById(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
 
-        /// POST: api/v1/VpcStorage/GetById
-        /// <summary>
-        /// Endpoint to get vpcStorages by name
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("GetByName")]
-        public async Task<IActionResult> GetByName(GetByName obj) => Ok(await _vpcStorageService.GetByName(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
-
         /// POST: api/v1/VpcStorage/Post
         /// <summary>
         /// Endpoint to create new vpcStorage

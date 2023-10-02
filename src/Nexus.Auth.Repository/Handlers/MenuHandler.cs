@@ -14,7 +14,7 @@ namespace Nexus.Auth.Repository.Handlers
             _menuService = menuService ?? throw new ArgumentNullException(nameof(menuService));
         }
 
-        async Task<IList<Menu>>  IBaseHandler<Menu>.GetAll(PageParams pageParams)
+        async Task<PageList<Menu>>  IBaseHandler<Menu>.GetAll(PageParams pageParams)
         {
             return await _menuService.GetAllAsync(pageParams);
         }

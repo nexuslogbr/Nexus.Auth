@@ -15,13 +15,13 @@ namespace Nexus.Auth.Repository.Services
         {
             _accessDataService = accessDataService;
         }
-        public async Task<GenericCommandResult<IEnumerable<ManufacturerModel>>> GetAll(PageParams pageParams, string path)
+        public async Task<GenericCommandResult<PageList<ManufacturerModel>>> GetAll(PageParams pageParams, string path)
         {
-            var result = await _accessDataService.PostDataAsync<IEnumerable<ManufacturerModel>>(path, "api/v1/Manufacturer/GetAll", pageParams);
+            var result = await _accessDataService.PostDataAsync<PageList<ManufacturerModel>>(path, "api/v1/Manufacturer/GetAll", pageParams);
             if (result is not null)
-                return new GenericCommandResult<IEnumerable<ManufacturerModel>>(true, "Success", result, StatusCodes.Status200OK);
+                return new GenericCommandResult<PageList<ManufacturerModel>>(true, "Success", result, StatusCodes.Status200OK);
 
-            return new GenericCommandResult<IEnumerable<ManufacturerModel>>(true, "Error", default, StatusCodes.Status400BadRequest);
+            return new GenericCommandResult<PageList<ManufacturerModel>>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
         public async Task<GenericCommandResult<ManufacturerModel>> GetById(GetById obj, string path)
@@ -31,15 +31,6 @@ namespace Nexus.Auth.Repository.Services
                 return new GenericCommandResult<ManufacturerModel>(true, "Success", result, StatusCodes.Status200OK);
 
             return new GenericCommandResult<ManufacturerModel>(true, "Error", default, StatusCodes.Status400BadRequest);
-        }
-
-        public async Task<GenericCommandResult<IEnumerable<ManufacturerModel>>> GetByName(GetByName obj, string path)
-        {
-            var result = await _accessDataService.PostDataAsync<IEnumerable<ManufacturerModel>>(path, "api/v1/Manufacturer/GetByName", obj);
-            if (result is not null)
-                return new GenericCommandResult<IEnumerable<ManufacturerModel>>(true, "Success", result, StatusCodes.Status200OK);
-
-            return new GenericCommandResult<IEnumerable<ManufacturerModel>>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
         public async Task<GenericCommandResult<ManufacturerModel>> Post(ManufacturerDto obj, string path)

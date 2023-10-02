@@ -15,18 +15,18 @@ public class VpcStorageService : IVpcStorageService
         _accessDataService = accessDataService;
     }
 
-    public Task<GenericCommandResult<IEnumerable<VpcStorageResponseDto>>> GetAll(PageParams pageParams, string path)
+    public Task<GenericCommandResult<PageList<VpcStorageResponseDto>>> GetAll(PageParams pageParams, string path)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<GenericCommandResult<IEnumerable<VpcStorageFlatResponseDto>>> GetAllFlat(PageParams pageParams, string path)
+    public async Task<GenericCommandResult<PageList<VpcStorageFlatResponseDto>>> GetAllFlat(PageParams pageParams, string path)
     {
-        var result = await _accessDataService.PostDataAsync<IEnumerable<VpcStorageFlatResponseDto>>(path, "api/v1/VpcStorage/GetAll", pageParams);
+        var result = await _accessDataService.PostDataAsync<PageList<VpcStorageFlatResponseDto>>(path, "api/v1/VpcStorage/GetAll", pageParams);
         if (result is not null)
-            return new GenericCommandResult<IEnumerable<VpcStorageFlatResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<PageList<VpcStorageFlatResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
 
-        return new GenericCommandResult<IEnumerable<VpcStorageFlatResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
+        return new GenericCommandResult<PageList<VpcStorageFlatResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
     public async Task<GenericCommandResult<VpcStorageResponseDto>> GetById(GetById obj, string path)
@@ -36,15 +36,6 @@ public class VpcStorageService : IVpcStorageService
             return new GenericCommandResult<VpcStorageResponseDto>(true, "Success", result, StatusCodes.Status200OK);
 
         return new GenericCommandResult<VpcStorageResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
-    }
-
-    public async Task<GenericCommandResult<IEnumerable<VpcStorageResponseDto>>> GetByName(GetByName obj, string path)
-    {
-        var result = await _accessDataService.PostDataAsync<IEnumerable<VpcStorageResponseDto>>(path, "api/v1/VpcStorage/GetByName", obj);
-        if (result is not null)
-            return new GenericCommandResult<IEnumerable<VpcStorageResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
-
-        return new GenericCommandResult<IEnumerable<VpcStorageResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
     public async Task<GenericCommandResult<VpcStorageResponseDto>> Post(VpcStorageDto obj, string path)

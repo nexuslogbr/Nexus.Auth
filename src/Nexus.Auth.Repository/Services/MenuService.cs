@@ -15,7 +15,7 @@ namespace Nexus.Auth.Repository.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<IList<Menu>> GetAllAsync(PageParams pageParams)
+        public async Task<PageList<Menu>> GetAllAsync(PageParams pageParams)
         {
 
             IQueryable<Menu> query = _context.Menus.AsQueryable();

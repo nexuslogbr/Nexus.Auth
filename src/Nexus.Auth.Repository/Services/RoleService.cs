@@ -20,7 +20,7 @@ namespace Nexus.Auth.Repository.Services
             _menuService = menuService;
         }
 
-        public async Task<IList<Role>> GetAllAsync(PageParams pageParams)
+        public async Task<PageList<Role>> GetAllAsync(PageParams pageParams)
         {
             IQueryable<Role> query = _roleManager.Roles.AsQueryable();
 

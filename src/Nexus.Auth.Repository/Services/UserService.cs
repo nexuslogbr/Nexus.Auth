@@ -20,7 +20,7 @@ namespace Nexus.Auth.Repository.Services
             _context = context;
         }
 
-        public async Task<IList<User>> GetAllAsync(PageParams pageParams)
+        public async Task<PageList<User>> GetAllAsync(PageParams pageParams)
         {
             IQueryable<User> query = _userManager.Users.AsQueryable();
 

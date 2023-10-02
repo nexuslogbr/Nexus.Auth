@@ -16,11 +16,11 @@ namespace Nexus.Auth.Repository.Handlers
             _menuService = menuService;
         }
 
-        async Task<IList<Role>> IBaseHandler<Role>.GetAll(PageParams pageParams)
+        async Task<PageList<Role>> IBaseHandler<Role>.GetAll(PageParams pageParams)
         {
             var roles = await _roleService.GetAllAsync(pageParams);
             
-            foreach (var role in roles)
+            foreach (var role in roles.Data)
                 role.Menus = await _menuService.GetByRoleIdAsync(role.Id);    
 
             return roles;
