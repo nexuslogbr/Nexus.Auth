@@ -1,7 +1,11 @@
-﻿using Nexus.Auth.Domain.Entities;
+﻿using AutoMapper;
+using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Auth.Repository.Dtos.Generics;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Nexus.Auth.Repository.Models;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -9,21 +13,29 @@ namespace Nexus.Auth.Repository.Handlers
     {
         private readonly IRoleService<Role> _roleService;
         private readonly IMenuService<Menu> _menuService;
+        private readonly RoleManager<Role> _roleManager;
+        private readonly IMapper _mapper;
 
-        public RoleHandler(IRoleService<Role> roleService, IMenuService<Menu> menuService) 
+        public RoleHandler(IRoleService<Role> roleService, IMenuService<Menu> menuService, RoleManager<Role> roleManager, IMapper mapper) 
         {
             _roleService = roleService;
             _menuService = menuService;
+            _roleManager = roleManager;
+            _mapper = mapper;
         }
-
-        async Task<PageList<Role>> IBaseHandler<Role>.GetAll(PageParams pageParams)
+        public async Task<PageList<RoleModel>> GetAll(PageParams pageParams)
         {
             var roles = await _roleService.GetAllAsync(pageParams);
             
-            foreach (var role in roles.Data)
-                role.Menus = await _menuService.GetByRoleIdAsync(role.Id);    
+            foreach (var role in roles)
+                role.Menus = await _menuService.GetByRoleIdAsync(role.Id);
 
-            return roles;
+            var count = await _roleManager.Roles.CountAsync();
+            return new PageList<RoleModel>(
+                _mapper.Map<List<RoleModel>>(roles),
+                count,
+                pageParams.PageNumber,
+                pageParams.PageSize);
         }
 
         async Task<Role> IRoleHandler<Role>.GetById(int id)

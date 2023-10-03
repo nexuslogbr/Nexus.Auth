@@ -30,20 +30,20 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("GetAll")]
-        public async Task<GenericCommandResult<IEnumerable<RoleModel>>> GetAll(PageParams pageParams)
+        public async Task<GenericCommandResult<PageList<RoleModel>>> GetAll(PageParams pageParams)
         {
             try
             {
                 var result = await _roleHandler.GetAll(pageParams);
 
                 if (result.TotalCount > 0)
-                    return new GenericCommandResult<IEnumerable<RoleModel>>(true, "Success", _mapper.Map<IEnumerable<RoleModel>>(result), StatusCodes.Status200OK);
+                    return new GenericCommandResult<PageList<RoleModel>>(true, "Success", result, StatusCodes.Status200OK);
 
-                return new GenericCommandResult<IEnumerable<RoleModel>>(false, "No data", null, StatusCodes.Status404NotFound);
+                return new GenericCommandResult<PageList<RoleModel>>(false, "No data", null, StatusCodes.Status404NotFound);
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult<IEnumerable<RoleModel>>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<PageList<RoleModel>>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 

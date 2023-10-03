@@ -16,6 +16,7 @@ namespace Nexus.Auth.Repository.Dtos.Generics
             PageSize = pageSize;
             CurrentPage = pageNumber;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            Data = items;
         }
     }
 }

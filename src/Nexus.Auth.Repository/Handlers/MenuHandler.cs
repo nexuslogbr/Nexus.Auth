@@ -1,22 +1,38 @@
+using AutoMapper;
 using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Auth.Repository.Dtos.Generics;
+using Nexus.Auth.Repository.Models;
+using Nexus.Auth.Infra.Context;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Nexus.Auth.Repository.Handlers
 {
     public class MenuHandler : IMenuHandler<Menu>
     {
         private readonly IMenuService<Menu> _menuService;
+        private readonly NexusAuthContext _context;
+        private readonly IMapper _mapper;
 
-        public MenuHandler(IMenuService<Menu> menuService) 
+        public MenuHandler(IMenuService<Menu> menuService, NexusAuthContext context, IMapper mapper)
         {
             _menuService = menuService ?? throw new ArgumentNullException(nameof(menuService));
+            _context = context;
+            _mapper = mapper;
         }
 
-        async Task<PageList<Menu>>  IBaseHandler<Menu>.GetAll(PageParams pageParams)
+        public async Task<PageList<MenuModel>>  GetAll(PageParams pageParams)
         {
-            return await _menuService.GetAllAsync(pageParams);
+            var menus = await _menuService.GetAllAsync(pageParams);
+            var count = await _context.Menus.CountAsync();
+            
+            return new PageList<MenuModel>(
+                _mapper.Map<List<MenuModel>>(menus),
+                count,
+                pageParams.PageNumber,
+                pageParams.PageSize);
         }
 
         async Task<Menu> IMenuHandler<Menu>.GetById(int id)

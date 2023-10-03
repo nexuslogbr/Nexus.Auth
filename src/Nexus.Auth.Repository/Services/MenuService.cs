@@ -15,7 +15,7 @@ namespace Nexus.Auth.Repository.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<PageList<Menu>> GetAllAsync(PageParams pageParams)
+        public async Task<List<Menu>> GetAllAsync(PageParams pageParams)
         {
 
             IQueryable<Menu> query = _context.Menus.AsQueryable();
@@ -26,7 +26,7 @@ namespace Nexus.Auth.Repository.Services
 
             var count = await _context.Menus.CountAsync();
             var items = await query.Skip((pageParams.PageNumber - 1) * pageParams.PageSize).Take(pageParams.PageSize).ToListAsync();
-            return new PageList<Menu>(items, count, pageParams.PageNumber, pageParams.PageSize);
+            return items;
         }
 
         public async Task<Menu> GetByIdAsync(int id)
