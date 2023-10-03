@@ -11,6 +11,7 @@ public class VpcItemResponseDto
     public bool HasMinQuantity { get; set; }
     public int MinQuantity { get; set; }
     public string AdditionalNotes { get; set; }
+    public int Quantity { get; set; }
 
     public int ManufacturerId { get; set; }
     public string ManufacturerName { get; set; }
