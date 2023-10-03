@@ -37,14 +37,6 @@ namespace Nexus.Auth.Api.Controllers
         [HttpPost("GetById")]
         public async Task<IActionResult> GetById(GetById obj) => Ok(await _categoryService.GetById(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
 
-        /// POST: api/v1/Category/GetById
-        /// <summary>
-        /// Endpoint to get categories by name
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("GetByName")]
-        public async Task<IActionResult> GetByName(GetByName obj) => Ok(await _categoryService.GetByName(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
-
         /// POST: api/v1/Category/Post
         /// <summary>
         /// Endpoint to create new category

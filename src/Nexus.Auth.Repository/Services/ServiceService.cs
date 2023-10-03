@@ -17,13 +17,13 @@ namespace Nexus.Auth.Repository.Services
             _accessDataService = accessDataService ?? throw new ArgumentException(nameof(accessDataService));
         }
 
-        public async Task<GenericCommandResult<IEnumerable<ServiceModel>>> GetAll(PageParams pageParams, string path)
+        public async Task<GenericCommandResult<PageList<ServiceModel>>> GetAll(PageParams pageParams, string path)
         {
-            var result = await _accessDataService.PostDataAsync<IEnumerable<ServiceModel>>(path, "/api/v1/Service/GetAll", pageParams);
+            var result = await _accessDataService.PostDataAsync<PageList<ServiceModel>>(path, "/api/v1/Service/GetAll", pageParams);
             if (result is not null)
-                return new GenericCommandResult<IEnumerable<ServiceModel>>(true, "Success", result, StatusCodes.Status200OK);
+                return new GenericCommandResult<PageList<ServiceModel>>(true, "Success", result, StatusCodes.Status200OK);
 
-            return new GenericCommandResult<IEnumerable<ServiceModel>>(true, "Error", default, StatusCodes.Status400BadRequest);
+            return new GenericCommandResult<PageList<ServiceModel>>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
         public async Task<GenericCommandResult<ServiceModel>> GetById(GetById obj, string path)
@@ -33,15 +33,6 @@ namespace Nexus.Auth.Repository.Services
                 return new GenericCommandResult<ServiceModel>(true, "Success", result, StatusCodes.Status200OK);
 
             return new GenericCommandResult<ServiceModel>(true, "Error", default, StatusCodes.Status400BadRequest);
-        }
-
-        public async Task<GenericCommandResult<IEnumerable<ServiceModel>>> GetByName(GetByName obj, string path)
-        {
-            var result = await _accessDataService.PostDataAsync<IEnumerable<ServiceModel>>(path, "/api/v1/Service/GetByName", obj);
-            if (result is not null)
-                return new GenericCommandResult<IEnumerable<ServiceModel>>(true, "Success", result, StatusCodes.Status200OK);
-
-            return new GenericCommandResult<IEnumerable<ServiceModel>>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
         public async Task<GenericCommandResult<ServiceModel>> Post(ServiceDto obj, string path)

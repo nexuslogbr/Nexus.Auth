@@ -16,13 +16,13 @@ public class DelayReasonService : IDelayReasonService
         _accessDataService = accessDataService;
     }
 
-    public async Task<GenericCommandResult<IEnumerable<DelayReasonResponseDto>>> GetAll(PageParams pageParams, string path)
+    public async Task<GenericCommandResult<PageList<DelayReasonResponseDto>>> GetAll(PageParams pageParams, string path)
     {
-        var result = await _accessDataService.PostDataAsync<IEnumerable<DelayReasonResponseDto>>(path, "api/v1/DelayReason/GetAll", pageParams);
+        var result = await _accessDataService.PostDataAsync<PageList<DelayReasonResponseDto>>(path, "api/v1/DelayReason/GetAll", pageParams);
         if (result is not null)
-            return new GenericCommandResult<IEnumerable<DelayReasonResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<PageList<DelayReasonResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
 
-        return new GenericCommandResult<IEnumerable<DelayReasonResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
+        return new GenericCommandResult<PageList<DelayReasonResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
     public async Task<GenericCommandResult<DelayReasonResponseDto>> GetById(GetById obj, string path)
@@ -32,15 +32,6 @@ public class DelayReasonService : IDelayReasonService
             return new GenericCommandResult<DelayReasonResponseDto>(true, "Success", result, StatusCodes.Status200OK);
 
         return new GenericCommandResult<DelayReasonResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
-    }
-
-    public async Task<GenericCommandResult<IEnumerable<DelayReasonResponseDto>>> GetByName(GetByName obj, string path)
-    {
-        var result = await _accessDataService.PostDataAsync<IEnumerable<DelayReasonResponseDto>>(path, "api/v1/DelayReason/GetByName", obj);
-        if (result is not null)
-            return new GenericCommandResult<IEnumerable<DelayReasonResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
-
-        return new GenericCommandResult<IEnumerable<DelayReasonResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
     public async Task<GenericCommandResult<DelayReasonResponseDto>> Post(DelayReasonDto obj, string path)

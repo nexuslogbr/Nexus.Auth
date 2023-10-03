@@ -15,13 +15,13 @@ public class VpcItemService : IVpcItemService
         _accessDataService = accessDataService;
     }
 
-    public async Task<GenericCommandResult<IEnumerable<VpcItemResponseDto>>> GetAll(PageParams pageParams, string path)
+    public async Task<GenericCommandResult<PageList<VpcItemResponseDto>>> GetAll(PageParams pageParams, string path)
     {
-        var result = await _accessDataService.PostDataAsync<IEnumerable<VpcItemResponseDto>>(path, "api/v1/VpcItem/GetAll", pageParams);
+        var result = await _accessDataService.PostDataAsync<PageList<VpcItemResponseDto>>(path, "api/v1/VpcItem/GetAll", pageParams);
         if (result is not null)
-            return new GenericCommandResult<IEnumerable<VpcItemResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<PageList<VpcItemResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
 
-        return new GenericCommandResult<IEnumerable<VpcItemResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
+        return new GenericCommandResult<PageList<VpcItemResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
     public async Task<GenericCommandResult<VpcItemResponseDto>> GetById(GetById obj, string path)
@@ -31,15 +31,6 @@ public class VpcItemService : IVpcItemService
             return new GenericCommandResult<VpcItemResponseDto>(true, "Success", result, StatusCodes.Status200OK);
 
         return new GenericCommandResult<VpcItemResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
-    }
-
-    public async Task<GenericCommandResult<IEnumerable<VpcItemResponseDto>>> GetByName(GetByName obj, string path)
-    {
-        var result = await _accessDataService.PostDataAsync<IEnumerable<VpcItemResponseDto>>(path, "api/v1/VpcItem/GetByName", obj);
-        if (result is not null)
-            return new GenericCommandResult<IEnumerable<VpcItemResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
-
-        return new GenericCommandResult<IEnumerable<VpcItemResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
     public async Task<GenericCommandResult<VpcItemResponseDto>> Post(VpcItemDto obj, string path)
