@@ -1,10 +1,36 @@
 version: '3.4'
 
 services:
-  nexus.auth.api:
-    image: ${DOCKER_REGISTRY-}nexusauthapi
-    build:
-      context: .
-      dockerfile: src/Nexus.Auth.Api/Dockerfile
-    ports:
-      - "44385:443"
+    generate-pfx:
+        image: emberstack/openssl
+        volumes:
+            - ./certs:/https:rw
+        command: > 
+            sh -c "[ -e "./https/nexus.pfx" ] && echo File Already exist || (
+                   rm -f /https/nexus.pfx &&
+                   openssl genrsa -out nexus.rsa 2048 &&
+                   openssl req -sha256 -new -key nexus.rsa -out nexus.csr -subj '/CN=localhost' &&
+                   openssl x509 -req -sha256 -days 365 -in nexus.csr -signkey nexus.rsa -out nexus.crt &&
+                   openssl pkcs12 -export -out /https/nexus.pfx -inkey nexus.rsa -in nexus.crt -password pass:123456789 &&
+                   rm nexus.rsa nexus.csr nexus.crt)"   
+
+    nexus.auth.api:
+        image: ${DOCKER_REGISTRY-}nexusauthapi
+        container_name: nexus.auth.api
+        build:
+          context: .
+          dockerfile: src/Nexus.Auth.Api/Dockerfile
+        ports:
+          - "44385:443"
+        networks:
+          - nexus_network
+        depends_on:
+          - generate-pfx
+        environment:
+          - ASPNETCORE_Kestrel__Certificates__Default__Password=123456789
+          - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/nexus.pfx
+      
+networks:
+  nexus_network:
+    name: nexus_network
+    driver: bridge

@@ -10,10 +10,12 @@ namespace Nexus.Auth.Repository.Services
     public class AccessDataService : IAccessDataService
     {
         private readonly ILogger<AccessDataService> _logger;
+        //private HttpClientHandler handler = new HttpClientHandler();
 
         public AccessDataService() { }
         public AccessDataService(ILogger<AccessDataService> logger)
         {
+            //handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
             _logger = logger;
         }
 
@@ -25,7 +27,8 @@ namespace Nexus.Auth.Repository.Services
             {
                 if (!string.IsNullOrEmpty(url))
                 {
-                    var httpClient = new HttpClient { BaseAddress = new Uri(path) };
+                    //var httpClient = new HttpClient(handler) { BaseAddress = new Uri(path) };
+                    var httpClient = new HttpClient() { BaseAddress = new Uri(path) };
 
                     httpClient.DefaultRequestHeaders.Accept.Clear();
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
