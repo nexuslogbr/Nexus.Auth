@@ -72,7 +72,7 @@ namespace Nexus.Auth.Api.Controllers
                 modelList.Add(new VpcItemModelDto
                 {
                     ModelId = model.ModelId,
-                    ModelName = currentModel.Data.Name
+                    Name = currentModel.Data.Name
                 });
             }
             obj.ManufacturerName = manufacturer.Data.Name;
@@ -108,7 +108,7 @@ namespace Nexus.Auth.Api.Controllers
                 modelList.Add(new VpcItemModelDto
                 {
                     ModelId = model.ModelId,
-                    ModelName = currentModel.Data.Name
+                    Name = currentModel.Data.Name
                 });
             }
             obj.ManufacturerName = manufacturer.Data.Name;

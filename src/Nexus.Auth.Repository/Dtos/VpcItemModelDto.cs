@@ -3,5 +3,5 @@
 public class VpcItemModelDto
 {
     public int ModelId { get; set; }
-    public string ModelName { get; set; }
+    public string Name { get; set; }
 }

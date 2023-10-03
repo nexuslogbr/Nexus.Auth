@@ -53,7 +53,7 @@ namespace Nexus.Auth.Api.Controllers
         {
             var customer = await _customerService.GetById(
                 new GetById { Id = obj.CustomerId },
-                _configuration["ConnectionStrings:NexusVpcApi"]);
+                _configuration["ConnectionStrings:NexusCustomerApi"]);
             if (!customer.Success) return BadRequest(customer);
 
             if (!ModelState.IsValid)
@@ -75,7 +75,7 @@ namespace Nexus.Auth.Api.Controllers
         {
             var customer = await _customerService.GetById(
                 new GetById { Id = obj.CustomerId },
-                _configuration["ConnectionStrings:NexusVpcApi"]);
+                _configuration["ConnectionStrings:NexusCustomerApi"]);
             if (!customer.Success) return BadRequest(customer);
 
             if (!ModelState.IsValid)
