@@ -10,11 +10,14 @@ namespace Nexus.Auth.Repository.Services
     public class AccessDataService : IAccessDataService
     {
         private readonly ILogger<AccessDataService> _logger;
+        private readonly HttpClient _httpClient;
+        private HttpClientHandler handler = new HttpClientHandler();
 
-        public AccessDataService() { }
-        public AccessDataService(ILogger<AccessDataService> logger)
+        public AccessDataService(ILogger<AccessDataService> logger, HttpClient httpClient)
         {
+            handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
             _logger = logger;
+            _httpClient = httpClient;
         }
 
         public async Task<T> PostDataAsync<T>(string path, string url, object data) where T : class
@@ -25,12 +28,11 @@ namespace Nexus.Auth.Repository.Services
             {
                 if (!string.IsNullOrEmpty(url))
                 {
-                    var httpClient = new HttpClient { BaseAddress = new Uri(path) };
+                    //var httpClient = new HttpClient() { BaseAddress = new Uri(path) };
+                    _httpClient.BaseAddress = new Uri(path);
+                    _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    httpClient.DefaultRequestHeaders.Accept.Clear();
-                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    var httpResponse = await httpClient.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
+                    var httpResponse = await _httpClient.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
                     responseString = await httpResponse.Content.ReadAsStringAsync();
 
                     var content = !string.IsNullOrEmpty(responseString) ? JsonConvert.DeserializeObject<T>(responseString) : Activator.CreateInstance<T>();

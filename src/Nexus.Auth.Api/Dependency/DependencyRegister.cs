@@ -1,10 +1,12 @@
-﻿using Nexus.Auth.Domain.Entities;
+﻿using Nexus.Auth.Api.Helpers;
+using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Repository.Handlers;
 using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Interfaces;
 using Nexus.Auth.Repository.Services;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Repository.Services;
+using Polly;
 
 namespace Nexus.Auth.API.Dependency
 {
@@ -12,6 +14,16 @@ namespace Nexus.Auth.API.Dependency
     {
         public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+
+            services.AddHttpClient<IAccessDataService, AccessDataService>()
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                .AllowSelfSignedCertificate()
+                .AddPolicyHandler(PollyExtensions.WaitAndTry())
+                .AddTransientHttpErrorPolicy(
+                    p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+
             services.AddTransient<IAuthHandler, AuthHandler>();
             services.AddTransient<IAuthService, AuthService>();
             services.AddScoped<IRoleHandler<Role>, RoleHandler>();
@@ -30,7 +42,6 @@ namespace Nexus.Auth.API.Dependency
             services.AddScoped<IDamageTypeService, DamageTypeService>();
             services.AddScoped<IDelayReasonService, DelayReasonService>();
             services.AddScoped<IVpcStorageService, VpcStorageService>();
-            services.AddScoped<IAccessDataService, AccessDataService>();
         }
     }
 }

@@ -1,10 +1,18 @@
 version: '3.4'
 
 services:
-  nexus.auth.api:
-    image: ${DOCKER_REGISTRY-}nexusauthapi
-    build:
-      context: .
-      dockerfile: src/Nexus.Auth.Api/Dockerfile
-    ports:
-      - "44385:443"
+    nexus.auth.api:
+        image: ${DOCKER_REGISTRY-}nexusauthapi
+        container_name: nexus.auth.api
+        build:
+          context: .
+          dockerfile: src/Nexus.Auth.Api/Dockerfile
+        ports:
+          - "44385:443"
+        networks:
+          - nexus_network
+      
+networks:
+  nexus_network:
+    name: nexus_network
+    driver: bridge
