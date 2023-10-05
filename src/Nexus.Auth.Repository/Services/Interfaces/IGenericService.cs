@@ -1,4 +1,4 @@
-﻿using Nexus.Auth.Repository.Dtos;
+﻿using Nexus.Auth.Repository.Dtos.Auth;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Utils;
 

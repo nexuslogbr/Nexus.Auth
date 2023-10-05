@@ -1,4 +1,4 @@
-﻿using Nexus.Auth.Repository.Dtos;
+﻿using Nexus.Auth.Repository.Dtos.Manufacturer;
 using Nexus.Auth.Repository.Interfaces;
 using Nexus.Auth.Repository.Models;
 

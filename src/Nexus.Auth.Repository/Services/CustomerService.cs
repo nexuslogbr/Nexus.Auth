@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Nexus.Auth.Repository.Dtos;
+using Nexus.Auth.Repository.Dtos.Auth;
+using Nexus.Auth.Repository.Dtos.Customer;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Interfaces;
 using Nexus.Auth.Repository.Models;
