@@ -2,11 +2,11 @@
 
 namespace Nexus.Auth.Repository.Utils
 {
-    public class GenericCommandResult
+    public class GenericCommandResult<T>
     {
         public GenericCommandResult() { }
 
-        public GenericCommandResult(bool success, string message, object data, int statusCode)
+        public GenericCommandResult(bool success, string message, T data, int statusCode)
         {
             Success = success;
             Message = message;
@@ -21,7 +21,7 @@ namespace Nexus.Auth.Repository.Utils
         public string Message { get; set; }
 
         [JsonProperty("data")]
-        public object Data { get; set; }
+        public T Data { get; set; }
 
         [JsonProperty("statusCode")]
         public int StatusCode { get; set; }

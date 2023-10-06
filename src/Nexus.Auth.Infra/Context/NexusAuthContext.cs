@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Nexus.Auth.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Nexus.Auth.Infra.Context
 {
@@ -17,6 +18,7 @@ namespace Nexus.Auth.Infra.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(NexusAuthContext).Assembly);
 
             modelBuilder.Entity<UserRole>(userRole =>
             {
@@ -27,6 +29,14 @@ namespace Nexus.Auth.Infra.Context
 
             //Especifica a relação de n para n e definindo quais são os identificadores
             modelBuilder.Entity<RoleMenu>().HasKey(p => new { p.RoleId, p.MenuId });
+        }
+    }
+
+    public abstract class EntityBaseMapping<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : EntityBase
+    {
+        public void Configure(EntityTypeBuilder<TEntity> builder)
+        {
+            builder.HasKey(x => x.Id);
         }
     }
 }

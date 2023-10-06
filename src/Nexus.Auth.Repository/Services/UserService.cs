@@ -20,7 +20,7 @@ namespace Nexus.Auth.Repository.Services
             _context = context;
         }
 
-        public async Task<IList<User>> GetAllAsync(PageParams pageParams)
+        public async Task<List<User>> GetAllAsync(PageParams pageParams)
         {
             IQueryable<User> query = _userManager.Users.AsQueryable();
 
@@ -33,9 +33,8 @@ namespace Nexus.Auth.Repository.Services
                 )
                 .OrderBy(x => x.Id);
 
-            var count = await _userManager.Users.CountAsync();
             var items = await query.Skip((pageParams.PageNumber - 1) * pageParams.PageSize).Take(pageParams.PageSize).ToListAsync();
-            return new PageList<User>(items, count, pageParams.PageNumber, pageParams.PageSize);
+            return items;
         }
 
         public async Task<User> GetByIdAsync(int id)

@@ -9,7 +9,7 @@ namespace Nexus.Auth.Repository.Handlers.Interfaces
         Task<User> Register(User entity, string password);
         Task<User> Update(User entity, string password);
         Task<TokenDto> Login(UserLoginDto dto, bool isEmail);
-        Task<GenericCommandResult> RegisterRolesToUser(List<UserRole> entity);
+        Task<GenericCommandResult<object>> RegisterRolesToUser(List<UserRole> entity);
         Task<bool> Logout();
     }
 }

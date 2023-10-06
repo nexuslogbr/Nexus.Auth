@@ -4,6 +4,9 @@ using Nexus.Auth.Repository.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Nexus.Auth.Repository.Dtos.Generics;
 using System.Data;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Utils;
 
 namespace Nexus.Auth.Repository.Handlers
@@ -12,21 +15,35 @@ namespace Nexus.Auth.Repository.Handlers
     {
         private readonly IUserService<User> _userService;
         private readonly IRoleService<Role> _roleService;
+        private readonly UserManager<User> _userManager;
+        private readonly IMapper _mapper;
 
-        public UserHandler(IUserService<User> userService, IRoleService<Role> roleService)
+        public UserHandler(
+            IUserService<User> userService, 
+            IRoleService<Role> roleService, 
+            IMapper mapper, 
+            UserManager<User> userManager)
         {
             _userService = userService;
             _roleService = roleService;
+            _mapper = mapper;
+            _userManager = userManager;
         }
        
-        async Task<IList<User>> IBaseHandler<User>.GetAll(PageParams pageParams)
+        public async Task<PageList<UserModel>> GetAll(PageParams pageParams)
         {
             var users = await _userService.GetAllAsync(pageParams);
 
             foreach (var user in users)
                 user.Roles = await _roleService.GetByUserIdAsync(user.Id);
+            
+            var count = await _userManager.Users.CountAsync();
 
-            return users;
+            return new PageList<UserModel>(
+                _mapper.Map<List<UserModel>>(users),
+                count,
+                pageParams.PageNumber,
+                pageParams.PageSize);
         }
 
         public async Task<User> GetById(int id)
@@ -104,7 +121,7 @@ namespace Nexus.Auth.Repository.Handlers
             return false;
         }
         
-        public Task<GenericCommandResult> SaveChangesAsync()
+        public Task<GenericCommandResult<object>> SaveChangesAsync()
         {
             throw new NotImplementedException();
         }

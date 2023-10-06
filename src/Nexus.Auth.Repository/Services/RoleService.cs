@@ -20,7 +20,7 @@ namespace Nexus.Auth.Repository.Services
             _menuService = menuService;
         }
 
-        public async Task<IList<Role>> GetAllAsync(PageParams pageParams)
+        public async Task<List<Role>> GetAllAsync(PageParams pageParams)
         {
             IQueryable<Role> query = _roleManager.Roles.AsQueryable();
 
@@ -30,7 +30,7 @@ namespace Nexus.Auth.Repository.Services
 
             var count = await _roleManager.Roles.CountAsync();
             var items = await query.Skip((pageParams.PageNumber - 1) * pageParams.PageSize).Take(pageParams.PageSize).ToListAsync();
-            return new PageList<Role>(items, count, pageParams.PageNumber, pageParams.PageSize);
+            return items;
         }
 
         public async Task<Role> GetByIdAsync(int id)
