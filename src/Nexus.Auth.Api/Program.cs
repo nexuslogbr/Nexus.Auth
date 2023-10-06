@@ -58,7 +58,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Injection Dependency Configuration 
 builder.Services.RegisterDependencies(builder.Configuration);
 
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Total",
+        builder =>
+            builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+});
 builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -80,9 +88,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors(x => x.AllowAnyHeader()
-    .AllowAnyMethod()
-    .AllowAnyOrigin());
+app.UseCors("Total");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseRouting();
