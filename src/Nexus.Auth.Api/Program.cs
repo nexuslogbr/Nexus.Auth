@@ -55,7 +55,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.LogoutPath = "/api/v1/Auth/Logout";
     }); ;
 
-// Injection Dependency Configuration
+// Injection Dependency Configuration 
 builder.Services.RegisterDependencies(builder.Configuration);
 
 builder.Services.AddCors();
