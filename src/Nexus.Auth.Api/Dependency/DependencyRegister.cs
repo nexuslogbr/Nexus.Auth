@@ -42,6 +42,8 @@ namespace Nexus.Auth.API.Dependency
             services.AddScoped<IDamageTypeService, DamageTypeService>();
             services.AddScoped<IDelayReasonService, DelayReasonService>();
             services.AddScoped<IVpcStorageService, VpcStorageService>();
+            services.AddScoped<IServiceTypeService, ServiceTypeService>();
+            services.AddScoped<ISlaService, SlaService>();
         }
     }
 }

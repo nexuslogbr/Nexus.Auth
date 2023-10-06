@@ -1,5 +1,4 @@
 ﻿using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Repository.Dtos;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Models;
@@ -7,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Nexus.Auth.Repository.Utils;
+using Nexus.Auth.Repository.Dtos.Role;
 
 namespace Nexus.Auth.Api.Controllers
 {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nexus.Auth.Repository.Dtos.Generics;
-using Nexus.Auth.Repository.Dtos;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Nexus.Auth.Repository.Dtos.Manufacturer;
 
 namespace Nexus.Auth.Api.Controllers
 {

@@ -1,4 +1,4 @@
-﻿using Nexus.Auth.Repository.Dtos;
+﻿using Nexus.Auth.Repository.Dtos.Menu;
 
 namespace Nexus.Auth.Repository.Models
 {

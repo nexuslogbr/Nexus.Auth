@@ -1,4 +1,4 @@
-﻿using Nexus.Auth.Repository.Dtos;
+﻿using Nexus.Auth.Repository.Dtos.VpcItem;
 using Nexus.Auth.Repository.Interfaces;
 
 namespace Nexus.Auth.Repository.Services.Interfaces;

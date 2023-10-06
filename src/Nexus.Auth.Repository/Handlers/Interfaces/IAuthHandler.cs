@@ -1,5 +1,6 @@
 ﻿using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Repository.Dtos;
+using Nexus.Auth.Repository.Dtos.Auth;
+using Nexus.Auth.Repository.Dtos.User;
 using Nexus.Auth.Repository.Utils;
 
 namespace Nexus.Auth.Repository.Handlers.Interfaces

@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nexus.Auth.Repository.Dtos;
 using Nexus.Auth.Repository.Dtos.Generics;
+using Nexus.Auth.Repository.Dtos.Service;
+using Nexus.Auth.Repository.Dtos.VpcItem;
 using Nexus.Auth.Repository.Interfaces;
 
 namespace Nexus.Api.Web.Controllers
@@ -15,11 +16,13 @@ namespace Nexus.Api.Web.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IServiceService _serviceService;
+        private readonly ICustomerService _customerService;
 
-        public ServiceController(IConfiguration configuration, IServiceService serviceService)
+        public ServiceController(IConfiguration configuration, IServiceService serviceService, ICustomerService customerService)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _serviceService = serviceService ?? throw new ArgumentNullException(nameof(serviceService));
+            _customerService = customerService;
         }
 
         /// GET: api/v1/Service/GetAll
@@ -38,13 +41,24 @@ namespace Nexus.Api.Web.Controllers
         [HttpPost("GetById")]
         public async Task<IActionResult> GetById(GetById obj) => Ok(await _serviceService.GetById(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
 
-        /// POST: api/v1/Service/Post
+        /// POST: api/v1/ServiceType/Post
         /// <summary>
-        /// Endpoint to create new service
+        /// Endpoint to create new serviceType
         /// </summary>
         /// <returns></returns>
         [HttpPost("Post")]
-        public async Task<IActionResult> Post(ServiceDto obj) => Ok(await _serviceService.Post(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+        public async Task<IActionResult> Post(ServiceDto obj)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Root.Errors);
+
+            var customers = await GetCustomerNames(obj.ServiceRelatedCustomers);
+            if (!customers.Any()) return BadRequest("Cliente não encontrado.");
+
+            obj.ServiceRelatedCustomers = customers;
+            var response = await _serviceService.Post(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
 
         /// POST: api/v1/Service/Put
         /// <summary>
@@ -52,7 +66,18 @@ namespace Nexus.Api.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<IActionResult> Put(ServiceIdDto obj) => Ok(await _serviceService.Put(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+        public async Task<IActionResult> Put(ServicePutDto obj)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Root.Errors);
+
+            var customers = await GetCustomerNames(obj.ServiceRelatedCustomers);
+            if (!customers.Any()) return BadRequest("Cliente não encontrado.");
+
+            obj.ServiceRelatedCustomers = customers;
+            var response = await _serviceService.Put(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
 
         /// POST: api/v1/Service/Remove
         /// <summary>
@@ -62,5 +87,19 @@ namespace Nexus.Api.Web.Controllers
         [HttpPost("Remove")]
         public async Task<IActionResult> Remove(GetById obj) => Ok(await _serviceService.Delete(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
 
+        private async Task<IEnumerable<ServiceRelatedCustomerDto>> GetCustomerNames(IEnumerable<ServiceRelatedCustomerDto> customers)
+        {
+            var list = new List<ServiceRelatedCustomerDto>();
+            foreach (var customer in customers)
+            {
+                var currentModel = await _customerService.GetById(
+                    new GetById { Id = customer.CustomerId },
+                    _configuration["ConnectionStrings:NexusCustomerApi"]);
+                if (!currentModel.Success) return null;
+                customer.CustomerName = currentModel.Data.Name;
+                list.Add(customer);
+            }
+            return list;
+        }
     }
 }

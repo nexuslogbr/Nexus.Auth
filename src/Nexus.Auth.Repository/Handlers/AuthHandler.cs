@@ -1,5 +1,4 @@
 ﻿using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Repository.Dtos;
 using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +9,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Nexus.Auth.Repository.Utils;
+using Nexus.Auth.Repository.Dtos.User;
+using Nexus.Auth.Repository.Dtos.Auth;
 
 namespace Nexus.Auth.Repository.Handlers
 {
