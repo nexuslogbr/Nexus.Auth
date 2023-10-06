@@ -80,13 +80,13 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors(x => x.AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowAnyOrigin());
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
-app.UseCors(x => x.AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowAnyOrigin());
 
 app.MapControllers();
 
