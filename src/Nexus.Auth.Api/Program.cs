@@ -20,7 +20,7 @@ builder.Services.AddDbContext<NexusAuthContext>(
     b => b.MigrationsAssembly("Nexus.Auth.Infra"))
     .EnableSensitiveDataLogging());
 
-// Manage required characters in generate password to users
+// Manage required characters in generate password to user
 IdentityBuilder identityBuilder = builder.Services.AddIdentityCore<User>(options =>
 {
     options.Password.RequireDigit = false;
