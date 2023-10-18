@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using Newtonsoft.Json.Linq;
 
 namespace Nexus.Auth.Repository.Services
 {
@@ -20,6 +22,7 @@ namespace Nexus.Auth.Repository.Services
             handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
             _logger = logger;
             _httpClient = httpClient;
+            _httpClient.Timeout = TimeSpan.FromSeconds(5000);
         }
 
         public async Task<T> PostFormDataAsync<T>(string path, string url, object data) where T : class
@@ -31,23 +34,23 @@ namespace Nexus.Auth.Repository.Services
                 if (!string.IsNullOrEmpty(url))
                 {
                     _httpClient.BaseAddress = new Uri(path);
-                    using var formContent = new MultipartFormDataContent();
+                    _httpClient.DefaultRequestHeaders.Add("X-Requested-By", "AM-Request");
+                    var mpForm = new MultipartFormDataContent();
                     foreach (var prop in data.GetType().GetProperties())
                     {
-                        if (prop.GetType().Equals(typeof(IFormFile)))
+                        var value = prop.GetValue(data);
+                        if (prop.PropertyType.Equals(typeof(IFormFile)))
                         {
-                            var fileName = (prop.GetValue(prop) as IFormFile).Name;
-                            formContent.Add(new ByteArrayContent(File.ReadAllBytes(prop.GetValue(prop).ToString())),
-                                prop.Name,
-                                fileName);
+                            var file = value as IFormFile;
+                            mpForm.Add(new StreamContent(file.OpenReadStream()), prop.Name, file.FileName);
+                            mpForm.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data") { Name = prop.Name, FileName = file.FileName };
                         }
                         else
                         {
-                            formContent.Add(new MultipartFormDataContent(prop.GetValue(prop).ToString()),
-                                String.Format("\"{0}\"", prop.Name));
+                            mpForm.Add(new StringContent(JsonConvert.SerializeObject(value)), prop.Name);
                         }
                     }
-                    var httpResponse = await _httpClient.PostAsync(url, formContent);
+                    var httpResponse = await _httpClient.PostAsync(url, mpForm);
                     responseString = await httpResponse.Content.ReadAsStringAsync();
 
                     var content = !string.IsNullOrEmpty(responseString) ? JsonConvert.DeserializeObject<T>(responseString) : Activator.CreateInstance<T>();
