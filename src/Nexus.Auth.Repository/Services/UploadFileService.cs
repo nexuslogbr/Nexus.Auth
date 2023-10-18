@@ -46,7 +46,7 @@ public class UploadFileService : IUploadFileService
 
     public async Task<GenericCommandResult<UploadFileResponseDto>> Post(UploadFileDto dto, string path)
     {
-        var result = await _accessDataService.PostDataAsync<UploadFileResponseDto>(path, "api/v1/UploadFile/Post", dto);
+        var result = await _accessDataService.PostFormDataAsync<UploadFileResponseDto>(path, "api/v1/UploadFile/Post", dto);
         if (result is not null)
             return new GenericCommandResult<UploadFileResponseDto>(true, "Success", result, StatusCodes.Status200OK);
 

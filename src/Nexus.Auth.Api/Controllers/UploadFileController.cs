@@ -60,7 +60,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Post")]
-        public async Task<IActionResult> Post(UploadFileDto obj)
+        public async Task<IActionResult> Post([FromForm] UploadFileDto obj)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Root.Errors);
