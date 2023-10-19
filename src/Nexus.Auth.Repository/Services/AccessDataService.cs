@@ -33,8 +33,10 @@ namespace Nexus.Auth.Repository.Services
             {
                 if (!string.IsNullOrEmpty(url))
                 {
-                    _httpClient.BaseAddress = new Uri(path);
-                    _httpClient.DefaultRequestHeaders.Add("X-Requested-By", "AM-Request");
+                    var request = new HttpRequestMessage(HttpMethod.Post, $"{path}/{url}");
+                    request.Headers.Accept.Clear();
+                    request.Headers.Clear();
+                    request.Headers.Add("X-Requested-By", "AM-Request");
                     var mpForm = new MultipartFormDataContent();
                     foreach (var prop in data.GetType().GetProperties())
                     {
@@ -50,7 +52,9 @@ namespace Nexus.Auth.Repository.Services
                             mpForm.Add(new StringContent(JsonConvert.SerializeObject(value)), prop.Name);
                         }
                     }
-                    var httpResponse = await _httpClient.PostAsync(url, mpForm);
+
+                    request.Content = mpForm;
+                    var httpResponse = await _httpClient.SendAsync(request);
                     responseString = await httpResponse.Content.ReadAsStringAsync();
 
                     var content = !string.IsNullOrEmpty(responseString) ? JsonConvert.DeserializeObject<T>(responseString) : Activator.CreateInstance<T>();
@@ -85,10 +89,11 @@ namespace Nexus.Auth.Repository.Services
             {
                 if (!string.IsNullOrEmpty(url))
                 {
-                    _httpClient.BaseAddress = new Uri(path);
-                    _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    var httpResponse = await _httpClient.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
+                    var request = new HttpRequestMessage(HttpMethod.Post, $"{path}/{url}");
+                    request.Headers.Accept.Clear();
+                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    request.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                    var httpResponse = await _httpClient.SendAsync(request, CancellationToken.None);
                     responseString = await httpResponse.Content.ReadAsStringAsync();
 
                     var content = !string.IsNullOrEmpty(responseString) ? JsonConvert.DeserializeObject<T>(responseString) : Activator.CreateInstance<T>();
