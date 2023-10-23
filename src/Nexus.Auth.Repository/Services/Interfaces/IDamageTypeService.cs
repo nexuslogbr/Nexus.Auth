@@ -1,4 +1,4 @@
-﻿using Nexus.Auth.Repository.Dtos;
+﻿using Nexus.Auth.Repository.Dtos.DamageType;
 using Nexus.Auth.Repository.Interfaces;
 
 namespace Nexus.Auth.Repository.Services.Interfaces;
