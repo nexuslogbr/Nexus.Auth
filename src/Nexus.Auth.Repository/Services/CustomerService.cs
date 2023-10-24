@@ -20,7 +20,7 @@ namespace Nexus.Repository.Services
 
         public async Task<GenericCommandResult<PageList<CustomerModel>>> GetAll(PageParams pageParams, string path)
         {
-            var result = await _accessDataService.PostDataAsync<PageList<CustomerModel>>(path, "/api/v1/Customer/GetAll", pageParams);
+            var result = await _accessDataService.PostDataAsync<PageList<CustomerModel>>(path, "api/v1/Customer/GetAll", pageParams);
             if (result is not null)
                 return new GenericCommandResult<PageList<CustomerModel>>(true, "Success", result, StatusCodes.Status200OK);
 
@@ -29,7 +29,7 @@ namespace Nexus.Repository.Services
 
         public async Task<GenericCommandResult<CustomerModel>> GetById(GetById obj, string path)
         {
-            var result = await _accessDataService.PostDataAsync<CustomerModel>(path, "/api/v1/Customer/GetById", obj);
+            var result = await _accessDataService.PostDataAsync<CustomerModel>(path, "api/v1/Customer/GetById", obj);
             if (result is not null)
                 return new GenericCommandResult<CustomerModel>(true, "Success", result, StatusCodes.Status200OK);
 
@@ -38,7 +38,7 @@ namespace Nexus.Repository.Services
 
         public async Task<GenericCommandResult<CustomerModel>> Post(CustomerDto obj, string path)
         {
-            var result = await _accessDataService.PostDataAsync<CustomerModel>(path, "/api/v1/Customer/Post", obj);
+            var result = await _accessDataService.PostDataAsync<CustomerModel>(path, "api/v1/Customer/Post", obj);
             if (result is not null)
                 return new GenericCommandResult<CustomerModel>(true, "Success", result, StatusCodes.Status200OK);
 
@@ -47,7 +47,7 @@ namespace Nexus.Repository.Services
 
         public async Task<GenericCommandResult<CustomerModel>> Put(CustomerDto obj, string path)
         {
-            var result = await _accessDataService.PostDataAsync<CustomerModel>(path, "/api/v1/Customer/Put", obj);
+            var result = await _accessDataService.PostDataAsync<CustomerModel>(path, "api/v1/Customer/Put", obj);
             if (result is not null)
                 return new GenericCommandResult<CustomerModel>(true, "Success", result, StatusCodes.Status200OK);
 
@@ -56,7 +56,7 @@ namespace Nexus.Repository.Services
 
         public async Task<GenericCommandResult<TokenDto>> Delete(GetById obj, string path)
         {
-            var result = await _accessDataService.PostDataAsync<TokenDto>(path, "/api/v1/Customer/Delete", obj);
+            var result = await _accessDataService.PostDataAsync<TokenDto>(path, "api/v1/Customer/Delete", obj);
             if (result is not null)
                 return new GenericCommandResult<TokenDto>(true, "Success", result, StatusCodes.Status200OK);
 
