@@ -78,16 +78,18 @@ namespace Nexus.Auth.Api.Controllers
                 if (!vehicleResponse.Success)
                     return BadRequest(vehicleResponse);
 
-                var changeStatusResponse = await _uploadFileService.ChangeStatus(new UploadFileChangeStatusDto
+                registerResult = vehicleResponse.Data;
+
+                var changeStatusResponse = await _uploadFileService.ChangeInfo(new UploadFileChangeInfoDto
                 {
                     FileId = response.Data.Id,
-                    Status = vehicleResponse.Data.Status
+                    Status = vehicleResponse.Data.Status,
+                    ConcludedRegisters = vehicleResponse.Data.ConcludedRegisters,
+                    FailedRegisters = vehicleResponse.Data.FailedRegisters
                 }, _configuration["ConnectionStrings:NexusUploadApi"]);
 
                 if (!changeStatusResponse.Success)
                     return BadRequest(vehicleResponse);
-
-                registerResult = vehicleResponse.Data;
             }
 
             return Ok(registerResult);
