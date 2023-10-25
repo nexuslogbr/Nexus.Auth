@@ -8,9 +8,12 @@
 
   <ItemGroup>
     <Folder Include="Dtos\Chassis\" />
+    <Folder Include="Dtos\ServiceOrder\" />
+    <Folder Include="Dtos\ServiceOrderItem\" />
     <Folder Include="Dtos\VehicleInfo\" />
     <Folder Include="Dtos\Sla\" />
     <Folder Include="Handlers\" />
+    <Folder Include="Params\" />
   </ItemGroup>
 
   <ItemGroup>
