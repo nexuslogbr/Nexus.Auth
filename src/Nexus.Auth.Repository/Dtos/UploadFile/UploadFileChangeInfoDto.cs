@@ -2,8 +2,10 @@
 
 namespace Nexus.Auth.Repository.Dtos.UploadFile;
 
-public class UploadFileChangeStatusDto
+public class UploadFileChangeInfoDto
 {
+    public int ConcludedRegisters { get; set; }
+    public int FailedRegisters { get; set; }
     public UploadStatusEnum Status { get; set; }
     public int FileId { get; set; }
 }
