@@ -6,6 +6,8 @@ public class UploadFileResponseDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
+    public int ConcludedRegisters { get; set; }
+    public int FailedRegisters { get; set; }
     public UploadStatusEnum Status { get; set; }
     public UploadTypeEnum Type { get; set; }
     public IEnumerable<string> Data { get; set; }

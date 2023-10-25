@@ -53,9 +53,9 @@ public class UploadFileService : IUploadFileService
         return new GenericCommandResult<UploadFileResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
-    public async Task<GenericCommandResult<UploadFileResponseDto>> ChangeStatus(UploadFileChangeStatusDto dto, string path)
+    public async Task<GenericCommandResult<UploadFileResponseDto>> ChangeInfo(UploadFileChangeInfoDto dto, string path)
     {
-        var result = await _accessDataService.PostDataAsync<UploadFileResponseDto>(path, "api/v1/UploadFile/ChangeStatus", dto);
+        var result = await _accessDataService.PostDataAsync<UploadFileResponseDto>(path, "api/v1/UploadFile/ChangeInfo", dto);
         if (result is not null)
             return new GenericCommandResult<UploadFileResponseDto>(true, "Success", result, StatusCodes.Status200OK);
 
