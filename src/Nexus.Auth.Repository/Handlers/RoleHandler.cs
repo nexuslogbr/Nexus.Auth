@@ -5,31 +5,29 @@ using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Nexus.Auth.Repository.Dtos.Role;
 using Nexus.Auth.Repository.Models;
 
 namespace Nexus.Auth.Repository.Handlers
 {
-    public class RoleHandler : IRoleHandler<Role>
+    public class RoleHandler : IRoleHandler
     {
         private readonly IRoleService<Role> _roleService;
         private readonly IMenuService<Menu> _menuService;
         private readonly RoleManager<Role> _roleManager;
         private readonly IMapper _mapper;
 
-        public RoleHandler(IRoleService<Role> roleService, IMenuService<Menu> menuService, RoleManager<Role> roleManager, IMapper mapper) 
+        public RoleHandler(IRoleService<Role> roleService, IMenuService<Menu> menuService, RoleManager<Role> roleManager, IMapper mapper)
         {
             _roleService = roleService;
             _menuService = menuService;
             _roleManager = roleManager;
             _mapper = mapper;
         }
+
         public async Task<PageList<RoleModel>> GetAll(PageParams pageParams)
         {
             var roles = await _roleService.GetAllAsync(pageParams);
-            
-            foreach (var role in roles)
-                role.Menus = await _menuService.GetByRoleIdAsync(role.Id);
-
             var count = await _roleManager.Roles.CountAsync();
             return new PageList<RoleModel>(
                 _mapper.Map<List<RoleModel>>(roles),
@@ -38,82 +36,44 @@ namespace Nexus.Auth.Repository.Handlers
                 pageParams.PageSize);
         }
 
-        async Task<Role> IRoleHandler<Role>.GetById(int id)
+        public async Task<RoleModel> GetById(int id)
         {
-            var role = await _roleService.GetByIdAsync(id);
-            role.Menus = role is not null ? await _menuService.GetByRoleIdAsync(role.Id) : throw new Exception("Error load entity");
-            return role;
+            return _mapper.Map<RoleModel>(await _roleService.GetByIdAsync(id));
         }
 
-        async Task<Role> IRoleHandler<Role>.GetByName(string name)
+        public async Task<RoleModel> GetByName(string name)
         {
-            var role = await _roleService.GetByNameAsync(name);
-            role.Menus = role is not null ? await _menuService.GetByRoleIdAsync(role.Id) : throw new Exception("Error load entity");
-            return role;
+            return _mapper.Map<RoleModel>(await _roleService.GetByNameAsync(name));
         }
 
-        public async Task<Role> Add(Role entity)
+        public async Task<RoleModel> Add(RoleDto dto)
         {
-            if (await _roleService.Add(entity))
-            {
-                var role = await _roleService.GetByNameAsync(entity.Name);
-                role.Menus = await _roleService.AddMenus(
-                    entity.Menus.Select(menu => 
-                                                new RoleMenu 
-                                                {
-                                                    MenuId = menu.Id, 
-                                                    RoleId = role.Id 
-                                                }).ToList()
-                );
-
-                return role;
-            }
-
-            throw new Exception("Error saving of entity");
+            var role = _mapper.Map<Role>(dto);
+            var success = await _roleService.Add(role);
+            if (!success)
+                throw new Exception("Cargo inválido.");
+            return _mapper.Map<RoleModel>(role);
         }
 
-        public async Task<Role> Update(Role entity)
+        public async Task<RoleModel> Update(RoleIdDto entity)
         {
             var role = await _roleService.GetByIdAsync(entity.Id);
-            role.Name = entity.Name;
-            role.Description = entity.Description;
-            role.ChangeDate = DateTime.Now;
+            if (role is null)
+                throw new Exception("Cargo inválido.");
+            
+            await _roleService.DeleteMenus(role.Id);
 
-            if (await _roleService.Update(role))
-            {
-                var result = await _roleService.GetByNameAsync(entity.Name);
-
-                if (await _roleService.DeleteMenus(role.Id))
-                {
-                    var menus = entity.Menus.Select(menu => new RoleMenu { MenuId = menu.Id, RoleId = result.Id }).ToList();
-                    result.Menus = await _roleService.AddMenus(menus);
-                }
-
-                return result;
-                throw new Exception("Error update of entity");
-            }
-
-            throw new Exception("Error update of entity");
+            var updated = _mapper.Map(entity, role);
+            var response = await _roleService.Update(updated);
+            if (!response)
+                throw new Exception("Erro ao salvar cargo.");
+            
+            return _mapper.Map<RoleModel>(updated);
         }
 
-        async Task<bool> IBaseHandler<Role>.Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            var removed = await _roleService.Delete(id);
-
-            if (removed)
-                return true;
-
-            return false;
-        }
-
-        public Task<Role> DeleteRange(Role[] entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<Role> IBaseHandler<Role>.SaveChangesAsync()
-        {
-            throw new NotImplementedException();
+            return await _roleService.Delete(id);
         }
     }
 }

@@ -16,11 +16,11 @@ namespace Nexus.Auth.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserHandler<User> _userHandler;
-        private readonly IRoleHandler<Role> _roleHandler;
+        private readonly IRoleHandler _roleHandler;
         private readonly IAuthHandler _authHandler;
         private readonly IMapper _mapper;
 
-        public UserController(IUserHandler<User> userHandler, IRoleHandler<Role> roleHandler, IAuthHandler authHandler, IMapper mapper)
+        public UserController(IUserHandler<User> userHandler, IRoleHandler roleHandler, IAuthHandler authHandler, IMapper mapper)
         {
             _userHandler = userHandler;
             _roleHandler = roleHandler;
