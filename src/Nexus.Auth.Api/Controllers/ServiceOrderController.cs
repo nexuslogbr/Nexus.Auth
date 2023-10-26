@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.ServiceOrder;
 using Nexus.Auth.Repository.Interfaces;
+using Nexus.Auth.Repository.Params;
 using Nexus.Auth.Repository.Services;
 using Nexus.Auth.Repository.Services.Interfaces;
 
@@ -66,36 +67,23 @@ namespace Nexus.Auth.Api.Controllers
             var customer = await _customerService.GetById(
                 new GetById { Id = obj.CustomerId },
                 _configuration["ConnectionStrings:NexusCustomerApi"]);
-            if (!customer.Success || customer.Data is null) return BadRequest(customer);
-            foreach (var orderItem in obj.OrderItems)
-            {
-                // GET CHASSIS NUMBER
-                var chassis = await _chassisService.GetById(new GetById
-                {
-                    Id = orderItem.ChassisId
-                }, _configuration["ConnectionStrings:NexusVehicleApi"]);
-                if (!chassis.Success || chassis.Data is null) return BadRequest(chassis);
-
-                // GET MODEL BY CHASSIS NUMBER
-                var vds = chassis.Data.ChassisNumber.Substring(3, 6);
-                var model = await _modelService.GetByVds(new GetByName
-                {
-                    Name = vds
-                }, _configuration["ConnectionStrings:NexusVehicleApi"]);
-                if (!model.Success || model.Data is null) return BadRequest(model);
-                
-                // VALIDATE IF MODEL IS VALID FOR THIS ITEM
-                var item = await _vpcItemService.GetByModelId(new GetById
-                {
-                    Id = model.Data.Id
-                }, _configuration["ConnectionStrings:NexusVpcApi"]);
-                if (!item.Success || item.Data is null) return BadRequest(item);
-
-
-                orderItem.ChassisNumber = chassis.Data.ChassisNumber;
-            }
+            if (!customer.Success || customer.Data is null) return BadRequest("Cliente não foi encontrado.");
             obj.CustomerName = customer.Data.Name;
 
+            var chassisInfos = await _chassisService.GetChassisInfo(new ChassisInfoParams
+            {
+                ChassisIds = obj.OrderItems.Select(x => x.ChassisId)
+            }, _configuration["ConnectionStrings:NexusVehicleApi"]);
+            if (!chassisInfos.Success || chassisInfos.Data is null) return BadRequest("Chassis não encontrados.");
+
+            foreach (var orderItem in obj.OrderItems)
+            {
+                var info = chassisInfos.Data.First(x => x.Id == orderItem.ChassisId);
+                if (info is null) return BadRequest("Chassi não foi encontrado.");
+                orderItem.ChassisNumber = info.ChassisNumber;
+                orderItem.ModelId = info.ModelId;
+            }
+            
             var response = await _serviceOrderService.Post(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : BadRequest(response);
         }

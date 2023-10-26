@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Chassis\" />
     <Folder Include="Dtos\ServiceOrder\" />
     <Folder Include="Dtos\ServiceOrderItem\" />
     <Folder Include="Dtos\VehicleInfo\" />

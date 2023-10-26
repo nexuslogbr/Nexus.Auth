@@ -2,6 +2,7 @@
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.UploadFile;
 using Nexus.Auth.Repository.Dtos.Chassis;
+using Nexus.Auth.Repository.Params;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Auth.Repository.Utils;
 
@@ -23,6 +24,15 @@ public class ChassisService : IChassisService
             return new GenericCommandResult<ChassisResponseDto>(true, "Success", result, StatusCodes.Status200OK);
 
         return new GenericCommandResult<ChassisResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
+
+    public async Task<GenericCommandResult<IEnumerable<ChassisInfoResponseDto>>> GetChassisInfo(ChassisInfoParams pageParams, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<IEnumerable<ChassisInfoResponseDto>>(path, "api/v1/Chassis/GetChassisInfo", pageParams);
+        if (result is not null)
+            return new GenericCommandResult<IEnumerable<ChassisInfoResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<IEnumerable<ChassisInfoResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
     public async Task<GenericCommandResult<PageList<ChassisResponseDto>>> GetAll(PageParams pageParams, string path)
