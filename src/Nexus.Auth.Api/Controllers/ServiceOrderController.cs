@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.ServiceOrder;
+using Nexus.Auth.Repository.Interfaces;
+using Nexus.Auth.Repository.Services;
 using Nexus.Auth.Repository.Services.Interfaces;
 
 namespace Nexus.Auth.Api.Controllers
@@ -14,12 +16,24 @@ namespace Nexus.Auth.Api.Controllers
     {
 
         private readonly IServiceOrderService _serviceOrderService;
+        private readonly IVpcItemService _vpcItemService;
+        private readonly IChassisService _chassisService;
+        private readonly ICustomerService _customerService;
+        private readonly IModelService _modelService;
         private readonly IConfiguration _configuration;
 
-        public ServiceOrderController(IServiceOrderService serviceOrderService, IConfiguration configuration)
+        public ServiceOrderController(
+            IServiceOrderService serviceOrderService, 
+            IConfiguration configuration, 
+            ICustomerService customerService, 
+            IChassisService chassisService, IModelService modelService, IVpcItemService vpcItemService)
         {
             _serviceOrderService = serviceOrderService;
             _configuration = configuration;
+            _customerService = customerService;
+            _chassisService = chassisService;
+            _modelService = modelService;
+            _vpcItemService = vpcItemService;
         }
 
         /// GET: api/v1/ServiceOrder/GetAll
@@ -48,6 +62,39 @@ namespace Nexus.Auth.Api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Root.Errors);
+            
+            var customer = await _customerService.GetById(
+                new GetById { Id = obj.CustomerId },
+                _configuration["ConnectionStrings:NexusCustomerApi"]);
+            if (!customer.Success || customer.Data is null) return BadRequest(customer);
+            foreach (var orderItem in obj.OrderItems)
+            {
+                // GET CHASSIS NUMBER
+                var chassis = await _chassisService.GetById(new GetById
+                {
+                    Id = orderItem.ChassisId
+                }, _configuration["ConnectionStrings:NexusVehicleApi"]);
+                if (!chassis.Success || chassis.Data is null) return BadRequest(chassis);
+
+                // GET MODEL BY CHASSIS NUMBER
+                var vds = chassis.Data.ChassisNumber.Substring(3, 6);
+                var model = await _modelService.GetByVds(new GetByName
+                {
+                    Name = vds
+                }, _configuration["ConnectionStrings:NexusVehicleApi"]);
+                if (!model.Success || model.Data is null) return BadRequest(model);
+                
+                // VALIDATE IF MODEL IS VALID FOR THIS ITEM
+                var item = await _vpcItemService.GetByModelId(new GetById
+                {
+                    Id = model.Data.Id
+                }, _configuration["ConnectionStrings:NexusVpcApi"]);
+                if (!item.Success || item.Data is null) return BadRequest(item);
+
+
+                orderItem.ChassisNumber = chassis.Data.ChassisNumber;
+            }
+            obj.CustomerName = customer.Data.Name;
 
             var response = await _serviceOrderService.Post(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : BadRequest(response);

@@ -38,6 +38,34 @@ namespace Nexus.Auth.Api.Controllers
         [HttpPost("GetAll")]
         public async Task<IActionResult> GetAll(PageParams pageParams) => Ok(await _vpcItemService.GetAll(pageParams, _configuration["ConnectionStrings:NexusVpcApi"]));
 
+        /// POST: api/v1/VpcItem/GetByModelId
+        /// <summary>
+        /// Endpoint to get vpcItem by model id
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("GetByModelId")]
+        public async Task<IActionResult> GetByModelId(GetById obj) => Ok(await _vpcItemService.GetByModelId(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+
+        /// POST: api/v1/VpcItem/GetByChassis
+        /// <summary>
+        /// Endpoint to get vpcItem by chassis number
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("GetByChassis")]
+        public async Task<IActionResult> GetByChassis(GetByName dto)
+        {
+            var vds = dto.Name.Substring(3, 6);
+            var model = await _modelService.GetByVds(new GetByName
+            {
+                Name = vds
+            }, _configuration["ConnectionStrings:NexusVehicleApi"]);
+            if (!model.Success || model.Data is null) return BadRequest(model);
+            return Ok(await _vpcItemService.GetByModelId(new GetById
+            {
+                Id = model.Data.Id
+            }, _configuration["ConnectionStrings:NexusVpcApi"]));
+        }
+
         /// POST: api/v1/VpcItem/GetById
         /// <summary>
         /// Endpoint to get vpcItem by id
@@ -45,7 +73,6 @@ namespace Nexus.Auth.Api.Controllers
         /// <returns></returns>
         [HttpPost("GetById")]
         public async Task<IActionResult> GetById(GetById obj) => Ok(await _vpcItemService.GetById(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
-
         /// POST: api/v1/VpcItem/Post
         /// <summary>
         /// Endpoint to create new vpcItem

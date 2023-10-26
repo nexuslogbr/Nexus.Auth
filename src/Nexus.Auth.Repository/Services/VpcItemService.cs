@@ -52,6 +52,15 @@ public class VpcItemService : IVpcItemService
         return new GenericCommandResult<VpcItemResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
+    public async Task<GenericCommandResult<IEnumerable<VpcItemResponseDto>>> GetByModelId(GetById dto, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<IEnumerable<VpcItemResponseDto>>(path, "api/v1/VpcItem/GetByModelId", dto);
+        if (result is not null)
+            return new GenericCommandResult<IEnumerable<VpcItemResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<IEnumerable<VpcItemResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
+
     public async Task<GenericCommandResult<TokenDto>> Delete(GetById obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<TokenDto>(path, "api/v1/VpcItem/Delete", obj);
