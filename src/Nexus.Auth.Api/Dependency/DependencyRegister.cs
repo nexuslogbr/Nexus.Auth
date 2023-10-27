@@ -26,6 +26,7 @@ namespace Nexus.Auth.API.Dependency
 
             services.AddTransient<IAuthHandler, AuthHandler>();
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<ISmtpMailService, SmtpMailService>();
             services.AddScoped<IRoleHandler, RoleHandler>();
             services.AddScoped<IRoleService<Role>, RoleService>();
             services.AddScoped<IUserHandler<User>, UserHandler>();

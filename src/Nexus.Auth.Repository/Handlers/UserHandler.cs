@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Utils;
+using Microsoft.Extensions.Configuration;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -16,18 +17,24 @@ namespace Nexus.Auth.Repository.Handlers
         private readonly IUserService<User> _userService;
         private readonly IRoleService<Role> _roleService;
         private readonly UserManager<User> _userManager;
+        private readonly ISmtpMailService _smtpMailService;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
         public UserHandler(
             IUserService<User> userService, 
             IRoleService<Role> roleService, 
             IMapper mapper, 
-            UserManager<User> userManager)
+            UserManager<User> userManager, 
+            ISmtpMailService smtpMailService, 
+            IConfiguration configuration)
         {
             _userService = userService;
             _roleService = roleService;
             _mapper = mapper;
             _userManager = userManager;
+            _smtpMailService = smtpMailService;
+            _configuration = configuration;
         }
        
         public async Task<PageList<UserModel>> GetAll(PageParams pageParams)
@@ -136,9 +143,18 @@ namespace Nexus.Auth.Repository.Handlers
             throw new NotImplementedException();
         }
 
-        public async Task<string> GeneratePasswordResetTokenAsync(User user)
+        public async Task GeneratePasswordResetTokenAsync(User user)
         {
-            return await _userService.GeneratePasswordResetTokenAsync(user);
+            var token = await _userService.GeneratePasswordResetTokenAsync(user);
+            var settings = _configuration.GetSection("MailSettings").Get<MailSettings>();
+            var data = new MailData
+            {
+                Body = token,
+                From = settings.EmailFrom,
+                Subject = "Alteração de senha",
+                To = user.Email
+            };
+            await _smtpMailService.SendMailAsync(data);
         }
 
         public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
