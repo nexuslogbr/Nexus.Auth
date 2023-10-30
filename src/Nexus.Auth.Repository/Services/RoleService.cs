@@ -22,10 +22,12 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<List<Role>> GetAllAsync(PageParams pageParams)
         {
-            IQueryable<Role> query = _roleManager.Roles.AsQueryable();
+            var query = _roleManager.Roles.AsQueryable();
 
             query = query
                 .Where(x => x.Name.ToLower().Contains(pageParams.Term.ToLower()))
+                .Include(x => x.RoleMenus)
+                .ThenInclude(x => x.Menu)
                 .OrderBy(x => x.Id);
 
             var count = await _roleManager.Roles.CountAsync();
@@ -35,7 +37,13 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<Role> GetByIdAsync(int id)
         {
-            return await _roleManager.FindByIdAsync(id.ToString());
+            var query = _roleManager.Roles.AsQueryable();
+
+            query = query
+                .Include(x => x.RoleMenus)
+                .ThenInclude(x => x.Menu);
+
+            return await query.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Role> GetByNameAsync(string name)
@@ -45,12 +53,19 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<IList<Role>> GetByUserIdAsync(int userId)
         {
-            var userRoles = _context.UserRoles.Include(_ => _.Role).Where(x => x.UserId == userId);
+            var userRoles = _context
+                .UserRoles
+                .Include(_ => _.Role)
+                .ThenInclude(x => x.RoleMenus)
+                .ThenInclude(x => x.Menu)
+                .Where(x => x.UserId == userId);
             return await userRoles.Where(x => x.Role != null).Select(x => x.Role).ToListAsync();
         }
 
         public async Task<bool> Add(Role entity)
         {
+            entity.RegisterDate = DateTime.Now;
+            entity.ChangeDate = DateTime.Now;
             var result = await _roleManager.CreateAsync(entity);
             return result.Succeeded;
         }
@@ -72,6 +87,7 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<bool> Update(Role entity)
         {
+            entity.ChangeDate = DateTime.Now;
             var result = await _roleManager.UpdateAsync(entity);
             return result.Succeeded;
         }

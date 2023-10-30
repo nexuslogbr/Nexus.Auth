@@ -13,7 +13,7 @@ namespace Nexus.Auth.Repository.Handlers.Interfaces
         Task<User> GetByEmail(string email);
         Task<IList<string>> GetRolesByUser(User user);
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
-        Task<string> GeneratePasswordResetTokenAsync(User user);
+        Task GeneratePasswordResetTokenAsync(User user);
         Task<bool> AddRoleByUser(User user, Role role);
         Task<bool> UpdateRoleByUser(User user, Role role);
         Task<IdentityResult> RemoveFromRoles(User user, IList<string> userRoles);

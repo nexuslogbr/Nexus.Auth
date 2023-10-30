@@ -15,10 +15,10 @@ namespace Nexus.Auth.Api.Controllers
     [Route("api/v1/[controller]")]
     public class RoleController : ControllerBase
     {
-        private readonly IRoleHandler<Role> _roleHandler;
+        private readonly IRoleHandler _roleHandler;
         private readonly IMapper _mapper;
 
-        public RoleController(IRoleHandler<Role> roleHandler, IMapper mapper)
+        public RoleController(IRoleHandler roleHandler, IMapper mapper)
         {
             _roleHandler = roleHandler;
             _mapper = mapper;
@@ -60,7 +60,7 @@ namespace Nexus.Auth.Api.Controllers
                 var result = await _roleHandler.GetById(dto.Id);
 
                 if (result is not null)
-                    return new GenericCommandResult<RoleModel>(true, "Success", _mapper.Map<RoleModel>(result), StatusCodes.Status200OK);
+                    return new GenericCommandResult<RoleModel>(true, "Success", result, StatusCodes.Status200OK);
 
                 return new GenericCommandResult<RoleModel>(false, "No data", null, StatusCodes.Status404NotFound);
             }
@@ -83,7 +83,7 @@ namespace Nexus.Auth.Api.Controllers
                 var result = await _roleHandler.GetByName(dto.Name);
 
                 if (result is not null)
-                    return new GenericCommandResult<RoleModel>(true, "Success", _mapper.Map<RoleModel>(result), StatusCodes.Status200OK);
+                    return new GenericCommandResult<RoleModel>(true, "Success", result, StatusCodes.Status200OK);
 
                 return new GenericCommandResult<RoleModel>(false, "No data", null, StatusCodes.Status404NotFound);
             }
@@ -106,14 +106,7 @@ namespace Nexus.Auth.Api.Controllers
                 if (dto.Menus.Count == 0)
                     return new GenericCommandResult<RoleModel>(true, "Menus list is required", null, StatusCodes.Status204NoContent);
 
-                return new GenericCommandResult<RoleModel>(
-                    true, 
-                    "Success", 
-                    _mapper.Map<RoleModel>(
-                        await _roleHandler.Add(_mapper.Map<Role>(dto))
-                    ), 
-                    StatusCodes.Status200OK
-                );
+                return new GenericCommandResult<RoleModel>(true, "Success", await _roleHandler.Add(dto), StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
@@ -131,14 +124,7 @@ namespace Nexus.Auth.Api.Controllers
         {
             try
             {
-                return new GenericCommandResult<RoleModel>(
-                    true,
-                    "Success",
-                    _mapper.Map<RoleModel>(
-                        await _roleHandler.Update(_mapper.Map<Role>(dto))
-                    ),
-                    StatusCodes.Status200OK
-                );
+                return new GenericCommandResult<RoleModel>(true, "Success", await _roleHandler.Update(dto), StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
