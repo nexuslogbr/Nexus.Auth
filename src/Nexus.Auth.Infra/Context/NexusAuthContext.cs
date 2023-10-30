@@ -28,7 +28,27 @@ namespace Nexus.Auth.Infra.Context
             });
 
             //Especifica a relação de n para n e definindo quais são os identificadores
-            modelBuilder.Entity<RoleMenu>().HasKey(p => new { p.RoleId, p.MenuId });
+            //modelBuilder.Entity<RoleMenu>().HasKey(p => new { p.RoleId, p.MenuId });
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            foreach (var entityEntry in ChangeTracker.Entries<EntityBase>())
+            {
+                switch (entityEntry.State)
+                {
+                    case EntityState.Added:
+                        entityEntry.Entity.RegisterDate = DateTime.Now;
+                        entityEntry.Entity.ChangeDate = DateTime.Now;
+                        entityEntry.Entity.Blocked = false;
+                        break;
+                    case EntityState.Modified:
+                        entityEntry.Entity.ChangeDate = DateTime.Now;
+                        break;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 

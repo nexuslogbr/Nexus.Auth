@@ -98,16 +98,17 @@ namespace Nexus.Auth.Api.Controllers
         /// Service to request reset password
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpPost("RequestPasswordReset")]
-        public async Task<GenericCommandResult<string>> RequestPasswordReset(RequestResetPasswordDto dto)
+        public async Task<GenericCommandResult<object>> RequestPasswordReset(RequestResetPasswordDto dto)
         {
             var user = await _userHandler.GetByEmail(dto.Email);
 
             if (user is null)
-                return new GenericCommandResult<string>(true, "User not found", null, StatusCodes.Status400BadRequest);
+                return new GenericCommandResult<object>(true, "User not found", null, StatusCodes.Status400BadRequest);
 
-            var result = await _userHandler.GeneratePasswordResetTokenAsync(user);
-            return new GenericCommandResult<string>(true, "Success", result, StatusCodes.Status200OK);
+            await _userHandler.GeneratePasswordResetTokenAsync(user);
+            return new GenericCommandResult<object>(true, "Success", null, StatusCodes.Status200OK);
         }
 
         /// POST: api/v1/Authentication/ResetPassword
@@ -115,6 +116,7 @@ namespace Nexus.Auth.Api.Controllers
         /// Service to reset password
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpPost("ResetPassword")]
         public async Task<GenericCommandResult<IdentityResult>> ResetPassword(ResetPasswordDto dto)
         {

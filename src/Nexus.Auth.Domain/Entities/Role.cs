@@ -21,14 +21,7 @@ namespace Nexus.Auth.Domain.Entities
 
         public DateTime ChangeDate { get; set; }
 
-
-        [NotMapped]
-        public List<UserRole> UserRoles { get; set; }
-
-        [NotMapped]
-        public IList<RoleMenu> RoleMenus { get; set; }
-
-        [NotMapped]
-        public IList<Menu> Menus { get; set; }
+        public virtual List<UserRole> UserRoles { get; set; }
+        public virtual IList<RoleMenu> RoleMenus { get; set; }
     }
 }
