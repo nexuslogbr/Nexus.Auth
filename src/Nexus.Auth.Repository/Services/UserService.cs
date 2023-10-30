@@ -16,6 +16,7 @@ namespace Nexus.Auth.Repository.Services
         public UserService(UserManager<User> userManager, IRoleService<Role> roleService, NexusAuthContext context)
         {
             _userManager = userManager;
+            //_userManager.RegisterTokenProvider(TokenOptions.DefaultProvider, new EmailTokenProvider<User>());
             _roleService = roleService;
             _context = context;
         }

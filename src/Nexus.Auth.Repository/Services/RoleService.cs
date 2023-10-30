@@ -53,7 +53,12 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<IList<Role>> GetByUserIdAsync(int userId)
         {
-            var userRoles = _context.UserRoles.Include(_ => _.Role).Where(x => x.UserId == userId);
+            var userRoles = _context
+                .UserRoles
+                .Include(_ => _.Role)
+                .ThenInclude(x => x.RoleMenus)
+                .ThenInclude(x => x.Menu)
+                .Where(x => x.UserId == userId);
             return await userRoles.Where(x => x.Role != null).Select(x => x.Role).ToListAsync();
         }
 

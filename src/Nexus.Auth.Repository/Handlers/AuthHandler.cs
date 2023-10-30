@@ -18,13 +18,16 @@ namespace Nexus.Auth.Repository.Handlers
     {
         private readonly IAuthService _authService;
         private readonly IUserService<User> _userService;
+        private readonly IRoleService<Role> _roleService;
         private readonly IConfiguration _config;
 
-        public AuthHandler(IAuthService authService, IUserService<User> userService, IConfiguration config)
+        public AuthHandler(
+            IAuthService authService, IUserService<User> userService, IConfiguration config, IRoleService<Role> roleService)
         {
             _authService = authService;
             _userService = userService;
             _config = config;
+            _roleService = roleService;
         }
 
         public async Task<User> Register(User entity, string password)
@@ -122,14 +125,16 @@ namespace Nexus.Auth.Repository.Handlers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
-            var roles = await _authService.GetRoles(user);
-
+            var roles = await _roleService.GetByUserIdAsync(user.Id);
             foreach (var role in roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                var menus = role.RoleMenus.Select(x => x.Menu).Select(x => x.Name);
+                claims.Add(new Claim(ClaimTypes.Role, role.Name));
+                claims.Add(new Claim("menus", string.Join(",", menus)));
             }
 
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config.GetSection("AppSettings:Key").Value));

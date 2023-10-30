@@ -35,6 +35,9 @@ identityBuilder.AddEntityFrameworkStores<NexusAuthContext>();
 identityBuilder.AddRoleValidator<RoleValidator<Role>>();
 identityBuilder.AddRoleManager<RoleManager<Role>>();
 identityBuilder.AddSignInManager<SignInManager<User>>();
+builder.Services.AddIdentityCore<User>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<NexusAuthContext>()
+    .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
