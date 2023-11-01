@@ -17,5 +17,6 @@ namespace Nexus.Auth.Repository.Handlers.Interfaces
         Task<bool> AddRoleByUser(User user, Role role);
         Task<bool> UpdateRoleByUser(User user, Role role);
         Task<IdentityResult> RemoveFromRoles(User user, IList<string> userRoles);
+        Task<bool> ChangeStatus(ChangeStatusDto dto);
     }
 }

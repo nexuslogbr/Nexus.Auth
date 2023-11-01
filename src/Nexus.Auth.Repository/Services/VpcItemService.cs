@@ -34,6 +34,15 @@ public class VpcItemService : IVpcItemService
         return new GenericCommandResult<VpcItemResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
+    public async Task<GenericCommandResult<ChangeStatusDto>> ChangeStatus(ChangeStatusDto obj, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<ChangeStatusDto>(path, "api/v1/VpcItem/ChangeStatus", obj);
+        if (result is not null)
+            return new GenericCommandResult<ChangeStatusDto>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<ChangeStatusDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
+
     public async Task<GenericCommandResult<VpcItemResponseDto>> Post(VpcItemDto obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<VpcItemResponseDto>(path, "api/v1/VpcItem/Post", obj);

@@ -34,6 +34,15 @@ public class SlaService : ISlaService
         return new GenericCommandResult<SlaResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
+    public async Task<GenericCommandResult<ChangeStatusDto>> ChangeStatus(ChangeStatusDto obj, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<ChangeStatusDto>(path, "api/v1/Sla/ChangeStatus", obj);
+        if (result is not null)
+            return new GenericCommandResult<ChangeStatusDto>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<ChangeStatusDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
+
     public async Task<GenericCommandResult<SlaResponseDto>> Post(SlaDto obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<SlaResponseDto>(path, "api/v1/Sla/Post", obj);

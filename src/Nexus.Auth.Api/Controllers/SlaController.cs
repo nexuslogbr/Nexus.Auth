@@ -99,5 +99,16 @@ namespace Nexus.Auth.Api.Controllers
             return response.Success ? Ok(response) : NotFound(response);
         }
 
+        /// POST: api/v1/Sla/ChangeStatus
+        /// <summary>
+        /// Endpoint to change the status for sla
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ChangeStatus")]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusDto obj)
+        {
+            var response = await _slaService.ChangeStatus(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
+            return response.Success ? Ok(response) : NotFound(response);
+        }
     }
 }
