@@ -5,8 +5,6 @@ namespace Nexus.Auth.Repository.Dtos.Sla;
 public class SlaDto
 {
     public int ServiceDeadline { get; set; }
-    public int? MaterialDeadline { get; set; }
-    public int? DaysAfterDeadline { get; set; }
 
     public int CustomerId { get; set; }
     public string CustomerName { get; set; }
