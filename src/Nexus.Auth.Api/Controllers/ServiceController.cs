@@ -101,5 +101,17 @@ namespace Nexus.Api.Web.Controllers
             }
             return list;
         }
+
+        /// POST: api/v1/Service/ChangeStatus
+        /// <summary>
+        /// Endpoint to change the status for service
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ChangeStatus")]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusDto obj)
+        {
+            var response = await _serviceService.ChangeStatus(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
+            return response.Success ? Ok(response) : NotFound(response);
+        }
     }
 }

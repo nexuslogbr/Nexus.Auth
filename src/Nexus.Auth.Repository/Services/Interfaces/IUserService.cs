@@ -15,5 +15,6 @@ namespace Nexus.Auth.Repository.Services.Interfaces
         Task<IdentityResult> RemoveRoles(User user, IList<string> userRoles);
         Task<IList<Role>> AddRoles(List<UserRole> list);
         Task<bool> DeleteRoles(int userId);
+        Task<bool> ChangeStatus(User entity, bool status);
     }
 }

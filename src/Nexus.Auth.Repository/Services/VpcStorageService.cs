@@ -39,6 +39,11 @@ public class VpcStorageService : IVpcStorageService
         return new GenericCommandResult<VpcStorageResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
+    public Task<GenericCommandResult<ChangeStatusDto>> ChangeStatus(ChangeStatusDto obj, string path)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<GenericCommandResult<VpcStorageResponseDto>> Post(VpcStorageDto obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<VpcStorageResponseDto>(path, "api/v1/VpcStorage/Post", obj);

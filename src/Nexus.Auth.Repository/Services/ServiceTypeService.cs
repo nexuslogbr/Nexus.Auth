@@ -34,6 +34,15 @@ public class ServiceTypeService : IServiceTypeService
         return new GenericCommandResult<ServiceTypeResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
+    public async Task<GenericCommandResult<ChangeStatusDto>> ChangeStatus(ChangeStatusDto obj, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<ChangeStatusDto>(path, "api/v1/ServiceType/ChangeStatus", obj);
+        if (result is not null)
+            return new GenericCommandResult<ChangeStatusDto>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<ChangeStatusDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
+
     public async Task<GenericCommandResult<ServiceTypeResponseDto>> Post(ServiceTypeDto obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<ServiceTypeResponseDto>(path, "api/v1/ServiceType/Post", obj);

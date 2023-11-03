@@ -63,5 +63,16 @@ namespace Nexus.Api.Web.Controllers
         [HttpPost("Remove")]
         public async Task<IActionResult> Remove(GetById obj) => Ok(await _customerService.Delete(obj, _configuration["ConnectionStrings:NexusCustomerApi"]));
 
+        /// POST: api/v1/Customer/ChangeStatus
+        /// <summary>
+        /// Endpoint to change the status for customer
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ChangeStatus")]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusDto obj)
+        {
+            var response = await _customerService.ChangeStatus(obj, _configuration["ConnectionStrings:NexusCustomerApi"]);
+            return response.Success ? Ok(response) : NotFound(response);
+        }
     }
 }

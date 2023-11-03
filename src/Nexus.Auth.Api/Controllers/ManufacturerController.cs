@@ -61,5 +61,16 @@ namespace Nexus.Auth.Api.Controllers
         [HttpPost("Remove")]
         public async Task<IActionResult> Remove(GetById obj) => Ok(await _manufacturerService.Delete(obj, _configuration["ConnectionStrings:NexusVehicleApi"]));
 
+        /// POST: api/v1/Manufacturer/ChangeStatus
+        /// <summary>
+        /// Endpoint to change the status for manufacturer
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ChangeStatus")]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusDto obj)
+        {
+            var response = await _manufacturerService.ChangeStatus(obj, _configuration["ConnectionStrings:NexusVehicleApi"]);
+            return response.Success ? Ok(response) : NotFound(response);
+        }
     }
 }

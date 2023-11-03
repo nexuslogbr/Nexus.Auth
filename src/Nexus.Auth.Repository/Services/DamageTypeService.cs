@@ -34,6 +34,15 @@ public class DamageTypeService : IDamageTypeService
         return new GenericCommandResult<DamageTypeResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
+    public async Task<GenericCommandResult<ChangeStatusDto>> ChangeStatus(ChangeStatusDto obj, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<ChangeStatusDto>(path, "api/v1/DamageType/ChangeStatus", obj);
+        if (result is not null)
+            return new GenericCommandResult<ChangeStatusDto>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<ChangeStatusDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
+
     public async Task<GenericCommandResult<DamageTypeResponseDto>> Post(DamageTypeDto obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<DamageTypeResponseDto>(path, "api/v1/DamageType/Post", obj);
