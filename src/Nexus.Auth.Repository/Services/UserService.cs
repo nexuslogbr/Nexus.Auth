@@ -81,6 +81,13 @@ namespace Nexus.Auth.Repository.Services
             return result.Succeeded;
         }
 
+        public async Task<bool> ChangeStatus(User entity, bool status)
+        {
+            entity.Blocked = status;
+            var result = await _userManager.UpdateAsync(entity);
+            return result.Succeeded;
+        }
+
         public async Task<bool> Delete(int id)
         {
             var User = await GetByIdAsync(id);

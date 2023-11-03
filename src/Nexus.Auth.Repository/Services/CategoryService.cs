@@ -34,6 +34,15 @@ public class CategoryService : ICategoryService
         return new GenericCommandResult<CategoryResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
+    public async Task<GenericCommandResult<ChangeStatusDto>> ChangeStatus(ChangeStatusDto obj, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<ChangeStatusDto>(path, "api/v1/Category/ChangeStatus", obj);
+        if (result is not null)
+            return new GenericCommandResult<ChangeStatusDto>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<ChangeStatusDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
+
     public async Task<GenericCommandResult<CategoryResponseDto>> Post(CategoryDto obj, string path)
     {
         var result = await _accessDataService.PostDataAsync<CategoryResponseDto>(path, "api/v1/Category/Post", obj);

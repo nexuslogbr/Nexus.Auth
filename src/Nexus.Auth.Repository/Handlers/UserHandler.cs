@@ -203,5 +203,13 @@ namespace Nexus.Auth.Repository.Handlers
         {
             return await _userService.RemoveRoles(user, userRoles);
         }
+
+        public async Task<bool> ChangeStatus(ChangeStatusDto dto)
+        {
+            var user = await _userService.GetByIdAsync(dto.Id);
+            if (user is null) return false;
+
+            return await _userService.ChangeStatus(user, dto.Blocked);
+        }
     }
 }

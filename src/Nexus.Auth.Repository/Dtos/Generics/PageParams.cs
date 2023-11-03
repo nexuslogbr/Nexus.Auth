@@ -13,5 +13,6 @@ namespace Nexus.Auth.Repository.Dtos.Generics
         }
 
         public string Term { get; set; } = string.Empty;
+        public bool? Blocked { get; set; }
     }
 }

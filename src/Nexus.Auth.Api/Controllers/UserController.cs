@@ -171,5 +171,27 @@ namespace Nexus.Auth.Api.Controllers
             }
         }
 
+        /// POST: api/v1/User/ChangeStatus
+        /// <summary>
+        /// Endpoint to change the status for user
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ChangeStatus")]
+        public async Task<GenericCommandResult<object>> ChangeStatus(ChangeStatusDto obj)
+        {
+            try
+            {
+                var result = await _userHandler.ChangeStatus(obj);
+
+                if (result)
+                    return new GenericCommandResult<object>(true, "Updated", result, StatusCodes.Status200OK);
+
+                return new GenericCommandResult<object>(false, "Error in saving", null, StatusCodes.Status404NotFound);
+            }
+            catch (Exception ex)
+            {
+                return new GenericCommandResult<object>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

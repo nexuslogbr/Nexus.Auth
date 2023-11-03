@@ -77,5 +77,16 @@ namespace Nexus.Auth.Api.Controllers
             var response = await _requesterService.Delete(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : NotFound(response);
         }
+        /// POST: api/v1/Requester/ChangeStatus
+        /// <summary>
+        /// Endpoint to change the status for requester
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ChangeStatus")]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusDto obj)
+        {
+            var response = await _requesterService.ChangeStatus(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
+            return response.Success ? Ok(response) : NotFound(response);
+        }
     }
 }

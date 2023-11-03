@@ -129,5 +129,17 @@ namespace Nexus.Auth.Api.Controllers
             var response = await _vpcItemService.Delete(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : NotFound(response);
         }
+
+        /// POST: api/v1/VpcItem/ChangeStatus
+        /// <summary>
+        /// Endpoint to change the status for vpcItem
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ChangeStatus")]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusDto obj)
+        {
+            var response = await _vpcItemService.ChangeStatus(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
+            return response.Success ? Ok(response) : NotFound(response);
+        }
     }
 }
