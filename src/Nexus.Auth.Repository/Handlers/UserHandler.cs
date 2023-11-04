@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Utils;
 using Microsoft.Extensions.Configuration;
+using System.Web;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -146,10 +147,15 @@ namespace Nexus.Auth.Repository.Handlers
         public async Task GeneratePasswordResetTokenAsync(User user)
         {
             var token = await _userService.GeneratePasswordResetTokenAsync(user);
+            var resetLink = GeneratePasswordResetLink(user.Email, token);
+            var url = "[routerLink]='['/login/reset-password', 'diego.francisco.dev@gmail.com', 'sd4f5ds4f54ds5f']'";
             var settings = _configuration.GetSection("MailSettings").Get<MailSettings>();
             var data = new MailData
             {
-                Body = token,
+                Body = $"<h3>Recuperação de Senha!</h3>" +
+               $"<p>Olá</p>" +
+               $"<p>Clique no link para redefinir a senha:</p>" +
+               $"<a href=\"{resetLink}\">Redefinir Senha</a>",
                 From = settings.EmailFrom,
                 Subject = "Alteração de senha",
                 To = user.Email
@@ -210,6 +216,11 @@ namespace Nexus.Auth.Repository.Handlers
             if (user is null) return false;
 
             return await _userService.ChangeStatus(user, dto.Blocked);
+        }
+        
+        public string GeneratePasswordResetLink(string email, string token)
+        {
+            return $"http://localhost:4200/login/reset-password/{HttpUtility.UrlEncode(email)}/{HttpUtility.UrlEncode(token)}";
         }
     }
 }
