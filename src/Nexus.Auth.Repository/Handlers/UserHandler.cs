@@ -148,7 +148,6 @@ namespace Nexus.Auth.Repository.Handlers
         {
             var token = await _userService.GeneratePasswordResetTokenAsync(user);
             var resetLink = GeneratePasswordResetLink(user.Email, token);
-            var url = "[routerLink]='['/login/reset-password', 'diego.francisco.dev@gmail.com', 'sd4f5ds4f54ds5f']'";
             var settings = _configuration.GetSection("MailSettings").Get<MailSettings>();
             var data = new MailData
             {
@@ -210,9 +209,10 @@ namespace Nexus.Auth.Repository.Handlers
             return await _userService.RemoveRoles(user, userRoles);
         }
 
-        public string GeneratePasswordResetLink(string email, string token)
+        private string GeneratePasswordResetLink(string email, string token)
         {
-            return $"http://localhost:4200/login/reset-password/{HttpUtility.UrlEncode(email)}/{HttpUtility.UrlEncode(token)}";
+            var path = _configuration["AppSettings:ResetPassword"];
+            return $"{path}/{HttpUtility.UrlEncode(email)}/{HttpUtility.UrlEncode(token)}";
         }
     }
 }
