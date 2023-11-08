@@ -13,5 +13,6 @@ namespace Nexus.Auth.Repository.Handlers.Interfaces
         Task<RoleModel> Add(RoleDto entity);
         Task<RoleModel> Update(RoleIdDto entity);
         Task<bool> Delete(int id);
+        Task<bool> ChangeStatus(ChangeStatusDto changeStatusDto);
     }
 }

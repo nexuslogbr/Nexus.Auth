@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Nexus.Auth.Repository.Dtos.Role;
 using Nexus.Auth.Repository.Models;
+using Nexus.Auth.Repository.Services;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -74,6 +75,14 @@ namespace Nexus.Auth.Repository.Handlers
         public async Task<bool> Delete(int id)
         {
             return await _roleService.Delete(id);
+        }
+
+        public async Task<bool> ChangeStatus(ChangeStatusDto dto)
+        {
+            var user = await _roleService.GetByIdAsync(dto.Id);
+            if (user is null) return false;
+
+            return await _roleService.ChangeStatus(user, dto.Blocked);
         }
     }
 }
