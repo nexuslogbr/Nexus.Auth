@@ -15,12 +15,12 @@ namespace Nexus.Auth.Api.Controllers
     [Route("api/v1/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserHandler<User> _userHandler;
+        private readonly IUserHandler _userHandler;
         private readonly IRoleHandler _roleHandler;
         private readonly IAuthHandler _authHandler;
         private readonly IMapper _mapper;
 
-        public UserController(IUserHandler<User> userHandler, IRoleHandler roleHandler, IAuthHandler authHandler, IMapper mapper)
+        public UserController(IUserHandler userHandler, IRoleHandler roleHandler, IAuthHandler authHandler, IMapper mapper)
         {
             _userHandler = userHandler;
             _roleHandler = roleHandler;

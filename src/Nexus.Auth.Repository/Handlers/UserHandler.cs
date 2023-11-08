@@ -10,10 +10,11 @@ using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Utils;
 using Microsoft.Extensions.Configuration;
 using System.Web;
+using Nexus.Auth.Repository.Dtos.User;
 
 namespace Nexus.Auth.Repository.Handlers
 {
-    public class UserHandler : IUserHandler<User>
+    public class UserHandler : IUserHandler
     {
         private readonly IUserService<User> _userService;
         private readonly IRoleService<Role> _roleService;
@@ -23,11 +24,11 @@ namespace Nexus.Auth.Repository.Handlers
         private readonly IConfiguration _configuration;
 
         public UserHandler(
-            IUserService<User> userService, 
-            IRoleService<Role> roleService, 
-            IMapper mapper, 
-            UserManager<User> userManager, 
-            ISmtpMailService smtpMailService, 
+            IUserService<User> userService,
+            IRoleService<Role> roleService,
+            IMapper mapper,
+            UserManager<User> userManager,
+            ISmtpMailService smtpMailService,
             IConfiguration configuration)
         {
             _userService = userService;
@@ -37,14 +38,14 @@ namespace Nexus.Auth.Repository.Handlers
             _smtpMailService = smtpMailService;
             _configuration = configuration;
         }
-       
+
         public async Task<PageList<UserModel>> GetAll(PageParams pageParams)
         {
             var users = await _userService.GetAllAsync(pageParams);
 
             foreach (var user in users)
                 user.Roles = await _roleService.GetByUserIdAsync(user.Id);
-            
+
             var count = await _userManager.Users.CountAsync();
 
             return new PageList<UserModel>(
@@ -68,80 +69,40 @@ namespace Nexus.Auth.Repository.Handlers
             return user;
         }
 
-        async Task<User> IUserHandler<User>.GetByEmail(string email)
+        async Task<User> IUserHandler.GetByEmail(string email)
         {
             var user = await _userService.GetByEmailAsync(email);
             user.Roles = user is not null ? await _roleService.GetByUserIdAsync(user.Id) : throw new Exception("Error load entity");
             return user;
         }
 
-        public async Task<User> Add(User entity)
+        public async Task<UserModel> Add(UserDto entity)
         {
-            if (await _userService.Add(entity))
-            {
-                var user = await _userService.GetByNameAsync(entity.Name);
-                user.Roles = await _userService.AddRoles(
-                    entity.Roles.Select(role =>
-                                                new UserRole
-                                                {
-                                                    RoleId = role.Id,
-                                                    UserId = user.Id
-                                                }).ToList()
-                );
+            var user = _mapper.Map<User>(entity);
+            var result = await _userService.Add(user);
 
-                return user;
-            }
+            if (result)
+                throw new Exception("Error saving of entity");
 
-            throw new Exception("Error saving of entity");
+            return _mapper.Map<UserModel>(user);
         }
 
-        public async Task<User> Update(User entity)
+        public async Task<UserModel> Update(UserIdDto entity)
         {
             var user = await _userService.GetByIdAsync(entity.Id);
-            user.Name = entity.Name = string.IsNullOrEmpty(entity.Name) ? user.Name : entity.Name;
-            user.UserName = string.IsNullOrEmpty(entity.UserName) ? user.UserName : entity.UserName;
-            user.Email = string.IsNullOrEmpty(entity.Email) ? user.Email : entity.Email;
-            user.ChangeDate = DateTime.Now;
-
-            if (await _userService.Update(entity))
-            {
-                var result = await _userService.GetByNameAsync(entity.Name);
-
-                if (await _userService.DeleteRoles(user.Id))
-                {
-                    var users = entity.Roles.Select(role => new UserRole { RoleId = role.Id, UserId = result.Id }).ToList();
-                    result.Roles = await _userService.AddRoles(users);
-                }
-
-                return result;
-            }
-
-            throw new Exception("Error update of entity");
+            await _userService.DeleteRoles(user.Id);
+            var updated = _mapper.Map(entity, user);
+            var result = await _userService.Update(updated);
+            
+            if (result)
+                throw new Exception("Error update of entity");
+            
+            return _mapper.Map<UserModel>(updated);
         }
 
-        async Task<bool> IBaseHandler<User>.Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            var removed = await _userService.Delete(id);
-
-            if (removed)
-                return true;
-
-            return false;
-        }
-        
-        public Task<GenericCommandResult<object>> SaveChangesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> DeleteRange(User[] entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<User> IBaseHandler<User>.SaveChangesAsync()
-        {
-            throw new NotImplementedException();
+            return await _userService.Delete(id);
         }
 
         public async Task GeneratePasswordResetTokenAsync(User user)
@@ -177,7 +138,7 @@ namespace Nexus.Auth.Repository.Handlers
 
             if (result.Succeeded)
                 return true;
-                
+
             return false;
         }
 
@@ -191,7 +152,7 @@ namespace Nexus.Auth.Repository.Handlers
             {
                 user.UserRoles = new List<UserRole> { new UserRole { User = user, Role = role } };
                 var result = await _userService.RegisterRoles(user);
-                
+
                 if (result.Succeeded)
                     return true;
             }
@@ -216,7 +177,7 @@ namespace Nexus.Auth.Repository.Handlers
 
             return await _userService.ChangeStatus(user, dto.Blocked);
         }
-        
+
         private string GeneratePasswordResetLink(string email, string token)
         {
             var path = _configuration["AppSettings:ResetPassword"];

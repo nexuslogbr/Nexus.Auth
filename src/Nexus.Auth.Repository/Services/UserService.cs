@@ -2,6 +2,7 @@
 using Nexus.Auth.Repository.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Infra.Context;
 
@@ -16,14 +17,13 @@ namespace Nexus.Auth.Repository.Services
         public UserService(UserManager<User> userManager, IRoleService<Role> roleService, NexusAuthContext context)
         {
             _userManager = userManager;
-            //_userManager.RegisterTokenProvider(TokenOptions.DefaultProvider, new EmailTokenProvider<User>());
             _roleService = roleService;
             _context = context;
         }
 
         public async Task<List<User>> GetAllAsync(PageParams pageParams)
         {
-            IQueryable<User> query = _userManager.Users.AsQueryable();
+            var query = _userManager.Users.AsQueryable();
 
             query = query
                 .Where(x => (
@@ -32,6 +32,8 @@ namespace Nexus.Auth.Repository.Services
                              || x.Email.ToLower().Contains(pageParams.Term.ToLower())
                             )
                 )
+                .Include(x => x.UserRoles)
+                .ThenInclude(x => x.Role)
                 .OrderBy(x => x.Id);
 
             var items = await query.Skip((pageParams.PageNumber - 1) * pageParams.PageSize).Take(pageParams.PageSize).ToListAsync();
@@ -40,7 +42,13 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<User> GetByIdAsync(int id)
         {
-            return await _userManager.FindByIdAsync(id.ToString());
+            var query = _userManager.Users.AsQueryable();
+            
+            query = query
+                .Include(x => x.UserRoles)
+                .ThenInclude(x => x.Role);
+
+            return await query.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<User> GetByNameAsync(string name)
@@ -56,6 +64,8 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<bool> Add(User entity)
         {
+            entity.ChangeDate = DateTime.Now;
+            entity.RegisterDate = DateTime.Now;
             var result = await _userManager.CreateAsync(entity);
             return result.Succeeded;
         }
@@ -77,6 +87,7 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<bool> Update(User entity)
         {
+            entity.ChangeDate = DateTime.Now;
             var result = await _userManager.UpdateAsync(entity);
             return result.Succeeded;
         }
