@@ -29,7 +29,7 @@ namespace Nexus.Auth.API.Dependency
             services.AddTransient<ISmtpMailService, SmtpMailService>();
             services.AddScoped<IRoleHandler, RoleHandler>();
             services.AddScoped<IRoleService<Role>, RoleService>();
-            services.AddScoped<IUserHandler<User>, UserHandler>();
+            services.AddScoped<IUserHandler, UserHandler>();
             services.AddScoped<IUserService<User>, UserService>();
             services.AddScoped<IMenuHandler<Menu>, MenuHandler>();
             services.AddScoped<IMenuService<Menu>, MenuService>();

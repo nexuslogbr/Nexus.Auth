@@ -119,6 +119,13 @@ namespace Nexus.Auth.Repository.Services
             throw new Exception("Error saving or loaging entity");
         }
 
+        public async Task<bool> ChangeStatus(Role role, bool blocked)
+        {
+            role.Blocked = blocked;
+            var result = await _roleManager.UpdateAsync(role);
+            return result.Succeeded;
+        }
+
         public Task<bool> DeleteRange(int id)
         {
             throw new NotImplementedException();

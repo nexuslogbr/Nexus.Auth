@@ -13,13 +13,23 @@ namespace Nexus.Auth.Api.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<User, UserIdDto>().ReverseMap();
+            CreateMap<User, UserDto>()
+                .ReverseMap()
+                .ForMember(d => d.Roles, src => src.Ignore())
+                .ForMember(d => d.UserRoles, src => src.MapFrom(e => e.Roles));
+            CreateMap<User, UserIdDto>()
+                .ReverseMap()
+                .ForMember(d => d.Roles, src => src.Ignore())
+                .ForMember(d => d.UserRoles, src => src.MapFrom(e => e.Roles));
             CreateMap<User, UserModel>().ReverseMap();
             CreateMap<User, GetById>().ReverseMap();
 
             CreateMap<Role, RoleIdDto>().ReverseMap();
             CreateMap<Role, RoleUserDto>().ReverseMap();
+            CreateMap<UserRole, RoleUserDto>()
+                .ReverseMap()
+                .ForMember(d => d.Id, src => src.Ignore())
+                .ForMember(d => d.RoleId, src => src.MapFrom(e => e.Id));
             CreateMap<Role, RoleModel>()
                 .ForMember(d => d.Menus, src => src.MapFrom(e => e.RoleMenus))
                 .ReverseMap();
@@ -33,7 +43,10 @@ namespace Nexus.Auth.Api.Helpers
                 .ForMember(e => e.MenuId, src => src.MapFrom(d => d.Id))
                 .ForMember(e => e.Id, src => src.Ignore());
 
-            CreateMap<UserRole, UserRoleDto>().ReverseMap();
+            CreateMap<UserRole, UserRoleDto>()
+                .ReverseMap()
+                .ForMember(d => d.Id, src => src.Ignore())
+                .ForMember(d => d.RoleId, src => src.MapFrom(e => e.Id));
             CreateMap<UserRole, UserDto>().ReverseMap();
             
             CreateMap<Menu, MenuDto>().ReverseMap();

@@ -9,7 +9,7 @@ namespace Nexus.Auth.Repository.Models
         public string UserName { get; set; }
         public string Email { get; set; }
         public bool Blocked { get; set; }
-        public string ChangeDate { get; set; }
+        public DateTime ChangeDate { get; set; }
         public IList<RoleUserDto> Roles { get; set; }
     }
 }

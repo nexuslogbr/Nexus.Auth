@@ -9,5 +9,6 @@ namespace Nexus.Auth.Repository.Services.Interfaces
         Task<IList<Role>> GetByUserIdAsync(int userId);
         Task<IList<Menu>> AddMenus(List<RoleMenu> list);
         Task<bool> DeleteMenus(int roleId);
+        Task<bool> ChangeStatus(Role user, bool blocked);
     }
 }

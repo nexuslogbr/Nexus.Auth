@@ -15,12 +15,12 @@ namespace Nexus.Auth.Api.Controllers
     [Route("api/v1/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserHandler<User> _userHandler;
+        private readonly IUserHandler _userHandler;
         private readonly IRoleHandler _roleHandler;
         private readonly IAuthHandler _authHandler;
         private readonly IMapper _mapper;
 
-        public UserController(IUserHandler<User> userHandler, IRoleHandler roleHandler, IAuthHandler authHandler, IMapper mapper)
+        public UserController(IUserHandler userHandler, IRoleHandler roleHandler, IAuthHandler authHandler, IMapper mapper)
         {
             _userHandler = userHandler;
             _roleHandler = roleHandler;
@@ -110,14 +110,7 @@ namespace Nexus.Auth.Api.Controllers
                 if (dto.Roles.Count == 0)
                     return new GenericCommandResult<UserModel>(true, "Role list is required", null, StatusCodes.Status204NoContent);
 
-                return new GenericCommandResult<UserModel>(
-                    true,
-                    "Success",
-                    _mapper.Map<UserModel>(
-                        await _authHandler.Register(_mapper.Map<User>(dto), dto.Password)
-                    ),
-                    StatusCodes.Status200OK
-                );
+                return new GenericCommandResult<UserModel>(true, "Success", await _authHandler.Register(dto), StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
@@ -135,12 +128,7 @@ namespace Nexus.Auth.Api.Controllers
         {
             try
             {
-                return new GenericCommandResult<UserModel>(
-                    true,
-                    "Success",
-                    _mapper.Map<UserModel>(await _authHandler.Update(_mapper.Map<User>(dto), dto.Password)),
-                    StatusCodes.Status200OK
-                );
+                return new GenericCommandResult<UserModel>(true, "Success", _mapper.Map<UserModel>(await _authHandler.Update(dto)), StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {

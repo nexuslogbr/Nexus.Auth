@@ -8,9 +8,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using Nexus.Auth.Repository.Utils;
 using Nexus.Auth.Repository.Dtos.User;
 using Nexus.Auth.Repository.Dtos.Auth;
+using Nexus.Auth.Repository.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -20,59 +23,52 @@ namespace Nexus.Auth.Repository.Handlers
         private readonly IUserService<User> _userService;
         private readonly IRoleService<Role> _roleService;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
         public AuthHandler(
-            IAuthService authService, IUserService<User> userService, IConfiguration config, IRoleService<Role> roleService)
+            IAuthService authService,
+            IUserService<User> userService,
+            IConfiguration config,
+            IRoleService<Role> roleService,
+            IMapper mapper)
         {
             _authService = authService;
             _userService = userService;
             _config = config;
             _roleService = roleService;
+            _mapper = mapper;
         }
 
-        public async Task<User> Register(User entity, string password)
+        public async Task<UserModel> Register(UserDto entity)
         {
+            var user = _mapper.Map<User>(entity);
+            user.ChangeDate = DateTime.Now;
+            user.RegisterDate = DateTime.Now;
+            var result = await _authService.Register(user, entity.Password);
 
-            if ((await _authService.Register(entity, password)).Succeeded)
-            {
-                var user = await _userService.GetByNameAsync(entity.Name);
-                user.Roles = await _userService.AddRoles(
-                    entity.Roles.Select(role =>
-                                                new UserRole
-                                                {
-                                                    RoleId = role.Id,
-                                                    UserId = user.Id
-                                                }).ToList()
-                );
+            if (!result.Succeeded)
+                throw new Exception("Erro ao salvar usuário.");
 
-                return user;
-            }
-
-            throw new Exception("Error saving of entity");
+            return _mapper.Map<UserModel>(user);
         }
 
-        public async Task<User> Update(User entity, string password)
+        public async Task<UserModel> Update(UserIdDto entity)
         {
             var user = await _userService.GetByIdAsync(entity.Id);
-            user.Name = string.IsNullOrEmpty(entity.Name) ? user.Name : entity.Name;
-            user.Email = string.IsNullOrEmpty(entity.Email) ? user.Email : entity.Email;
-            user.UserName = string.IsNullOrEmpty(entity.UserName) ? user.UserName : entity.UserName;
-            user.ChangeDate = DateTime.Now;
+            if (user is null)
+                throw new Exception("Usuário não encontrado.");
 
-            var result = !string.IsNullOrEmpty(password) ? (await _authService.UpdateUserWithPass(user, password)).Succeeded : (await _authService.UpdateUserNoPass(user)).Succeeded;
+            await _userService.DeleteRoles(user.Id);
+            var updated = _mapper.Map(entity, user);
+            updated.ChangeDate = DateTime.Now;
 
-            if (result)
-            {
-                if (await _userService.DeleteRoles(user.Id))
-                {
-                    var users = entity.Roles.Select(role => new UserRole { RoleId = role.Id, UserId = user.Id }).ToList();
-                    user.Roles = await _userService.AddRoles(users);
-                }
+            var result = !string.IsNullOrEmpty(entity.Password) ?
+                await _authService.UpdateUserWithPass(updated, entity.Password) :
+                await _authService.UpdateUserNoPass(updated);
+            if (!result.Succeeded)
+                throw new Exception("Erro ao salvar usuário.");
 
-                return user;
-            }
-
-            throw new Exception("Error update of entity");
+            return _mapper.Map<UserModel>(updated);
         }
 
         public async Task<GenericCommandResult<object>> RegisterRolesToUser(List<UserRole> entity)
@@ -151,7 +147,7 @@ namespace Nexus.Auth.Repository.Handlers
 
             return tokenHandler.WriteToken(token);
         }
-        
+
         public async Task<bool> Logout()
         {
             var success = await _authService.Logout();

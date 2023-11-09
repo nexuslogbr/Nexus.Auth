@@ -1,14 +1,15 @@
 ﻿using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Repository.Dtos.Auth;
 using Nexus.Auth.Repository.Dtos.User;
+using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Utils;
 
 namespace Nexus.Auth.Repository.Handlers.Interfaces
 {
     public interface IAuthHandler
     {
-        Task<User> Register(User entity, string password);
-        Task<User> Update(User entity, string password);
+        Task<UserModel> Register(UserDto entity);
+        Task<UserModel> Update(UserIdDto entity);
         Task<TokenDto> Login(UserLoginDto dto, bool isEmail);
         Task<GenericCommandResult<object>> RegisterRolesToUser(List<UserRole> entity);
         Task<bool> Logout();
