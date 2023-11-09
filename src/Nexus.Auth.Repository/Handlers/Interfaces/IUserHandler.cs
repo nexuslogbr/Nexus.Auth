@@ -1,11 +1,12 @@
 ﻿using Nexus.Auth.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Nexus.Auth.Repository.Dtos.Generics;
+using Nexus.Auth.Repository.Dtos.User;
 using Nexus.Auth.Repository.Models;
 
 namespace Nexus.Auth.Repository.Handlers.Interfaces
 {
-    public interface IUserHandler<T> : IBaseHandler<T> where T : class
+    public interface IUserHandler
     {
         Task<PageList<UserModel>> GetAll(PageParams pageParams);
         Task<User> GetById(int id);
@@ -18,5 +19,8 @@ namespace Nexus.Auth.Repository.Handlers.Interfaces
         Task<bool> UpdateRoleByUser(User user, Role role);
         Task<IdentityResult> RemoveFromRoles(User user, IList<string> userRoles);
         Task<bool> ChangeStatus(ChangeStatusDto dto);
+        Task<bool> Delete(int id);
+        Task<UserModel> Add(UserDto dto);
+        Task<UserModel> Update(UserIdDto entity);
     }
 }

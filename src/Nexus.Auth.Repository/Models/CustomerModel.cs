@@ -1,4 +1,6 @@
 ﻿
+using Nexus.Auth.Repository.Dtos.Customer;
+
 namespace Nexus.Auth.Repository.Models
 {
     public class CustomerModel
@@ -8,5 +10,7 @@ namespace Nexus.Auth.Repository.Models
         public string? TaxCode { get; set; }
         public string? ChangeDate { get; set; }
         public bool Blocked { get; set; }
+        public AddressDto? Address { get; set; }
+        public ContactDto[]? Contacts { get; set; }
     }
 }

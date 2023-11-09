@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Nexus.Auth.Repository.Utils;
 using Nexus.Auth.Repository.Dtos.Role;
+using Nexus.Auth.Repository.Handlers;
 
 namespace Nexus.Auth.Api.Controllers
 {
@@ -146,6 +147,29 @@ namespace Nexus.Auth.Api.Controllers
 
                 if (result)
                     return new GenericCommandResult<object>(true, "Removed", result, StatusCodes.Status200OK);
+
+                return new GenericCommandResult<object>(false, "Error in saving", null, StatusCodes.Status404NotFound);
+            }
+            catch (Exception ex)
+            {
+                return new GenericCommandResult<object>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        /// POST: api/v1/Role/ChangeStatus
+        /// <summary>
+        /// Endpoint to change the status for role
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ChangeStatus")]
+        public async Task<GenericCommandResult<object>> ChangeStatus(ChangeStatusDto obj)
+        {
+            try
+            {
+                var result = await _roleHandler.ChangeStatus(obj);
+
+                if (result)
+                    return new GenericCommandResult<object>(true, "Updated", result, StatusCodes.Status200OK);
 
                 return new GenericCommandResult<object>(false, "Error in saving", null, StatusCodes.Status404NotFound);
             }

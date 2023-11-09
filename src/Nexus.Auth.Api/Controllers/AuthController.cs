@@ -20,10 +20,10 @@ namespace Nexus.Auth.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthHandler _authHandler;
-        private readonly IUserHandler<User> _userHandler;
+        private readonly IUserHandler _userHandler;
         private readonly IMapper _mapper;
 
-        public AuthController(IAuthHandler authHandler, IUserHandler<User> userHandler, IMapper mapper)
+        public AuthController(IAuthHandler authHandler, IUserHandler userHandler, IMapper mapper)
         {
             _authHandler = authHandler;
             this._userHandler = userHandler;
@@ -36,19 +36,19 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Register")]
-        public async Task<GenericCommandResult<User>> Register(UserDto dto)
+        public async Task<GenericCommandResult<UserModel>> Register(UserDto dto)
         {
             try
             {
                 if (dto.Roles.Count == 0)
-                    return new GenericCommandResult<User>(true, "Role list is required", null, StatusCodes.Status204NoContent);
+                    return new GenericCommandResult<UserModel>(true, "Role list is required", null, StatusCodes.Status204NoContent);
 
-                var result = await _authHandler.Register(_mapper.Map<User>(dto), dto.Password);
-                return new GenericCommandResult<User>(true, "User created", result, StatusCodes.Status200OK);
+                var result = await _authHandler.Register(dto);
+                return new GenericCommandResult<UserModel>(true, "User created", result, StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult<User>(true, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<UserModel>(true, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
