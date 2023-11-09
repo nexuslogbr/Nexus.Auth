@@ -13,6 +13,7 @@ using Nexus.Auth.Repository.Utils;
 using Nexus.Auth.Repository.Dtos.User;
 using Nexus.Auth.Repository.Dtos.Auth;
 using Nexus.Auth.Repository.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -41,6 +42,8 @@ namespace Nexus.Auth.Repository.Handlers
         public async Task<UserModel> Register(UserDto entity)
         {
             var user = _mapper.Map<User>(entity);
+            user.ChangeDate = DateTime.Now;
+            user.RegisterDate = DateTime.Now;
             var result = await _authService.Register(user, entity.Password);
 
             if (!result.Succeeded)
@@ -57,6 +60,7 @@ namespace Nexus.Auth.Repository.Handlers
 
             await _userService.DeleteRoles(user.Id);
             var updated = _mapper.Map(entity, user);
+            updated.ChangeDate = DateTime.Now;
 
             var result = !string.IsNullOrEmpty(entity.Password) ?
                 await _authService.UpdateUserWithPass(updated, entity.Password) :

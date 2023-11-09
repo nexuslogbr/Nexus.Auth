@@ -79,6 +79,8 @@ namespace Nexus.Auth.Repository.Handlers
         public async Task<UserModel> Add(UserDto entity)
         {
             var user = _mapper.Map<User>(entity);
+            user.ChangeDate = DateTime.Now;
+            user.RegisterDate = DateTime.Now;
             var result = await _userService.Add(user);
 
             if (result)
@@ -92,6 +94,7 @@ namespace Nexus.Auth.Repository.Handlers
             var user = await _userService.GetByIdAsync(entity.Id);
             await _userService.DeleteRoles(user.Id);
             var updated = _mapper.Map(entity, user);
+            updated.ChangeDate = DateTime.Now;
             var result = await _userService.Update(updated);
             
             if (result)

@@ -17,12 +17,19 @@ namespace Nexus.Auth.Api.Helpers
                 .ReverseMap()
                 .ForMember(d => d.Roles, src => src.Ignore())
                 .ForMember(d => d.UserRoles, src => src.MapFrom(e => e.Roles));
-            CreateMap<User, UserIdDto>().ReverseMap();
+            CreateMap<User, UserIdDto>()
+                .ReverseMap()
+                .ForMember(d => d.Roles, src => src.Ignore())
+                .ForMember(d => d.UserRoles, src => src.MapFrom(e => e.Roles));
             CreateMap<User, UserModel>().ReverseMap();
             CreateMap<User, GetById>().ReverseMap();
 
             CreateMap<Role, RoleIdDto>().ReverseMap();
             CreateMap<Role, RoleUserDto>().ReverseMap();
+            CreateMap<UserRole, RoleUserDto>()
+                .ReverseMap()
+                .ForMember(d => d.Id, src => src.Ignore())
+                .ForMember(d => d.RoleId, src => src.MapFrom(e => e.Id));
             CreateMap<Role, RoleModel>()
                 .ForMember(d => d.Menus, src => src.MapFrom(e => e.RoleMenus))
                 .ReverseMap();

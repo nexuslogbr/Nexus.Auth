@@ -64,8 +64,6 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<bool> Add(User entity)
         {
-            entity.ChangeDate = DateTime.Now;
-            entity.RegisterDate = DateTime.Now;
             var result = await _userManager.CreateAsync(entity);
             return result.Succeeded;
         }
@@ -87,7 +85,6 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<bool> Update(User entity)
         {
-            entity.ChangeDate = DateTime.Now;
             var result = await _userManager.UpdateAsync(entity);
             return result.Succeeded;
         }
