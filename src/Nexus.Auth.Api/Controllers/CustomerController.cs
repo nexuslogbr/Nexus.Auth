@@ -53,7 +53,7 @@ namespace Nexus.Api.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<IActionResult> Put(CustomerDto obj) => Ok(await _customerService.Put(obj, _configuration["ConnectionStrings:NexusCustomerApi"]));
+        public async Task<IActionResult> Put(CustomerIdDto obj) => Ok(await _customerService.Put(obj, _configuration["ConnectionStrings:NexusCustomerApi"]));
 
         /// POST: api/v1/Customer/Remove
         /// <summary>
