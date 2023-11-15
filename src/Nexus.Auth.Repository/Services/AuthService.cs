@@ -30,9 +30,28 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<Role> FindRoleByRoleId(int id) => await _roleManager.FindByIdAsync(id.ToString());
 
-        public async Task<User> FindUserByUserName(string username) => await _userManager.FindByNameAsync(username);
+        public async Task<User> FindUserByUserName(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null) { return null; }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            user.Roles = await _roleManager.Roles.Where(r => roles.Contains(r.Name)).ToListAsync();
+
+            return user;
+        } 
         
-        public async Task<User> FindUserByEmail(string email) => await _userManager.FindByEmailAsync(email);
+        public async Task<User> FindUserByEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) { return null; }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            user.Roles = await _roleManager.Roles.Where(r => roles.Contains(r.Name)).ToListAsync();
+
+            return user;
+
+        }
 
         public async Task<IdentityResult> Register(User model, string password) 
         {

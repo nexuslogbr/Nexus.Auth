@@ -23,9 +23,11 @@ namespace Nexus.Auth.Api.Helpers
                 .ForMember(d => d.UserRoles, src => src.MapFrom(e => e.Roles));
             CreateMap<User, UserModel>().ReverseMap();
             CreateMap<User, GetById>().ReverseMap();
+            CreateMap<User, UserResult>().ReverseMap();
 
             CreateMap<Role, RoleIdDto>().ReverseMap();
             CreateMap<Role, RoleUserDto>().ReverseMap();
+            CreateMap<Role, RoleResult>().ReverseMap();
             CreateMap<UserRole, RoleUserDto>()
                 .ReverseMap()
                 .ForMember(d => d.Id, src => src.Ignore())
