@@ -13,7 +13,7 @@ using Nexus.Auth.Repository.Utils;
 using Nexus.Auth.Repository.Dtos.User;
 using Nexus.Auth.Repository.Dtos.Auth;
 using Nexus.Auth.Repository.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Nexus.Auth.Repository.Dtos.Role;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -98,7 +98,7 @@ namespace Nexus.Auth.Repository.Handlers
             return new GenericCommandResult<object>(true, "Successful creation", true, StatusCodes.Status200OK);
         }
 
-        public async Task<TokenDto> Login(UserLoginDto dto, bool isEmail)
+        public async Task<AuthResult> Login(UserLoginDto dto, bool isEmail)
         {
             User user = null;
             if (isEmail)
@@ -111,7 +111,12 @@ namespace Nexus.Auth.Repository.Handlers
             var result = await _authService.CheckPasswordSignIn(user, dto.Password);
 
             if (result.Succeeded)
-                return new TokenDto { Token = await GenerateJWToken(user) };
+                return new AuthResult
+                {
+                    Token = await GenerateJWToken(user),
+                    User = _mapper.Map<UserResult>(user),
+                    Roles = _mapper.Map<RoleResult[]>(user.Roles)
+                };
 
             return null;
         }

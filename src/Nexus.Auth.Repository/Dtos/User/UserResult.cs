@@ -1,0 +1,10 @@
+﻿
+namespace Nexus.Auth.Repository.Dtos.User
+{
+    public class UserResult
+    {
+        public string? Name { get; set; }
+        public string? UserName { get; set; }
+        public string? Email { get; set; }
+    }
+}
