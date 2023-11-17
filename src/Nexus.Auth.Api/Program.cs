@@ -27,7 +27,7 @@ IdentityBuilder identityBuilder = builder.Services.AddIdentityCore<User>(options
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 4;
+    options.Password.RequiredLength = 6;
 });
 
 identityBuilder = new IdentityBuilder(identityBuilder.UserType, typeof(Role), builder.Services);
