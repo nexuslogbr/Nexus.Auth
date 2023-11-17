@@ -72,11 +72,11 @@ namespace Nexus.Auth.Api.Controllers
                         result, 
                         StatusCodes.Status200OK);
 
-                return new GenericCommandResult<AuthResult>(true, "Invalid user or password", null, StatusCodes.Status400BadRequest);
+                return new GenericCommandResult<AuthResult>(false, "Invalid user or password", null, StatusCodes.Status400BadRequest);
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult<AuthResult>(true, "Invalids data" + ex.Message, null, StatusCodes.Status400BadRequest);
+                return new GenericCommandResult<AuthResult>(false, "Invalids data" + ex.Message, null, StatusCodes.Status400BadRequest);
             }
         }
 
