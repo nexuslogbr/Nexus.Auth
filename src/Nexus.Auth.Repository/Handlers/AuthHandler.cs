@@ -105,18 +105,21 @@ namespace Nexus.Auth.Repository.Handlers
                 user = await _authService.FindUserByEmail(dto.UserName);
             else if (!string.IsNullOrEmpty(dto.UserName))
                 user = await _authService.FindUserByUserName(dto.UserName);
-            else
+
+            if (user is null)
                 return null;
+            else
+            {
+                var result = await _authService.CheckPasswordSignIn(user, dto.Password);
 
-            var result = await _authService.CheckPasswordSignIn(user, dto.Password);
-
-            if (result.Succeeded)
-                return new AuthResult
-                {
-                    Token = await GenerateJWToken(user),
-                    User = _mapper.Map<UserResult>(user),
-                    Roles = _mapper.Map<RoleResult[]>(user.Roles)
-                };
+                if (result.Succeeded)
+                    return new AuthResult
+                    {
+                        Token = await GenerateJWToken(user),
+                        User = _mapper.Map<UserResult>(user),
+                        Roles = _mapper.Map<RoleResult[]>(user.Roles)
+                    };
+            }
 
             return null;
         }

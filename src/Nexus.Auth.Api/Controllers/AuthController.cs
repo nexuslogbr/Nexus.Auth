@@ -76,7 +76,7 @@ namespace Nexus.Auth.Api.Controllers
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult<AuthResult>(false, "Invalids data" + ex.Message, null, StatusCodes.Status400BadRequest);
+                return new GenericCommandResult<AuthResult>(false, "Invalids data" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
