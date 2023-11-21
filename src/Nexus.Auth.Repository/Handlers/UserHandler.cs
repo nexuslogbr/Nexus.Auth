@@ -58,6 +58,9 @@ namespace Nexus.Auth.Repository.Handlers
         public async Task<User> GetById(int id)
         {
             var user = await _userService.GetByIdAsync(id);
+
+            if (user is null) return null;
+
             user.Roles = user is not null ? await _roleService.GetByUserIdAsync(user.Id) : throw new Exception("Error load entity");
             return user;
         }
