@@ -130,7 +130,7 @@ namespace Nexus.Auth.Api.Controllers
             if (user is null)
                 return new GenericCommandResult<IdentityResult>(true, "User not found", null, StatusCodes.Status400BadRequest);
 
-            var token = await _userHandler.ResetPasswordAsync(user, HttpUtility.UrlDecode(dto.Token), dto.Password);
+            var token = await _userHandler.ResetPasswordAsync(user, HttpUtility.UrlDecode(dto.ResetPasswordToken), dto.NewPassword);
 
             return new GenericCommandResult<IdentityResult>(true, "Success", token, StatusCodes.Status200OK);
         }

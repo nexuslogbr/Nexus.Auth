@@ -27,6 +27,8 @@ namespace Nexus.Auth.Domain.Entities
 
         [NotMapped]
         public IList<Role> Roles { get; set; }
+        [NotMapped]
+        public string ResetPasswordToken { get; set; }
         //public string Name { get; private set; }
 
         //public User(string fullName)
