@@ -110,6 +110,7 @@ namespace Nexus.Auth.Repository.Handlers
                 return null;
             else
             {
+                user.ResetPasswordToken = await _userService.GeneratePasswordResetTokenAsync(user);
                 var result = await _authService.CheckPasswordSignIn(user, dto.Password);
 
                 if (result.Succeeded)
