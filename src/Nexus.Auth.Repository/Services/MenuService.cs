@@ -40,6 +40,11 @@ namespace Nexus.Auth.Repository.Services
             return await roleMenus.Where(x => x.Menu != null).Select(x => x.Menu).ToListAsync();
         }
 
+        public async Task<IList<RoleMenu>> GetMenuByRoleIdAsync(int roleId)
+        {
+            return await _context.RoleMenus.Include(_ => _.Menu).Where(x => x.RoleId == roleId).ToListAsync();
+        }
+
         public async Task<Menu> GetByNameAsync(string name)
         {
             return await _context.Menus.FirstOrDefaultAsync(x => x.Name == name);
@@ -48,6 +53,12 @@ namespace Nexus.Auth.Repository.Services
         public async Task<bool> Add(Menu entity)
         {
             var result = await _context.Menus.AddAsync(entity);
+            return await SaveChangesAsync();
+        }
+
+        public async Task<bool> AddRange(IList<RoleMenu> menus)
+        {
+            await _context.RoleMenus.AddRangeAsync(menus);
             return await SaveChangesAsync();
         }
 
@@ -72,6 +83,12 @@ namespace Nexus.Auth.Repository.Services
         public async Task<bool> DeleteRange(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> DeleteRange(IList<RoleMenu> menus)
+        {
+            _context.RoleMenus.RemoveRange(menus);
+            return await SaveChangesAsync();
         }
 
         public async Task<bool> SaveChangesAsync()

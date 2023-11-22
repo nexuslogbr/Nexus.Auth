@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Nexus.Auth.Repository.Dtos.Role;
 using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Services;
+using Nexus.Auth.Repository.Utils;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -59,17 +60,29 @@ namespace Nexus.Auth.Repository.Handlers
         public async Task<RoleModel> Update(RoleIdDto entity)
         {
             var role = await _roleService.GetByIdAsync(entity.Id);
-            if (role is null)
-                throw new Exception("Cargo inválido.");
-            
-            await _roleService.DeleteMenus(role.Id);
+            var menus = await _menuService.GetByRoleIdAsync(entity.Id);
 
-            var updated = _mapper.Map(entity, role);
-            var response = await _roleService.Update(updated);
-            if (!response)
-                throw new Exception("Erro ao salvar cargo.");
+            if (role is null)
+                throw new Exception("Perfil inválido.");
+            else if (menus.Count == 0)
+                throw new Exception("Perfil sem menus vinculados.");
+
+            var currentDate = DateTimeExtensions.GetCurrentDate();
+            var roleMenusToSave = entity.Menus.Select(menu => new RoleMenu { RoleId = role.Id, MenuId = menu.Id, RegisterDate = currentDate, ChangeDate = currentDate, Blocked = false }).ToList();
+            var roleMenusToRemove = await _menuService.GetMenuByRoleIdAsync(role.Id);
+
+            if (await _menuService.AddRange(roleMenusToSave))
+            {
+                await _menuService.DeleteRange(roleMenusToRemove);
+                var updated = _mapper.Map(entity, role);
+                var response = await _roleService.Update(updated);
+                if (!response)
+                    throw new Exception("Erro ao salvar o perfil.");
             
-            return _mapper.Map<RoleModel>(updated);
+                return _mapper.Map<RoleModel>(updated);
+            }
+            else
+                throw new Exception("Menu inválido.");
         }
 
         public async Task<bool> Delete(int id)
