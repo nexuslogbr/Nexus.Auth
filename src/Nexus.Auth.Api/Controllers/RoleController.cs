@@ -129,7 +129,7 @@ namespace Nexus.Auth.Api.Controllers
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult<RoleModel>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<RoleModel>(false, ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
