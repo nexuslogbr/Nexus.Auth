@@ -128,7 +128,7 @@ namespace Nexus.Auth.Api.Controllers
             var user = await _userHandler.GetByEmail(dto.Email);
 
             if (user is null)
-                return new GenericCommandResult<IdentityResult>(true, "User not found", null, StatusCodes.Status400BadRequest);
+                return new GenericCommandResult<IdentityResult>(false, "User not found", null, StatusCodes.Status404NotFound);
 
             var decodeToken = dto.Logged ? dto.ResetPasswordToken: HttpUtility.UrlDecode(dto.ResetPasswordToken);
             var result = await _userHandler.ResetPasswordAsync(user, decodeToken, dto.NewPassword);
