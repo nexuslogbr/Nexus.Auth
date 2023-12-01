@@ -7,6 +7,7 @@ using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.UploadFile;
 using Nexus.Auth.Repository.Services;
 using Nexus.Auth.Repository.Services.Interfaces;
+using Nexus.Auth.Repository.Dtos.VehicleInfo;
 
 namespace Nexus.Auth.Api.Controllers
 {
@@ -65,6 +66,8 @@ namespace Nexus.Auth.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Root.Errors);
 
+            var datas = _uploadFileService.GetFileData(obj.File, obj.Type);
+
             var response = await _uploadFileService.Post(obj, _configuration["ConnectionStrings:NexusUploadApi"]);
             if (!response.Success)
                 return BadRequest(response);
@@ -72,8 +75,7 @@ namespace Nexus.Auth.Api.Controllers
             var registerResult = new UploadFileRegisterResultDto();
             if (obj.Type == UploadTypeEnum.Chassis)
             {
-                var vehicleResponse = await _vehicleInfoService.PostRange(response.Data.Data,
-                    _configuration["ConnectionStrings:NexusVehicleApi"]);
+                var vehicleResponse = await _vehicleInfoService.PostRange(response.Data.Data, _configuration["ConnectionStrings:NexusVehicleApi"]);
                 
                 if (!vehicleResponse.Success)
                     return BadRequest(vehicleResponse);

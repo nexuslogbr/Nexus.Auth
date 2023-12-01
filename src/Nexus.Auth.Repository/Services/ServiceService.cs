@@ -72,5 +72,10 @@ namespace Nexus.Auth.Repository.Services
 
             return new GenericCommandResult<TokenDto>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
+
+        public Task<GenericCommandResult<ServiceResponseDto>> GetByName(GetByName dto, string path)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
