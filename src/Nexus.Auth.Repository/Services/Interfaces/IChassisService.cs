@@ -8,5 +8,5 @@ public interface IChassisService
 {
     Task<GenericCommandResult<ChassisResponseDto>> GetById(GetById dto, string path);
     Task<GenericCommandResult<PageList<ChassisResponseDto>>> GetAll(PageParams pageParams, string path);
-    Task<GenericCommandResult<ChassisResponseDto>> GetBySerialNumber(GetBySerialNumber dto, string path);
+    Task<GenericCommandResult<ChassisResponseDto[]>> GetBySerialNumber(GetBySerialNumber dto, string path);
 }
