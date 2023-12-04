@@ -34,13 +34,13 @@ public class ChassisService : IChassisService
         return new GenericCommandResult<PageList<ChassisResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
-    public async Task<GenericCommandResult<ChassisResponseDto>> GetBySerialNumber(GetBySerialNumber dto, string path)
+    public async Task<GenericCommandResult<ChassisResponseDto[]>> GetBySerialNumber(GetBySerialNumber dto, string path)
     {
-        var result = await _accessDataService.PostDataAsync<ChassisResponseDto>(path, "api/v1/Chassis/GetBySerialNumber", dto);
+        var result = await _accessDataService.PostDataAsync<ChassisResponseDto[]>(path, "api/v1/Chassis/GetBySerialNumber", dto);
         if (result is not null)
-            return new GenericCommandResult<ChassisResponseDto>(true, "Success", result, StatusCodes.Status200OK);
+            return new GenericCommandResult<ChassisResponseDto[]>(true, "Success", result, StatusCodes.Status200OK);
 
-        return new GenericCommandResult<ChassisResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+        return new GenericCommandResult<ChassisResponseDto[]>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
 }
