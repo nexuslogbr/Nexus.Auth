@@ -14,4 +14,5 @@ public interface IVehicleInfoService
     Task<GenericCommandResult<UploadFileRegisterResultDto>> PostRange(IEnumerable<string> entities, string path);
     Task<GenericCommandResult<TokenDto>> Delete(GetById dto, string path);
     Task<GenericCommandResult<VehicleInfoResponseDto>> GetById(GetById dto, string path);
+    Task<GenericCommandResult<VehicleInfoResponseDto>> GetByName(GetByName dto, string path);
 }

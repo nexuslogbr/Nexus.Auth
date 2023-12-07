@@ -80,8 +80,12 @@ public class ModelService : IModelService
         return new GenericCommandResult<TokenDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
-    public Task<GenericCommandResult<ModelResponseDto>> GetByName(GetByName dto, string path)
+    public async Task<GenericCommandResult<ModelResponseDto>> GetByName(GetByName obj, string path)
     {
-        throw new NotImplementedException();
+        var result = await _accessDataService.PostDataAsync<ModelResponseDto>(path, "api/v1/Model/GetByName", obj);
+        if (result is not null)
+            return new GenericCommandResult<ModelResponseDto>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<ModelResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 }

@@ -12,21 +12,35 @@ using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Auth.Repository.Utils;
 using Nexus.Auth.Repository.Dtos.VehicleInfo;
 using Nexus.Auth.Repository.Models;
+using Nexus.Auth.Repository.Interfaces;
 
 namespace Nexus.Auth.Repository.Services;
 
 public class UploadFileService : IUploadFileService
 {
     private readonly IAccessDataService _accessDataService;
+    private readonly ICustomerService _customerService;
+    private readonly IRequesterService _requesterService;
+    private readonly IManufacturerService _manufacturerService;
+    private readonly IModelService _modelService;
+    private readonly IServiceService _serviceService;
+
     private readonly IConfiguration _configuration;
     private Dictionary<string, int> _headers;
     private Dictionary<UploadTypeEnum, string[]> _validHeaders = new();
     private readonly string[] CHASSIS_VALID_HEADERS = { "cliente", "código solicitante", "solicitante", "fabricante", "modelo", "chassi", "data faturamento", "serviço", "rua", "vaga", "placa" };
 
-    public UploadFileService(IAccessDataService accessDataService, IConfiguration configuration)
+    public UploadFileService(IAccessDataService accessDataService, IConfiguration configuration,
+        ICustomerService customerService, IRequesterService requesterService, IManufacturerService manufacturerService, IModelService modelService, IServiceService serviceService)
     {
         _accessDataService = accessDataService;
         _configuration = configuration;
+
+        _customerService = customerService;
+        _requesterService = requesterService;
+        _manufacturerService = manufacturerService;
+        _modelService = modelService;
+        _serviceService = serviceService;
         _validHeaders.Add(UploadTypeEnum.Chassis, CHASSIS_VALID_HEADERS);
     }
 
@@ -90,6 +104,7 @@ public class UploadFileService : IUploadFileService
             {
                 var isHeaderLine = true;
                 var i = 0;
+                var errors = new List<IList<FileErrorDto>>();
                 while (reader.Read()) //Each row of the file
                 {
                     if (i > reader.RowCount)
@@ -110,7 +125,7 @@ public class UploadFileService : IUploadFileService
                             var res = GetLineData(reader);
                             stringList.Add(res);
 
-                            var valid = ValidateDataAsync(res);
+                            errors.Add(ValidateDataAsync(res, i).Result);
                         }
                     }
                     i++;
@@ -122,40 +137,54 @@ public class UploadFileService : IUploadFileService
         return stringList;
     }
 
-    public async Task<bool> ValidateDataAsync(string data)
+    public async Task<IList<FileErrorDto>> ValidateDataAsync(string data, int line)
     {
+        var errorList = new List<FileErrorDto>();
         string[] collums = data.Split(';');
-        var datasToOS = new List<VehicleDto>();
 
         var chassi = collums[5].Split('=')[1];
+        if (!ValidateChassisNumber(chassi)) 
+            errorList.Add(new FileErrorDto() {  Error = "Chassi number invalid", Line = line });
+
         var invoice = Convert.ToDateTime(collums[6].Split('=')[1]);
         var park = Convert.ToInt32(collums[9].Split('=')[1]);
+        
+        var service = collums[7].Split('=')[1];
+        var services = service.Split(",");
 
         var register = new VehicleDto()
         {
             Customer = collums[0].Split('=')[1],
-            Requester = collums[1].Split('=')[1],
-            RequesterCode = collums[2].Split('=')[1],
+            RequesterCode = collums[1].Split('=')[1],
+            Requester = collums[2].Split('=')[1],
             Manufacturer = collums[3].Split('=')[1],
             Model = collums[4].Split('=')[1],
             ChassisNumber = chassi,
             Invoicing = invoice,
-            Service = collums[7].Split('=')[1],
+            Services = services.ToList(),
             Street = collums[8].Split('=')[1],
             Parking = park,
             Plate = collums[10].Split('=')[1]
         };
 
-        var customer = await _accessDataService.PostDataAsync<CustomerModel>(_configuration["ConnectionStrings:NexusCustomerApi"], "api/v1/Customer/GetByName", new GetByName { Name = register.Customer });
-        var requester = await _accessDataService.PostDataAsync<CustomerModel>(_configuration["ConnectionStrings:NexusVpcApi"], "api/v1/Customer/GetByName", new GetByName { Name = register.Customer });
-        var manufacturer = await _accessDataService.PostDataAsync<CustomerModel>(_configuration["ConnectionStrings:NexusVehicleApi"], "api/v1/Customer/GetByName", new GetByName { Name = register.Customer });
-        var model = await _accessDataService.PostDataAsync<CustomerModel>(_configuration["ConnectionStrings:NexusVehicleApi"], "api/v1/Customer/GetByName", new GetByName { Name = register.Customer });
-        var vehicle = await _accessDataService.PostDataAsync<CustomerModel>(_configuration["ConnectionStrings:NexusCustomerApi"], "api/v1/Customer/GetByName", new GetByName { Name = register.Customer });
-        var service = await _accessDataService.PostDataAsync<CustomerModel>(_configuration["ConnectionStrings:NexusVpcApi"], "api/v1/Customer/GetByName", new GetByName { Name = register.Customer });
+        // Tasks for API calls
+        var customerTask = _customerService.GetByName(new GetByName { Name = register.Customer }, _configuration["ConnectionStrings:NexusCustomerApi"]);
+        var manufacturerTask = _manufacturerService.GetByName(new GetByName { Name = register.Manufacturer }, _configuration["ConnectionStrings:NexusVehicleApi"]);
+        var modelTask = _modelService.GetByName(new GetByName { Name = register.Model }, _configuration["ConnectionStrings:NexusVehicleApi"]);
+        var requesterTask = _requesterService.GetByName(new GetByName { Name = register.Requester }, _configuration["ConnectionStrings:NexusVpcApi"]);
+        //var serviceTask = _serviceService.GetByName(new GetByName { Name = register.Service }, _configuration["ConnectionStrings:NexusVpcApi"]);
 
+        // Wait for all tasks to completed
+        await Task.WhenAll(customerTask, manufacturerTask, modelTask, requesterTask);
 
+        // Results
+        var customer = customerTask.Result.Data; if (customer.Id == 0) errorList.Add(new FileErrorDto() { Error = "Customer invalid", Line = line });
+        var manufacturer = manufacturerTask.Result.Data; if (manufacturer.Id == 0) errorList.Add(new FileErrorDto() { Error = "Manufacturer invalid", Line = line });
+        var model = modelTask.Result.Data; if (model.Id == 0) errorList.Add(new FileErrorDto() { Error = "Model invalid", Line = line });
+        var requester = requesterTask.Result.Data; if (requester.Id == 0) errorList.Add(new FileErrorDto() { Error = "Requester invalid", Line = line });
+        //var service = await serviceTask;
 
-        return true;
+        return errorList;
     }
 
     private bool ValidateChassisNumber(string chassis)

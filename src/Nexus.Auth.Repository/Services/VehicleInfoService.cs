@@ -52,4 +52,13 @@ public class VehicleInfoService : IVehicleInfoService
 
         return new GenericCommandResult<VehicleInfoResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
+
+    public async Task<GenericCommandResult<VehicleInfoResponseDto>> GetByName(GetByName dto, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<VehicleInfoResponseDto>(path, "api/v1/VehicleInfo/GetByName", dto);
+        if (result is not null)
+            return new GenericCommandResult<VehicleInfoResponseDto>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<VehicleInfoResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
 }

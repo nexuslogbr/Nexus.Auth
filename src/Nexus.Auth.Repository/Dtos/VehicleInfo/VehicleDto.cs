@@ -9,7 +9,7 @@
         public string? Model { get; set; } // Modelo
         public string? ChassisNumber { get; set; } // Chassi
         public DateTime? Invoicing { get; set; } // Data Faturamento
-        public string? Service { get; set; } // Serviço
+        public List<string>? Services { get; set; } // Serviço
         public string? Street { get; set; } // Rua
         public int? Parking { get; set; } // Vaga
         public string? Plate { get; set; } // Placa
