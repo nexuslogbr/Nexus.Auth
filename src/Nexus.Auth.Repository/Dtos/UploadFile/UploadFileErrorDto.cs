@@ -1,7 +1,6 @@
-﻿
-namespace Nexus.Auth.Repository.Dtos.Generics
+﻿namespace Nexus.Auth.Repository.Dtos.UploadFile
 {
-    public class FileErrorDto
+    public class UploadFileErrorDto
     {
         public int Line { get; set; }
         public string Error { get; set; }

@@ -14,5 +14,5 @@ public interface IUploadFileService
     Task<GenericCommandResult<TokenDto>> Delete(GetById obj, string path);
     Task<GenericCommandResult<UploadFileResponseDto>> Post(UploadFileDto dto, string path);
     Task<GenericCommandResult<UploadFileResponseDto>> ChangeInfo(UploadFileChangeInfoDto dto, string path);
-    IEnumerable<string> GetFileData(IFormFile formFile, UploadTypeEnum type);
+    IEnumerable<UploadFileResult> GetFileData(IFormFile formFile, UploadTypeEnum type);
 }

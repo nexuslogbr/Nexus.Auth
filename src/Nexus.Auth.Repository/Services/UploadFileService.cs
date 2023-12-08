@@ -92,10 +92,10 @@ public class UploadFileService : IUploadFileService
 
     #region Convert spreadsheet methods
 
-    public IEnumerable<string> GetFileData(IFormFile formFile, UploadTypeEnum type)
+    public IEnumerable<UploadFileResult> GetFileData(IFormFile formFile, UploadTypeEnum type)
     {
-        var stringList = new List<string>();
-        System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        var list = new List<UploadFileResult>();
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         using (var stream = new MemoryStream())
         {
             formFile.CopyTo(stream);
@@ -104,7 +104,6 @@ public class UploadFileService : IUploadFileService
             {
                 var isHeaderLine = true;
                 var i = 0;
-                var errors = new List<IList<FileErrorDto>>();
                 while (reader.Read()) //Each row of the file
                 {
                     if (i > reader.RowCount)
@@ -122,10 +121,10 @@ public class UploadFileService : IUploadFileService
 
                         if (!allValuesEmpty)
                         {
-                            var res = GetLineData(reader);
-                            stringList.Add(res);
-
-                            errors.Add(ValidateDataAsync(res, i).Result);
+                            var result = new UploadFileResult();
+                            result.Data = GetLineData(reader);
+                            result.Errors = ValidateDataAsync(result.Data, i).Result;
+                            list.Add(result);
                         }
                     }
                     i++;
@@ -134,23 +133,23 @@ public class UploadFileService : IUploadFileService
                 }
             }
         }
-        return stringList;
+        return list;
     }
 
-    public async Task<IList<FileErrorDto>> ValidateDataAsync(string data, int line)
+    public async Task<IList<UploadFileErrorDto>> ValidateDataAsync(string data, int line)
     {
-        var errorList = new List<FileErrorDto>();
+        var errorList = new List<UploadFileErrorDto>();
         string[] collums = data.Split(';');
 
         var chassi = collums[5].Split('=')[1];
         if (!ValidateChassisNumber(chassi)) 
-            errorList.Add(new FileErrorDto() {  Error = "Chassi number invalid", Line = line });
+            errorList.Add(new UploadFileErrorDto() {  Error = "Chassi number invalid", Line = line });
 
         var invoice = Convert.ToDateTime(collums[6].Split('=')[1]);
         var park = Convert.ToInt32(collums[9].Split('=')[1]);
         
-        var service = collums[7].Split('=')[1];
-        var services = service.Split(",");
+        var collum = collums[7].Split('=')[1];
+        var services = collum.Split(",");
 
         var register = new VehicleDto()
         {
@@ -172,17 +171,23 @@ public class UploadFileService : IUploadFileService
         var manufacturerTask = _manufacturerService.GetByName(new GetByName { Name = register.Manufacturer }, _configuration["ConnectionStrings:NexusVehicleApi"]);
         var modelTask = _modelService.GetByName(new GetByName { Name = register.Model }, _configuration["ConnectionStrings:NexusVehicleApi"]);
         var requesterTask = _requesterService.GetByName(new GetByName { Name = register.Requester }, _configuration["ConnectionStrings:NexusVpcApi"]);
-        //var serviceTask = _serviceService.GetByName(new GetByName { Name = register.Service }, _configuration["ConnectionStrings:NexusVpcApi"]);
 
         // Wait for all tasks to completed
         await Task.WhenAll(customerTask, manufacturerTask, modelTask, requesterTask);
 
         // Results
-        var customer = customerTask.Result.Data; if (customer.Id == 0) errorList.Add(new FileErrorDto() { Error = "Customer invalid", Line = line });
-        var manufacturer = manufacturerTask.Result.Data; if (manufacturer.Id == 0) errorList.Add(new FileErrorDto() { Error = "Manufacturer invalid", Line = line });
-        var model = modelTask.Result.Data; if (model.Id == 0) errorList.Add(new FileErrorDto() { Error = "Model invalid", Line = line });
-        var requester = requesterTask.Result.Data; if (requester.Id == 0) errorList.Add(new FileErrorDto() { Error = "Requester invalid", Line = line });
-        //var service = await serviceTask;
+        var customer = customerTask.Result.Data; if (customer.Id == 0) errorList.Add(new UploadFileErrorDto() { Error = "Customer invalid", Line = line });
+        var manufacturer = manufacturerTask.Result.Data; if (manufacturer.Id == 0) errorList.Add(new UploadFileErrorDto() { Error = "Manufacturer invalid", Line = line });
+        var model = modelTask.Result.Data; if (model.Id == 0) errorList.Add(new UploadFileErrorDto() { Error = "Model invalid", Line = line });
+        var requester = requesterTask.Result.Data; if (requester.Id == 0) errorList.Add(new UploadFileErrorDto() { Error = "Requester invalid", Line = line });
+
+
+        foreach (var name in services)
+        {
+            var serviceTask = _serviceService.GetByName(new GetByName { Name = name }, _configuration["ConnectionStrings:NexusVpcApi"]);
+            await Task.WhenAll(serviceTask);
+            var service = serviceTask.Result.Data; if (service.Id == 0) errorList.Add(new UploadFileErrorDto() { Error = "service invalid:" + name, Line = line });
+        }
 
         return errorList;
     }

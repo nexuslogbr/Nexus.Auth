@@ -61,14 +61,35 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Post")]
-        public async Task<IActionResult> Post([FromForm] UploadFileDto obj)
+        public async Task<IActionResult> Post([FromForm] UploadFileToSendDto obj)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Root.Errors);
 
             var datas = _uploadFileService.GetFileData(obj.File, obj.Type);
 
-            var response = await _uploadFileService.Post(obj, _configuration["ConnectionStrings:NexusUploadApi"]);
+            var errorList = new List<string>();
+            var file = new UploadFileDto
+            {
+                File = obj.File,
+                Type = obj.Type,
+            };
+
+            foreach (var data in datas)
+            {
+                if (data.Errors.Count > 0)
+                {
+                    foreach (var error in data.Errors)
+                    {
+                        errorList.Add("Erro:" + error.Error + ", Linha:" + error.Line);
+                        file.FailedRegisters++;
+                    }
+                }
+                else
+                    file.ConcludedRegisters++;
+            }
+
+            var response = await _uploadFileService.Post(file, _configuration["ConnectionStrings:NexusUploadApi"]);
             if (!response.Success)
                 return BadRequest(response);
 
@@ -76,7 +97,7 @@ namespace Nexus.Auth.Api.Controllers
             if (obj.Type == UploadTypeEnum.Chassis)
             {
                 var vehicleResponse = await _vehicleInfoService.PostRange(response.Data.Data, _configuration["ConnectionStrings:NexusVehicleApi"]);
-                
+
                 if (!vehicleResponse.Success)
                     return BadRequest(vehicleResponse);
 
@@ -95,6 +116,7 @@ namespace Nexus.Auth.Api.Controllers
             }
 
             return Ok(registerResult);
+            //return Ok();
         }
     }
 }
