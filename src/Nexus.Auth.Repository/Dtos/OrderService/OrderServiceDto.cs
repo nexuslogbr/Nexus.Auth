@@ -1,6 +1,7 @@
-﻿namespace Nexus.Auth.Repository.Dtos.VehicleInfo
+﻿
+namespace Nexus.Auth.Repository.Dtos.OrderService
 {
-    public class VehicleDto
+    public class OrderServiceDto
     {
         public string? Customer { get; set; } // Cliente
         public string? RequesterCode { get; set; } // Código Solicitante

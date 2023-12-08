@@ -66,28 +66,7 @@ namespace Nexus.Auth.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Root.Errors);
 
-            var datas = _uploadFileService.GetFileData(obj.File, obj.Type);
-
-            var errorList = new List<string>();
-            var file = new UploadFileDto
-            {
-                File = obj.File,
-                Type = obj.Type,
-            };
-
-            foreach (var data in datas)
-            {
-                if (data.Errors.Count > 0)
-                {
-                    foreach (var error in data.Errors)
-                    {
-                        errorList.Add("Erro:" + error.Error + ", Linha:" + error.Line);
-                        file.FailedRegisters++;
-                    }
-                }
-                else
-                    file.ConcludedRegisters++;
-            }
+            var file = _uploadFileService.FilterFileData(obj.File, obj.Type);
 
             var response = await _uploadFileService.Post(file, _configuration["ConnectionStrings:NexusUploadApi"]);
             if (!response.Success)
@@ -116,7 +95,6 @@ namespace Nexus.Auth.Api.Controllers
             }
 
             return Ok(registerResult);
-            //return Ok();
         }
     }
 }
