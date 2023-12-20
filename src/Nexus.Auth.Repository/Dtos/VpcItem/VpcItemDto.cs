@@ -19,6 +19,9 @@ public class VpcItemDto
     public int ManufacturerId { get; set; }
     public string ManufacturerName { get; set; }
 
+    [Required]
+    public int RequesterId { get; set; }
+
     public virtual IEnumerable<VpcItemYearDto> Years { get; set; }
     public virtual IEnumerable<VpcItemModelDto> Models { get; set; }
 }
