@@ -17,6 +17,8 @@ public class VpcStorageResponseDto
     public string CustomerName { get; set; }
     public int RequesterId { get; set; }
     public string RequesterName { get; set; }
+    public int? PlaceId { get; set; }
+    public string? PlaceName { get; set; }
     public int StorageCount { get; set; }
     public bool IsSameCustomer { get; set; }
     public int EntranceOrExitCount { get; set; }

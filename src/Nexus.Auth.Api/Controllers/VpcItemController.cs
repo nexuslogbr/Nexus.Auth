@@ -46,6 +46,14 @@ namespace Nexus.Auth.Api.Controllers
         [HttpPost("GetById")]
         public async Task<IActionResult> GetById(GetById obj) => Ok(await _vpcItemService.GetById(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
 
+        /// POST: api/v1/VpcItem/GetRequestersByItemId
+        /// <summary>
+        /// Endpoint to get requesters by Itemid
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("GetRequestersByItemId")]
+        public async Task<IActionResult> GetRequestersByItemId(GetById obj) => Ok(await _vpcItemService.GetRequestersByItemId(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+
         /// POST: api/v1/VpcItem/Post
         /// <summary>
         /// Endpoint to create new vpcItem
@@ -57,17 +65,13 @@ namespace Nexus.Auth.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Root.Errors);
 
-            var manufacturer = await _manufacturerService.GetById(
-                new GetById { Id = obj.ManufacturerId },
-                _configuration["ConnectionStrings:NexusVehicleApi"]);
+            var manufacturer = await _manufacturerService.GetById(new GetById { Id = obj.ManufacturerId }, _configuration["ConnectionStrings:NexusVehicleApi"]);
             if (!manufacturer.Success) return BadRequest(manufacturer);
 
             var modelList = new List<VpcItemModelDto>();
             foreach (var model in obj.Models)
             {
-                var currentModel = await _modelService.GetById(
-                    new GetById { Id = model.ModelId },
-                    _configuration["ConnectionStrings:NexusVehicleApi"]);
+                var currentModel = await _modelService.GetById(new GetById { Id = model.ModelId }, _configuration["ConnectionStrings:NexusVehicleApi"]);
                 if (!currentModel.Success) return BadRequest(model);
                 modelList.Add(new VpcItemModelDto
                 {

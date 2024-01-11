@@ -9,6 +9,8 @@ public class VpcStorageFlatResponseDto
     public string CustomerName { get; set; }
     public int RequesterId { get; set; }
     public string RequesterName { get; set; }
+    public int? PlaceId { get; set; }
+    public string? PlaceName { get; set; }
     public int StorageCount { get; set; }
     public DateTime ChangeDate { get; set; }
 }

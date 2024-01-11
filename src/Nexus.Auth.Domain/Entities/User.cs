@@ -25,18 +25,13 @@ namespace Nexus.Auth.Domain.Entities
 
         public List<UserRole> UserRoles { get; set; }
 
+        public int? PlaceId { get; set; }
+        [Column(TypeName = "varchar(20)")]
+        public string? PlaceName { get; set; }
+
         [NotMapped]
         public IList<Role> Roles { get; set; }
         [NotMapped]
         public string ResetPasswordToken { get; set; }
-        //public string Name { get; private set; }
-
-        //public User(string fullName)
-        //{
-        //    ExceptionDomain.ThrowException(string.IsNullOrEmpty(fullName), "Name invalid");
-
-        //    Name = fullName;
-        //}
-
     }
 }
