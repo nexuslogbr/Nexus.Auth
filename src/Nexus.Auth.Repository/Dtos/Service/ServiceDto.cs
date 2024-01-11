@@ -1,5 +1,4 @@
 ﻿using Nexus.Auth.Repository.Dtos.Customer;
-using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Enums;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,8 +13,8 @@ namespace Nexus.Auth.Repository.Dtos.Service
 
         public required int VpcItemId { get; set; }
 
-        public required IList<GetById> Requesters { get; set; }
-        public required IList<CustomerVpcDto> Customers { get; set; }
+        public required IList<CustomerVpcDto> ServiceCustomers { get; set; }
+        public required IList<ServiceRequesterDto> ServiceRequesters { get; set; }
     }
 
     public class ServicePutDto : ServiceDto
