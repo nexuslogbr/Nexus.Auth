@@ -48,6 +48,7 @@ namespace Nexus.Auth.API.Dependency
             services.AddScoped<IChassisService, ChassisService>();
             services.AddScoped<IVehicleInfoService, VehicleInfoService>();
             services.AddScoped<IUploadFileService, UploadFileService>();
+            services.AddScoped<IPlaceService, PlaceService>();
         }
     }
 }

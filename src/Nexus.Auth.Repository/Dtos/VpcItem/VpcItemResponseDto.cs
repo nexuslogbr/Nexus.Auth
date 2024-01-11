@@ -18,9 +18,7 @@ public class VpcItemResponseDto
     public int CategoryId { get; set; }
     public string CategoryName { get; set; }
 
-    public int RequesterId { get; set; }
-    public string RequesterName { get; set; }
-
+    public virtual IEnumerable<VpcItemRequesterResponseDto> Requesters { get; set; }
     public virtual IEnumerable<VpcItemYearResponseDto> Years { get; set; }
     public virtual IEnumerable<VpcItemModelResponseDto> Models { get; set; }
 }

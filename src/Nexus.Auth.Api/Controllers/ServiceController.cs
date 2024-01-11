@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Nexus.Auth.Repository.Dtos.Customer;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.Service;
 using Nexus.Auth.Repository.Dtos.VpcItem;
@@ -52,10 +53,9 @@ namespace Nexus.Api.Web.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Root.Errors);
 
-            var customers = await GetCustomerNames(obj.ServiceRelatedCustomers);
+            var customers = await GetCustomerNames(obj.ServiceCustomers);
             if (!customers.Any()) return BadRequest("Cliente não encontrado.");
 
-            obj.ServiceRelatedCustomers = customers;
             var response = await _serviceService.Post(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : BadRequest(response);
         }
@@ -71,10 +71,9 @@ namespace Nexus.Api.Web.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Root.Errors);
 
-            var customers = await GetCustomerNames(obj.ServiceRelatedCustomers);
+            var customers = await GetCustomerNames(obj.ServiceCustomers);
             if (!customers.Any()) return BadRequest("Cliente não encontrado.");
 
-            obj.ServiceRelatedCustomers = customers;
             var response = await _serviceService.Put(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : BadRequest(response);
         }
@@ -87,16 +86,14 @@ namespace Nexus.Api.Web.Controllers
         [HttpPost("Remove")]
         public async Task<IActionResult> Remove(GetById obj) => Ok(await _serviceService.Delete(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
 
-        private async Task<IEnumerable<ServiceRelatedCustomerDto>> GetCustomerNames(IEnumerable<ServiceRelatedCustomerDto> customers)
+        private async Task<List<CustomerVpcDto>> GetCustomerNames(IList<CustomerVpcDto> customers)
         {
-            var list = new List<ServiceRelatedCustomerDto>();
+            var list = new List<CustomerVpcDto>();
             foreach (var customer in customers)
             {
-                var currentModel = await _customerService.GetById(
-                    new GetById { Id = customer.CustomerId },
-                    _configuration["ConnectionStrings:NexusCustomerApi"]);
+                var currentModel = await _customerService.GetById(new GetById { Id = customer.CustomerId }, _configuration["ConnectionStrings:NexusCustomerApi"]);
                 if (!currentModel.Success) return null;
-                customer.CustomerName = currentModel.Data.Name;
+                customer.CustomerId = currentModel.Data.Id;
                 list.Add(customer);
             }
             return list;

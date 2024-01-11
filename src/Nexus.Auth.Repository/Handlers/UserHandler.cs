@@ -11,6 +11,7 @@ using Nexus.Auth.Repository.Utils;
 using Microsoft.Extensions.Configuration;
 using System.Web;
 using Nexus.Auth.Repository.Dtos.User;
+using Nexus.Auth.Repository.Services;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -22,6 +23,7 @@ namespace Nexus.Auth.Repository.Handlers
         private readonly ISmtpMailService _smtpMailService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+        private readonly IPlaceService _placeService;
 
         public UserHandler(
             IUserService<User> userService,
@@ -29,7 +31,8 @@ namespace Nexus.Auth.Repository.Handlers
             IMapper mapper,
             UserManager<User> userManager,
             ISmtpMailService smtpMailService,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IPlaceService placeService)
         {
             _userService = userService;
             _roleService = roleService;
@@ -37,6 +40,7 @@ namespace Nexus.Auth.Repository.Handlers
             _userManager = userManager;
             _smtpMailService = smtpMailService;
             _configuration = configuration;
+            _placeService = placeService;
         }
 
         public async Task<PageList<UserModel>> GetAll(PageParams pageParams)
@@ -82,6 +86,12 @@ namespace Nexus.Auth.Repository.Handlers
         public async Task<UserModel> Add(UserDto entity)
         {
             var user = _mapper.Map<User>(entity);
+
+            var place = (await _placeService.GetById(new GetById { Id = (int)entity.PlaceId }, _configuration["ConnectionStrings:NexusCustomerApi"])).Data;
+            if (place is null) throw new Exception("Local inválido");
+
+            user.PlaceId = place.Id;
+            user.PlaceName = place.Name;
             user.ChangeDate = DateTime.Now;
             user.RegisterDate = DateTime.Now;
             var result = await _userService.Add(user);
@@ -97,6 +107,12 @@ namespace Nexus.Auth.Repository.Handlers
             var user = await _userService.GetByIdAsync(entity.Id);
             await _userService.DeleteRoles(user.Id);
             var updated = _mapper.Map(entity, user);
+
+            var place = (await _placeService.GetById(new GetById { Id = (int)entity.PlaceId }, _configuration["ConnectionStrings:NexusCustomerApi"])).Data;
+            if (place is null)  throw new Exception("Local inválido");
+
+            updated.PlaceId = place.Id;
+            updated.PlaceName = place.Name;
             updated.ChangeDate = DateTime.Now;
             var result = await _userService.Update(updated);
             
