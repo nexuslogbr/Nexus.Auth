@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Nexus.Auth.Repository.Dtos.Auth;
 using Nexus.Auth.Repository.Dtos.Generics;
+using Nexus.Auth.Repository.Dtos.Requester;
 using Nexus.Auth.Repository.Dtos.VpcItem;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Auth.Repository.Utils;
@@ -32,6 +33,15 @@ public class VpcItemService : IVpcItemService
             return new GenericCommandResult<VpcItemResponseDto>(true, "Success", result, StatusCodes.Status200OK);
 
         return new GenericCommandResult<VpcItemResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
+
+    public async Task<GenericCommandResult<List<RequesterResponseDto>>> GetRequestersByItemId(GetById obj, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<List<RequesterResponseDto>>(path, "api/v1/VpcItem/GetRequestersByItemId", obj);
+        if (result is not null)
+            return new GenericCommandResult<List<RequesterResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<List<RequesterResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
 
     public async Task<GenericCommandResult<ChangeStatusDto>> ChangeStatus(ChangeStatusDto obj, string path)

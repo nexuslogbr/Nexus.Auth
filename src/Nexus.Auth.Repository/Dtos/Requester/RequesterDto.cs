@@ -6,6 +6,7 @@ public class RequesterDto
 {
     [Required]
     public string Name { get; set; }
+    public required string Code { get; set; }
 }
 
 public class RequesterPutDto : RequesterDto
