@@ -1,11 +1,11 @@
-﻿
-using Nexus.Auth.Repository.Dtos.UploadFile;
+﻿using Nexus.Auth.Repository.Dtos.UploadFile;
 using System.ComponentModel;
 
 namespace Nexus.Auth.Repository.Dtos.OrderService
 {
-    public class OrderServiceDto
+    public class OrderServiceResponseDto
     {
+        public int Id { get; set; }
         public string? Place { get; set; }
         public string? Customer { get; set; }
         public string? RequesterCode { get; set; }
@@ -21,8 +21,5 @@ namespace Nexus.Auth.Repository.Dtos.OrderService
         [DefaultValue(true)]
         public bool Success { get; set; }
         public string Error { get; set; }
-
-        public int ModelId { get; set; }
-        public int PlaceId { get; set; }
     }
 }
