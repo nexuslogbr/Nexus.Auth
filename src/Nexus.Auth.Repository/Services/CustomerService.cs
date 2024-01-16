@@ -36,6 +36,15 @@ namespace Nexus.Repository.Services
             return new GenericCommandResult<CustomerModel>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
+        public async Task<GenericCommandResult<CustomerModel>> GetByName(GetByName obj, string path)
+        {
+            var result = await _accessDataService.PostDataAsync<CustomerModel>(path, "api/v1/Customer/GetByName", obj);
+            if (result is not null)
+                return new GenericCommandResult<CustomerModel>(true, "Success", result, StatusCodes.Status200OK);
+
+            return new GenericCommandResult<CustomerModel>(true, "Error", default, StatusCodes.Status400BadRequest);
+        }
+
         public async Task<GenericCommandResult<ChangeStatusDto>> ChangeStatus(ChangeStatusDto obj, string path)
         {
             var result = await _accessDataService.PostDataAsync<ChangeStatusDto>(path, "api/v1/Customer/ChangeStatus", obj);

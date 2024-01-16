@@ -79,4 +79,9 @@ public class VpcItemService : IVpcItemService
 
         return new GenericCommandResult<TokenDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
+
+    public Task<GenericCommandResult<VpcItemResponseDto>> GetByName(GetByName dto, string path)
+    {
+        throw new NotImplementedException();
+    }
 }

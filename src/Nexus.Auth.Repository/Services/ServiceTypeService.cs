@@ -69,4 +69,9 @@ public class ServiceTypeService : IServiceTypeService
 
         return new GenericCommandResult<TokenDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
+
+    public Task<GenericCommandResult<ServiceTypeResponseDto>> GetByName(GetByName dto, string path)
+    {
+        throw new NotImplementedException();
+    }
 }

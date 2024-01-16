@@ -69,4 +69,9 @@ public class CategoryService : ICategoryService
 
         return new GenericCommandResult<TokenDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
+
+    public Task<GenericCommandResult<CategoryResponseDto>> GetByName(GetByName dto, string path)
+    {
+        throw new NotImplementedException();
+    }
 }
