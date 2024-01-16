@@ -1,4 +1,6 @@
-﻿namespace Nexus.Auth.Repository.Dtos.UploadFile
+﻿using Nexus.Auth.Repository.Dtos.UploadFile;
+
+namespace Nexus.Auth.Repository.Dtos.FileVpc
 {
     public class FileVpcResponseDto
     {

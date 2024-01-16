@@ -15,6 +15,7 @@ using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Interfaces;
 using Nexus.Auth.Repository.Dtos.OrderService;
 using Nexus.Auth.Repository.Dtos.Model;
+using System.Collections.Generic;
 
 namespace Nexus.Auth.Repository.Services;
 
@@ -145,7 +146,7 @@ public class UploadFileService : IUploadFileService
                         if (!allValuesEmpty)
                         {
                             var data = GetLineData(reader);
-                            var result = ValidateDataAsync(data, i).Result;
+                            var result = ValidateDataAsync(data, i, list).Result;
                             list.Add(result);
                         }
                     }
@@ -156,14 +157,13 @@ public class UploadFileService : IUploadFileService
         return list;
     }
 
-    public async Task<OrderServiceDto> ValidateDataAsync(string data, int line)
+    public async Task<OrderServiceDto> ValidateDataAsync(string data, int line, List<OrderServiceDto> list)
     {
         string[] collums = data.Split(';');
 
         var chassis = collums[4].Split('=')[1];
         var invoice = collums[5].Split('=')[1] != "" ? Convert.ToDateTime(collums[5].Split('=')[1]) : new DateTime();
         var park = collums[8].Split('=')[1] != "" ? Convert.ToInt32(collums[8].Split('=')[1]) : 0;
-
         var collum = collums[6].Split('=')[1];
         var services = collum.Split(",");
 
@@ -173,7 +173,7 @@ public class UploadFileService : IUploadFileService
             Customer = collums[1].Split('=')[1],
             RequesterCode = collums[2].Split('=')[1],
             Requester = collums[3].Split('=')[1],
-            Chassis = ValidateChassisNumber(chassis) ? chassis : "",
+            Chassis = chassis,
             Invoicing = invoice,
             Services = new List<FileVpcServiceDto>(),
             Street = collums[7].Split('=')[1],
@@ -194,10 +194,28 @@ public class UploadFileService : IUploadFileService
             await Task.WhenAll(vehicle);
 
             if (vehicle.Result.Data.Id > 0)
-                return new OrderServiceDto { Chassis = chassis, Success = false, Error = "Já existe uma ordem de serviço aberta para esse veículo" };
+            {
+                orderService.Success = false;
+                orderService.Error = "Já existe uma ordem de serviço aberta para esse veículo, Linha: " + line + ". ";
+            }
+            else if (list.Any(x => x.Chassis == orderService.Chassis))
+            {
+                orderService.Success = false;
+                orderService.Error = "Chassi duplicado no arquivo, Linha: " + line + ". ";
+            }
+            else if (!ValidateChassisNumber(chassis))
+            {
+
+                orderService.Success = false;
+                orderService.Error = "Chassi Inválido, Linha: " + line + ". ";
+            }
         }
-        else
-            return new OrderServiceDto { Chassis = chassis, Success = false, Error = "Chassi inválido" };
+        else if (!ValidateChassisNumber(chassis))
+        {
+
+            orderService.Success = false;
+            orderService.Error = "Chassi Inválido, Linha: " + line + ". ";
+        }
 
 
         var place = _placeService.GetByName(new GetByName { Name = orderService.Place }, _configuration["ConnectionStrings:NexusCustomerApi"]);
@@ -219,9 +237,8 @@ public class UploadFileService : IUploadFileService
         {
             var manufacturer = model.Manufacturer;
             orderService.ModelId = model.Id;
-            if (model.Id == 0)
+            if (model.Id > 0)
             {
-                orderService.Error += "Erro: Chassi Inválido" + line + ".  ";
                 if (!manufacturer.Wmis.Any(w => w.WMI == wmi)) { orderService.Error += "Chassi Inválido, Linha: " + line + ".  "; orderService.Success = false; };
 
             }
@@ -230,7 +247,7 @@ public class UploadFileService : IUploadFileService
         if (orderService.Plate.Length != 7)
         {
             orderService.Plate = "";
-            orderService.Error += "Chassi Inválido" + line + ".  ";
+            orderService.Error += "Placa Inválida" + line + ".  ";
         }
 
         foreach (var name in services)

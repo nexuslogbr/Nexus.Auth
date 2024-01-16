@@ -85,16 +85,8 @@ namespace Nexus.Auth.Api.Controllers
                 var vehicles = new List<VehicleDto>();
 
                 foreach (var os in file.OrderService)
-                {
                     if (os.Success)
-                        vehicles.Add(new VehicleDto
-                        {
-                            Chassis = os.Chassis,
-                            FileId = response.Data.Id,
-                            PlaceId = os.PlaceId,
-                            ModelId = os.ModelId
-                        });    
-                }
+                        vehicles.Add(new VehicleDto { Chassis = os.Chassis, FileId = response.Data.Id, PlaceId = os.PlaceId, ModelId = os.ModelId });    
 
                 var vehicleResponse = await _vehicleService.PostRange(vehicles, _configuration["ConnectionStrings:NexusVehicleApi"]);
 
@@ -102,16 +94,8 @@ namespace Nexus.Auth.Api.Controllers
                     return BadRequest(vehicleResponse);
             }
 
-            var res = new UploadFileDisplayDto();
-            int i = 1;
 
-            foreach (var os in file.OrderService)
-            {
-                res.Data += "Linha:" + i + "           " + os.Chassis + "          " + (os.Success ? "OK" : os.Error) + "\n";
-                i++;
-            }
-
-            return Ok(res);
+            return Ok(new UploadFileDisplayDto { FileName = response.Data.Name, ConcludedRegisters = file.ConcludedRegisters, FailedRegisters = file.FailedRegisters });
         }
     }
 }
