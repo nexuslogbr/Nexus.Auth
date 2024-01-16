@@ -79,4 +79,22 @@ public class ModelService : IModelService
 
         return new GenericCommandResult<TokenDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
+
+    public async Task<GenericCommandResult<ModelResponseDto>> GetByName(GetByName obj, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<ModelResponseDto>(path, "api/v1/Model/GetByName", obj);
+        if (result is not null)
+            return new GenericCommandResult<ModelResponseDto>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<ModelResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
+
+    public async Task<GenericCommandResult<ModelFromVdsResponseDto>> GetByVds(GetByVdsDto obj, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<ModelFromVdsResponseDto>(path, "api/v1/Model/GetByVds", obj);
+        if (result is not null)
+            return new GenericCommandResult<ModelFromVdsResponseDto>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<ModelFromVdsResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
 }
