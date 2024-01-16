@@ -27,14 +27,14 @@ public class UploadFileService : IUploadFileService
     private readonly IModelService _modelService;
     private readonly IServiceService _serviceService;
     private readonly IPlaceService _placeService;
-
+    private readonly IFileVpcService _fileVpcService;
     private readonly IConfiguration _configuration;
     private Dictionary<string, int> _headers;
     private Dictionary<UploadTypeEnum, string[]> _validHeaders = new();
     private readonly string[] CHASSIS_VALID_HEADERS = { "local", "cliente", "código solicitante", "solicitante", "chassi", "data faturamento", "serviço", "rua", "vaga", "placa" };
 
     public UploadFileService(IAccessDataService accessDataService, IConfiguration configuration,
-        ICustomerService customerService, IRequesterService requesterService, IManufacturerService manufacturerService, IModelService modelService, IServiceService serviceService, IPlaceService placeService)
+        ICustomerService customerService, IRequesterService requesterService, IManufacturerService manufacturerService, IModelService modelService, IServiceService serviceService, IPlaceService placeService, IFileVpcService fileVpcService)
     {
         _accessDataService = accessDataService;
         _configuration = configuration;
@@ -45,6 +45,7 @@ public class UploadFileService : IUploadFileService
         _modelService = modelService;
         _serviceService = serviceService;
         _placeService = placeService ?? throw new ArgumentNullException(nameof(placeService));
+        _fileVpcService = fileVpcService;
         _validHeaders.Add(UploadTypeEnum.Chassis, CHASSIS_VALID_HEADERS);
     }
 
@@ -104,9 +105,9 @@ public class UploadFileService : IUploadFileService
         foreach (var data in datas)
         {
             if (data.Success)
-                model.FailedRegisters++;
-            else
                 model.ConcludedRegisters++;
+            else
+                model.FailedRegisters++;
 
             model.OrderService.Add(data);
         }
@@ -186,6 +187,19 @@ public class UploadFileService : IUploadFileService
         var vds = orderService.Chassis != "" ? orderService.Chassis.Substring(3, 5) : "";
 
         // Tasks for API calls
+
+        if (!string.IsNullOrEmpty(orderService.Chassis))
+        {
+            var vehicle = _fileVpcService.GetByChassi(new GetByChassi { Chassis = orderService.Chassis }, _configuration["ConnectionStrings:NexusUploadApi"]);
+            await Task.WhenAll(vehicle);
+
+            if (vehicle.Result.Data.Id > 0)
+                return new OrderServiceDto { Chassis = chassis, Success = false, Error = "Já existe uma ordem de serviço aberta para esse veículo" };
+        }
+        else
+            return new OrderServiceDto { Chassis = chassis, Success = false, Error = "Chassi inválido" };
+
+
         var place = _placeService.GetByName(new GetByName { Name = orderService.Place }, _configuration["ConnectionStrings:NexusCustomerApi"]);
         var customer = _customerService.GetByName(new GetByName { Name = orderService.Customer }, _configuration["ConnectionStrings:NexusCustomerApi"]);
         var requester = _requesterService.GetByName(new GetByName { Name = orderService.Requester }, _configuration["ConnectionStrings:NexusVpcApi"]);

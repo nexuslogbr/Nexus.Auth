@@ -102,7 +102,16 @@ namespace Nexus.Auth.Api.Controllers
                     return BadRequest(vehicleResponse);
             }
 
-            return Ok(file.OrderService);
+            var res = new UploadFileDisplayDto();
+            int i = 1;
+
+            foreach (var os in file.OrderService)
+            {
+                res.Data += "Linha:" + i + "           " + os.Chassis + "          " + (os.Success ? "OK" : os.Error) + "\n";
+                i++;
+            }
+
+            return Ok(res);
         }
     }
 }
