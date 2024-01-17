@@ -232,7 +232,7 @@ public class UploadFileService : IUploadFileService
         orderService.Place = place.Result.Data.Name; if (place.Result.Data.Id == 0) { orderService.Error += "Erro: Local Inválido, Linha: " + line + ". "; orderService.Success = false; }
         orderService.PlaceId = place.Result.Data.Id;
         orderService.Customer = customer.Result.Data.Name; if (customer.Result.Data.Id == 0) { orderService.Error += "Erro: Cliente Inválido, Linha: " + line + ". "; orderService.Success = false; }
-        orderService.Requester = requester.Result.Data.Name; if (requester.Result.Data.Id == 0) { orderService.Error += "Erro: Solcitante Inválido, Linha: " + line + ". "; orderService.Success = false; }
+        orderService.Requester = requester.Result.Data.Name; if (requester.Result.Data.Id == 0) { orderService.Error += "Erro: Solicitante Inválido, Linha: " + line + ". "; orderService.Success = false; }
 
         var model = modelTask.Result.Data; if (model.Id == 0) { orderService.Error += "Chassi Inválido, Linha: " + line + ". "; orderService.Success = false; }
         else

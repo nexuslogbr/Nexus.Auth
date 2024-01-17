@@ -1,4 +1,6 @@
-﻿namespace Nexus.Auth.Repository.Dtos.Model;
+﻿using Nexus.Auth.Repository.Dtos.Manufacturer;
+
+namespace Nexus.Auth.Repository.Dtos.Model;
 
 public class ModelResponseDto
 {
@@ -9,6 +11,6 @@ public class ModelResponseDto
 
     public string Name { get; set; }
     public int ManufacturerId { get; set; }
-    public string Manufacturer { get; set; }
+    public ManufacturerResponseDto Manufacturer { get; set; }
     public IEnumerable<ModelVdsResponseDto> VdsList { get; set; }
 }
