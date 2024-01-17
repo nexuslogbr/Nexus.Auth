@@ -234,14 +234,14 @@ public class UploadFileService : IUploadFileService
         orderService.Customer = customer.Result.Data.Name; if (customer.Result.Data.Id == 0) { orderService.Error += "Erro: Cliente Inválido, Linha: " + line + ". "; orderService.Success = false; }
         orderService.Requester = requester.Result.Data.Name; if (requester.Result.Data.Id == 0) { orderService.Error += "Erro: Solicitante Inválido, Linha: " + line + ". "; orderService.Success = false; }
 
-        var model = modelTask.Result.Data; if (model.Id == 0) { orderService.Error += "Chassi Inválido, Linha: " + line + ". "; orderService.Success = false; }
+        var model = modelTask.Result.Data; if (model.Id == 0) { orderService.Error += "Chassi Inválido (vds), Linha: " + line + ". "; orderService.Success = false; }
         else
         {
             var manufacturer = model.Manufacturer;
             orderService.ModelId = model.Id;
             if (model.Id > 0)
             {
-                if (!manufacturer.Wmis.Any(w => w.WMI == wmi)) { orderService.Error += "Chassi Inválido, Linha: " + line + ".  "; orderService.Success = false; };
+                if (!manufacturer.Wmis.Any(w => w.WMI == wmi)) { orderService.Error += "Chassi Inválido (wmi), Linha: " + line + ".  "; orderService.Success = false; };
 
             }
         }
