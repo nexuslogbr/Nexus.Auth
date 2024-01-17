@@ -214,6 +214,11 @@ public class UploadFileService : IUploadFileService
             orderService.Error = "Chassi Inválido, Linha: " + line + ". ";
         }
 
+        if (orderService.Invoicing == DateTime.MinValue)
+        {
+            orderService.Success = false;
+            orderService.Error = "Data invalida, Linha: " + line + ". ";
+        }
 
         var place = _placeService.GetByName(new GetByName { Name = orderService.Place }, _configuration["ConnectionStrings:NexusCustomerApi"]);
         var customer = _customerService.GetByName(new GetByName { Name = orderService.Customer }, _configuration["ConnectionStrings:NexusCustomerApi"]);
@@ -227,7 +232,7 @@ public class UploadFileService : IUploadFileService
         orderService.Place = place.Result.Data.Name; if (place.Result.Data.Id == 0) { orderService.Error += "Erro: Local Inválido, Linha: " + line + ". "; orderService.Success = false; }
         orderService.PlaceId = place.Result.Data.Id;
         orderService.Customer = customer.Result.Data.Name; if (customer.Result.Data.Id == 0) { orderService.Error += "Erro: Cliente Inválido, Linha: " + line + ". "; orderService.Success = false; }
-        orderService.Requester = requester.Result.Data.Name; if (requester.Id == 0) { orderService.Error += "Erro: Solcitante Inválido, Linha: " + line + ". "; orderService.Success = false; }
+        orderService.Requester = requester.Result.Data.Name; if (requester.Result.Data.Id == 0) { orderService.Error += "Erro: Solcitante Inválido, Linha: " + line + ". "; orderService.Success = false; }
 
         var model = modelTask.Result.Data; if (model.Id == 0) { orderService.Error += "Chassi Inválido, Linha: " + line + ". "; orderService.Success = false; }
         else
@@ -252,7 +257,7 @@ public class UploadFileService : IUploadFileService
             var service = _serviceService.GetByName(new GetByName { Name = name }, _configuration["ConnectionStrings:NexusVpcApi"]);
             await Task.WhenAll(service);
             orderService.Services.Add(new FileVpcServiceDto { Service = service.Result.Data.Name });
-            if (service.Id == 0) { orderService.Error += "Serviço Inválido, Linha: " + line + ". "; orderService.Success = false; }
+            if (service.Result.Data.Id == 0) { orderService.Error += "Serviço Inválido, Linha: " + line + ". "; orderService.Success = false; }
         }
 
         return orderService;
