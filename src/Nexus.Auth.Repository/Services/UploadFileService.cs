@@ -222,7 +222,7 @@ public class UploadFileService : IUploadFileService
 
         var place = _placeService.GetByName(new GetByName { Name = orderService.Place }, _configuration["ConnectionStrings:NexusCustomerApi"]);
         var customer = _customerService.GetByName(new GetByName { Name = orderService.Customer }, _configuration["ConnectionStrings:NexusCustomerApi"]);
-        var requester = _requesterService.GetByName(new GetByName { Name = orderService.Requester }, _configuration["ConnectionStrings:NexusVpcApi"]);
+        var requester = _requesterService.GetByNameOrCode(new GetByNameCodeDto { Name = orderService.Requester, Code = orderService.RequesterCode }, _configuration["ConnectionStrings:NexusVpcApi"]);
         var modelTask = _modelService.GetByVds(new GetByVdsDto { Vds = vds }, _configuration["ConnectionStrings:NexusVehicleApi"]);
 
         // Wait for all tasks to completed

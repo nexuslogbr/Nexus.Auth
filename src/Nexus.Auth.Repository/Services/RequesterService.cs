@@ -78,4 +78,13 @@ public class RequesterService : IRequesterService
 
         return new GenericCommandResult<RequesterResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
     }
+
+    public async Task<GenericCommandResult<RequesterResponseDto>> GetByNameOrCode(GetByNameCodeDto obj, string path)
+    {
+        var result = await _accessDataService.PostDataAsync<RequesterResponseDto>(path, "api/v1/Requester/GetByNameOrCode", obj);
+        if (result is not null)
+            return new GenericCommandResult<RequesterResponseDto>(true, "Success", result, StatusCodes.Status200OK);
+
+        return new GenericCommandResult<RequesterResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+    }
 }
