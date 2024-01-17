@@ -53,7 +53,7 @@ namespace Nexus.Auth.Api.Controllers
 
             foreach (var os in files)
             {
-                res.Data += "Linha:" + i + "           " + os.Chassis + "          " + (os.Success ? "OK" : os.Error) + "\n";
+                res.Data += os.Chassis + "          " + (os.Success ? "OK" : os.Error) + "\n";
                 i++;
             }
 
