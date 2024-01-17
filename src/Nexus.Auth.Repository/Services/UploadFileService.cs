@@ -161,11 +161,8 @@ public class UploadFileService : IUploadFileService
     {
         string[] collums = data.Split(';');
 
-        var chassis = collums[4].Split('=')[1];
-        var invoice = collums[5].Split('=')[1] != "" ? Convert.ToDateTime(collums[5].Split('=')[1]) : new DateTime();
-        var park = collums[8].Split('=')[1] != "" ? Convert.ToInt32(collums[8].Split('=')[1]) : 0;
-        var collum = collums[6].Split('=')[1];
-        var services = collum.Split(",");
+        var collumServices = collums[6].Split('=')[1];
+        var services = collumServices.Split(",");
 
         var orderService = new OrderServiceDto()
         {
@@ -173,18 +170,18 @@ public class UploadFileService : IUploadFileService
             Customer = collums[1].Split('=')[1],
             RequesterCode = collums[2].Split('=')[1],
             Requester = collums[3].Split('=')[1],
-            Chassis = chassis,
-            Invoicing = invoice,
+            Chassis = collums[4].Split('=')[1],
+            Invoicing = ValidadeDate(collums[5].Split('=')[1]),
             Services = new List<FileVpcServiceDto>(),
             Street = collums[7].Split('=')[1],
-            Parking = park,
+            Parking = ValidadeNumber(collums[8].Split('=')[1]),
             Plate = collums[9].Split('=')[1],
             Error = "",
             Success = true
         };
 
         var wmi = orderService.Chassis != "" ? orderService.Chassis.Substring(0, 3) : "";
-        var vds = orderService.Chassis != "" ? orderService.Chassis.Substring(3, 5) : "";
+        var vds = orderService.Chassis != "" && orderService.Chassis.Length > 8 ? orderService.Chassis.Substring(3, 5) : "";
 
         // Tasks for API calls
 
@@ -203,14 +200,14 @@ public class UploadFileService : IUploadFileService
                 orderService.Success = false;
                 orderService.Error = "Chassi duplicado no arquivo, Linha: " + line + ". ";
             }
-            else if (!ValidateChassisNumber(chassis))
+            else if (!ValidateChassisNumber(orderService.Chassis))
             {
 
                 orderService.Success = false;
                 orderService.Error = "Chassi Inválido, Linha: " + line + ". ";
             }
         }
-        else if (!ValidateChassisNumber(chassis))
+        else if (!ValidateChassisNumber(orderService.Chassis))
         {
 
             orderService.Success = false;
@@ -266,6 +263,18 @@ public class UploadFileService : IUploadFileService
         if (string.IsNullOrWhiteSpace(chassis) || chassis.Length != 17)
             return false;
         return new Regex("^[A-Za-z0-9]{3,3}[A-Za-z0-9]{6,6}[A-Za-z0-9]{2,2}[A-Za-z0-9]{6,6}$").Match(chassis).Success;
+    }
+
+    private DateTime ValidadeDate(string date)
+    {
+        if (DateTime.TryParse(date, out DateTime result))  return result;
+        else return DateTime.MinValue;
+    }
+
+    private int ValidadeNumber(string input)
+    {
+        if (int.TryParse(input, out int number)) return number;
+        else return 0;
     }
 
     private string GetLineData(IExcelDataReader reader)
