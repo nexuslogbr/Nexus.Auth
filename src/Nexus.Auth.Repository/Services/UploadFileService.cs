@@ -249,7 +249,7 @@ public class UploadFileService : IUploadFileService
         if (orderService.Plate.Length != 7)
         {
             orderService.Plate = "";
-            orderService.Error += "Placa Inválida" + line + ".  ";
+            orderService.Error += "Placa Inválida, Linha: " + line + ".  ";
         }
 
         foreach (var name in services)
