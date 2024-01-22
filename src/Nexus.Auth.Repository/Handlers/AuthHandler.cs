@@ -76,7 +76,7 @@ namespace Nexus.Auth.Repository.Handlers
             if (place is null) throw new Exception("Local inválido");
 
             updated.PlaceId = place.Id;
-            updated.PlaceName = place.Name + " - " + place.Acronym;
+            updated.PlaceName = place.Id > 0 ? place.Name + " - " + place.Acronym : "";
             updated.ChangeDate = DateTime.Now;
 
             var result = !string.IsNullOrEmpty(entity.Password) ?
