@@ -24,7 +24,6 @@ public class UploadFileService : IUploadFileService
     private readonly IAccessDataService _accessDataService;
     private readonly ICustomerService _customerService;
     private readonly IRequesterService _requesterService;
-    private readonly IManufacturerService _manufacturerService;
     private readonly IModelService _modelService;
     private readonly IServiceService _serviceService;
     private readonly IPlaceService _placeService;
@@ -34,15 +33,20 @@ public class UploadFileService : IUploadFileService
     private Dictionary<UploadTypeEnum, string[]> _validHeaders = new();
     private readonly string[] CHASSIS_VALID_HEADERS = { "local", "cliente", "código solicitante", "solicitante", "chassi", "data faturamento", "serviço", "rua", "vaga", "placa" };
 
-    public UploadFileService(IAccessDataService accessDataService, IConfiguration configuration,
-        ICustomerService customerService, IRequesterService requesterService, IManufacturerService manufacturerService, IModelService modelService, IServiceService serviceService, IPlaceService placeService, IFileVpcService fileVpcService)
+    public UploadFileService(IAccessDataService accessDataService, 
+        IConfiguration configuration,
+        ICustomerService customerService, 
+        IRequesterService requesterService, 
+        IModelService modelService, 
+        IServiceService serviceService, 
+        IPlaceService placeService, 
+        IFileVpcService fileVpcService)
     {
         _accessDataService = accessDataService;
         _configuration = configuration;
 
         _customerService = customerService;
         _requesterService = requesterService;
-        _manufacturerService = manufacturerService;
         _modelService = modelService;
         _serviceService = serviceService;
         _placeService = placeService ?? throw new ArgumentNullException(nameof(placeService));
@@ -238,7 +242,13 @@ public class UploadFileService : IUploadFileService
         else
         {
             var manufacturer = model.Manufacturer;
+            orderService.RequesterId = requester.Result.Data.Id;
+            orderService.CustomerId = customer.Result.Data.Id;
+            orderService.ManufacturerId = manufacturer.Id;
+            orderService.ManufacturerName = manufacturer.Name;
             orderService.ModelId = model.Id;
+            orderService.ModelName = model.Name;
+            orderService.RequesterCode = requester.Result.Data.Code;
             if (model.Id > 0)
             {
                 if (!manufacturer.Wmis.Any(w => w.WMI == wmi)) { orderService.Error += "Chassi Inválido (wmi), Linha: " + line + ".  "; orderService.Success = false; };
@@ -256,7 +266,10 @@ public class UploadFileService : IUploadFileService
         {
             var service = _serviceService.GetByName(new GetByName { Name = name }, _configuration["ConnectionStrings:NexusVpcApi"]);
             await Task.WhenAll(service);
-            orderService.Services.Add(new FileVpcServiceDto { Service = service.Result.Data.Name });
+            orderService.Services.Add(new FileVpcServiceDto { 
+                Service = service.Result.Data.Name,
+                ServiceId = service.Result.Data.Id
+            });
             if (service.Result.Data.Id == 0) { orderService.Error += "Serviço Inválido, Linha: " + line + ". "; orderService.Success = false; }
         }
 
