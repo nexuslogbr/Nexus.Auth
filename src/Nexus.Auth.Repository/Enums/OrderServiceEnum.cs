@@ -33,8 +33,11 @@
 
     public enum OrderServiceServiceStatusEnum
     {
+        [StringValue("Gerada")]
+        Created = 1,
+
         [StringValue("Liberado")]
-        Released = 1,
+        Released,
 
         [StringValue("Concluído")]
         Completed,

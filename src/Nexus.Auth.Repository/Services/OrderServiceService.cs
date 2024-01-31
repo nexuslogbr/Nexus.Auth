@@ -77,6 +77,15 @@ namespace Nexus.Auth.Repository.Services
             return new GenericCommandResult<TokenDto>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
+        public async Task<GenericCommandResult<BooleanDto>> RemoveServicesRange(OrderServiceRemoveServicesDto obj, string path)
+        {
+            var result = await _accessDataService.PostDataAsync<BooleanDto>(path, "api/v1/OrderService/DeleteServicesRange", obj);
+            if (result is not null)
+                return new GenericCommandResult<BooleanDto>(true, "Success", result, StatusCodes.Status200OK);
+
+            return new GenericCommandResult<BooleanDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+        }
+
         public async Task<GenericCommandResult<ChangeStatusDto>> ChangeStatus(ChangeStatusDto obj, string path)
         {
             throw new NotImplementedException();
@@ -94,7 +103,7 @@ namespace Nexus.Auth.Repository.Services
                 RequesterId = data.RequesterId,
                 RequesterName = data.Requester,
                 RequesterCode = data.RequesterCode,
-                Services = data.Services.Select(x => new OrderServicesDto { ServiceId = x.ServiceId}).ToList(),
+                Services = data.Services.Select(x => new OrderServicesDto { ServiceId = x.ServiceId, ServiceName = x.Service, Status = OrderServiceServiceStatusEnum.Created }).ToList(),
                 OrderStatus = OrderServiceStatusEnum.Created,
                 ManufacturerId = data.ManufacturerId,
                 ManufacturerName = data.ManufacturerName,

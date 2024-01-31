@@ -78,6 +78,25 @@ namespace Nexus.Auth.Api.Controllers
             return response.Success ? Ok(response) : NotFound(response);
         }
 
+        /// POST: api/v1/OrderService/RemoveServicesRange
+        /// <summary>
+        /// Endpoint to remove services of order service
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("RemoveServicesRange")]
+        public async Task<IActionResult> RemoveServicesRange(OrderServiceRemoveServicesDto dto)
+        {
+            try
+            {
+                var result = await _orderServiceService.RemoveServicesRange(dto, _configuration["ConnectionStrings:NexusVpcApi"]);
+                return result.Success ? Ok(result) : BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex + " Query error");
+            }
+        }
+
         /// POST: api/v1/OrderService/ChangeStatus
         /// <summary>
         /// Endpoint to change the status for order service
