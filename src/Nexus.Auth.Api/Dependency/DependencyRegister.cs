@@ -50,6 +50,7 @@ namespace Nexus.Auth.API.Dependency
             services.AddScoped<IUploadFileService, UploadFileService>();
             services.AddScoped<IPlaceService, PlaceService>();
             services.AddScoped<IFileVpcService, FileVpcService>();
+            services.AddScoped<IOrderServiceService, OrderServiceService>();
         }
     }
 }

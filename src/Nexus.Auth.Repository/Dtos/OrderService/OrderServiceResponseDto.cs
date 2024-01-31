@@ -1,4 +1,5 @@
 ﻿using Nexus.Auth.Repository.Dtos.UploadFile;
+using Nexus.Auth.Repository.Enums;
 using System.ComponentModel;
 
 namespace Nexus.Auth.Repository.Dtos.OrderService
@@ -6,20 +7,28 @@ namespace Nexus.Auth.Repository.Dtos.OrderService
     public class OrderServiceResponseDto
     {
         public int Id { get; set; }
-        public string? Place { get; set; }
-        public string? Customer { get; set; }
-        public string? RequesterCode { get; set; }
-        public string? Requester { get; set; }
-        public string? Chassis { get; set; }
-        public DateTime? Invoicing { get; set; }
-        public List<FileVpcServiceDto>? Services { get; set; }
-        public string? Street { get; set; }
-        public int? Parking { get; set; }
-        public string? Plate { get; set; }
-        public int? UploadFileId { get; set; }
+        public string Chassi { get; set; }
+        public string CustomerName { get; set; }
+        public string RequesterName { get; set; }
+        public string RequesterCode { get; set; }
+        public string ManufacturerName { get; set; }
+        public string ModelName { get; set; }
 
-        [DefaultValue(true)]
-        public bool Success { get; set; }
-        public string Error { get; set; }
+        public List<OrderServiceServiceResponseDto> Services { get; set; }
+
+        public OrderServiceStatusEnum OrderStatus { get; set; }
+
+        public DateTime Invoicing { get; set; }
+        public string Street { get; set; }
+        public int Parking { get; set; }
+        public string Plate { get; set; }
+
+
+        public int? AgingDays { get; set; }
+        public DateTime? VpcDateEnding { get; set; }
+        public string? Transporter { get; set; }
+        public DateTime? ExpeditionDate { get; set; }
+
+        public int? InvoicingUntilDispatchDays { get; set; }
     }
 }
