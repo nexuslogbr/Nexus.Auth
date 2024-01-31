@@ -5,6 +5,7 @@ using Nexus.Auth.Repository.Dtos.UploadFile;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Auth.Repository.Dtos.Vehicle;
+using Nexus.Auth.Repository.Dtos.OrderService;
 
 namespace Nexus.Auth.Api.Controllers
 {
@@ -17,13 +18,20 @@ namespace Nexus.Auth.Api.Controllers
         private readonly IUploadFileService _uploadFileService;
         private readonly IVehicleService _vehicleService;
         private readonly IFileVpcService _fileVpcService;
+        private readonly IOrderServiceService _orderServiceService;
 
-        public UploadFileController(IUploadFileService uploadFileService, IVehicleService vehicleInfoService, IConfiguration configuration, IFileVpcService fileVpcService)
+        public UploadFileController(
+            IUploadFileService uploadFileService, 
+            IVehicleService vehicleInfoService, 
+            IConfiguration configuration, 
+            IFileVpcService fileVpcService,
+            IOrderServiceService orderServiceService)
         {
             _uploadFileService = uploadFileService;
             _vehicleService = vehicleInfoService;
             _configuration = configuration;
             _fileVpcService = fileVpcService;
+            _orderServiceService = orderServiceService;
         }
 
         /// GET: api/v1/UploadFile/GetAll
@@ -83,17 +91,21 @@ namespace Nexus.Auth.Api.Controllers
             if (obj.Type == UploadTypeEnum.Chassis)
             {
                 var vehicles = new List<VehicleDto>();
+                var newOS = new List<OrderServiceToSaveDto>();
 
                 foreach (var os in file.OrderService)
                     if (os.Success)
-                        vehicles.Add(new VehicleDto { Chassis = os.Chassis, FileId = response.Data.Id, PlaceId = os.PlaceId, ModelId = os.ModelId });    
+                    {
+                        vehicles.Add(new VehicleDto { Chassis = os.Chassis, FileId = response.Data.Id, PlaceId = os.PlaceId, ModelId = os.ModelId });
+                        newOS.Add(_orderServiceService.GetOrderData(os, response.Data.Id));
+                    }
 
                 var vehicleResponse = await _vehicleService.PostRange(vehicles, _configuration["ConnectionStrings:NexusVehicleApi"]);
+                var orderServiceResponse = await _orderServiceService.PostRange(newOS, _configuration["ConnectionStrings:NexusVpcApi"]);
 
-                if (!vehicleResponse.Success)
-                    return BadRequest(vehicleResponse);
+                if (!vehicleResponse.Success && !orderServiceResponse.Success)
+                    return BadRequest();
             }
-
 
             return Ok(new UploadFileDisplayDto { FileName = response.Data.Name, ConcludedRegisters = file.ConcludedRegisters, FailedRegisters = file.FailedRegisters });
         }
