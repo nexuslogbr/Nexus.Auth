@@ -28,6 +28,14 @@ namespace Nexus.Auth.Api.Controllers
         [HttpPost("GetAll")]
         public async Task<IActionResult> GetAll(PageParams pageParams) => Ok(await _orderServiceService.GetAll(pageParams, _configuration["ConnectionStrings:NexusVpcApi"]));
 
+        /// POST: api/v1/OrderService/GetServiceByIdAsync
+        /// <summary>
+        /// Endpoint to get service of order by id
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("GetServiceById")]
+        public async Task<IActionResult> GetServiceByIdAsync(GetById obj) => Ok(await _orderServiceService.GetServiceByIdAsync(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+
         /// POST: api/v1/OrderService/GetById
         /// <summary>
         /// Endpoint to get order service by id

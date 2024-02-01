@@ -10,5 +10,6 @@ namespace Nexus.Auth.Repository.Services.Interfaces
         Task<GenericCommandResult<OrderServiceResponseDto>> PostRange(List<OrderServiceToSaveDto> entities, string path);
         OrderServiceToSaveDto GetOrderData(OrderServiceDto data, int fileId);
         Task<GenericCommandResult<BooleanDto>> RemoveServicesRange(OrderServiceRemoveServicesDto obj, string path);
+        Task<GenericCommandResult<OrderServiceServiceInfoDto>> GetServiceByIdAsync(GetById obj, string path);
     }
 }
