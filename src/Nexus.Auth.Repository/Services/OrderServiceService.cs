@@ -136,6 +136,24 @@ namespace Nexus.Auth.Repository.Services
             return new GenericCommandResult<OrderServiceListResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
+        public async Task<GenericCommandResult<OrderServiceStreetsListDto>> GetUniqueStreetsAsync(GetByIdsDto obj, string path)
+        {
+            var result = await _accessDataService.PostDataAsync<OrderServiceStreetsListDto>(path, "api/v1/OrderService/GetUniqueStreetsAsync", obj);
+            if (result is not null)
+                return new GenericCommandResult<OrderServiceStreetsListDto>(true, "Success", result, StatusCodes.Status200OK);
+
+            return new GenericCommandResult<OrderServiceStreetsListDto>(true, "Error", default, StatusCodes.Status400BadRequest);
+        }
+
+        public async Task<GenericCommandResult<List<OrderServiceResponseDto>>> GetOrdersbyStreetAsync(OrderServiceByStreetDto obj, string path)
+        {
+            var result = await _accessDataService.PostDataAsync<List<OrderServiceResponseDto>>(path, "api/v1/OrderService/GetOrdersbyStreetAsync", obj);
+            if (result is not null)
+                return new GenericCommandResult<List<OrderServiceResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+
+            return new GenericCommandResult<List<OrderServiceResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
+        }
+
         #region
 
         public OrderServiceToSaveDto GetOrderData(OrderServiceDto data, int fileId)

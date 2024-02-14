@@ -42,6 +42,14 @@ namespace Nexus.Api.Web.Controllers
         [HttpPost("GetById")]
         public async Task<IActionResult> GetById(GetById obj) => Ok(await _serviceService.GetById(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
 
+        /// POST: api/v1/Service/GetByGamaType
+        /// <summary>
+        /// Endpoint to get list of services by gama type
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("GetByGamaType")]
+        public async Task<IActionResult> GetByGamaType(GetByGamaTypeDto obj) => Ok(await _serviceService.GetByGamaType(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+
         /// POST: api/v1/ServiceType/Post
         /// <summary>
         /// Endpoint to create new serviceType
