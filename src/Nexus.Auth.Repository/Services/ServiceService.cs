@@ -37,6 +37,15 @@ namespace Nexus.Auth.Repository.Services
             return new GenericCommandResult<ServiceResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
+        public async Task<GenericCommandResult<List<ServiceResponseDto>>> GetByGamaType(GetByGamaTypeDto obj, string path)
+        {
+            var result = await _accessDataService.PostDataAsync<List<ServiceResponseDto>>(path, "api/v1/Service/GetByGamaType", obj);
+            if (result is not null)
+                return new GenericCommandResult<List<ServiceResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+
+            return new GenericCommandResult<List<ServiceResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
+        }
+
         public async Task<GenericCommandResult<ChangeStatusDto>> ChangeStatus(ChangeStatusDto obj, string path)
         {
             var result = await _accessDataService.PostDataAsync<ChangeStatusDto>(path, "api/v1/Service/ChangeStatus", obj);

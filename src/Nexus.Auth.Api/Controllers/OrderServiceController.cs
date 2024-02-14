@@ -149,5 +149,19 @@ namespace Nexus.Auth.Api.Controllers
         /// <returns></returns>
         [HttpPost("GetListById")]
         public async Task<IActionResult> GetListById(GetById obj) => Ok(await _orderServiceService.GetListById(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+
+        /// POST: api/v1/OrderService/GetUniqueStreetsAsync
+        /// <summary>
+        /// Endpoint to get a streets by services id
+        /// <returns></returns>
+        [HttpPost("GetUniqueStreetsAsync")]
+        public async Task<IActionResult> GetUniqueStreetsAsync(GetByIdsDto obj) => Ok(await _orderServiceService.GetUniqueStreetsAsync(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+
+        /// POST: api/v1/OrderService/GetOrdersbyStreetAsync
+        /// <summary>
+        /// Endpoint to get orders by streets and services
+        /// <returns></returns>
+        [HttpPost("GetOrdersbyStreetAsync")]
+        public async Task<IActionResult> GetOrdersbyStreetAsync(OrderServiceByStreetDto obj) => Ok(await _orderServiceService.GetOrdersbyStreetAsync(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
     }
 }

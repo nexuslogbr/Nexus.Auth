@@ -15,5 +15,7 @@ namespace Nexus.Auth.Repository.Services.Interfaces
         Task<GenericCommandResult<BooleanDto>> CreateList(List<int> obj, string path);
         Task<GenericCommandResult<List<OrderServiceListFilterResponseDto>>> FilterLists(OrderServiceListFilter obj, string path);
         Task<GenericCommandResult<OrderServiceListResponseDto>> GetListById(GetById obj, string path);
+        Task<GenericCommandResult<OrderServiceStreetsListDto>> GetUniqueStreetsAsync(GetByIdsDto obj, string path);
+        Task<GenericCommandResult<List<OrderServiceResponseDto>>> GetOrdersbyStreetAsync(OrderServiceByStreetDto obj, string path);
     }
 }
