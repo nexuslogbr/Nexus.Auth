@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Nexus.Auth.Repository.Dtos.Generics;
+using Nexus.Auth.Repository.Dtos.Model;
 using Nexus.Auth.Repository.Dtos.OrderService;
 using Nexus.Auth.Repository.Services.Interfaces;
 
@@ -116,5 +118,36 @@ namespace Nexus.Auth.Api.Controllers
             var response = await _orderServiceService.ChangeStatus(obj, _configuration["ConnectionStrings:NexusVpcApi"]);
             return response.Success ? Ok(response) : NotFound(response);
         }
+
+        /// POST: api/v1/OrderService/Filter
+        /// <summary>
+        /// Endpoint to search data to filters
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("Filter")]
+        public async Task<IActionResult> Filter(OrderServiceFilter filter) => Ok(await _orderServiceService.Filter(filter, _configuration["ConnectionStrings:NexusVpcApi"]));
+
+        /// POST: api/v1/OrderService/CreateList
+        /// <summary>
+        /// Endpoint to create a list
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("CreateList")]
+        public async Task<IActionResult> CreateList(List<int> obj) => Ok(await _orderServiceService.CreateList(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+
+        /// POST: api/v1/OrderService/FilterLists
+        /// <summary>
+        /// Endpoint to filter the lists
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("FilterLists")]
+        public async Task<IActionResult> FilterLists(OrderServiceListFilter obj) => Ok(await _orderServiceService.FilterLists(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+
+        /// POST: api/v1/OrderService/GetListById
+        /// <summary>
+        /// Endpoint to get a list by id
+        /// <returns></returns>
+        [HttpPost("GetListById")]
+        public async Task<IActionResult> GetListById(GetById obj) => Ok(await _orderServiceService.GetListById(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
     }
 }

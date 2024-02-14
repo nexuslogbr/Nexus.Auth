@@ -1,6 +1,4 @@
-﻿using Nexus.Auth.Repository.Dtos.UploadFile;
-using Nexus.Auth.Repository.Enums;
-using System.ComponentModel;
+﻿using Nexus.Auth.Repository.Enums;
 
 namespace Nexus.Auth.Repository.Dtos.OrderService
 {
