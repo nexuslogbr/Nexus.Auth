@@ -46,6 +46,14 @@ namespace Nexus.Auth.Api.Controllers
         [HttpPost("GetById")]
         public async Task<IActionResult> GetById(GetById obj) => Ok(await _orderServiceService.GetById(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
 
+        /// POST: api/v1/OrderService/GetByChassi
+        /// <summary>
+        /// Endpoint to get order service by chassi
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("GetByChassi")]
+        public async Task<IActionResult> GetByChassi(GetByChassi obj) => Ok(await _orderServiceService.GetByChassi(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+
         /// POST: api/v1/OrderService/Post
         /// <summary>
         /// Endpoint to create new order service

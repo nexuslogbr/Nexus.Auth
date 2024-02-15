@@ -36,6 +36,15 @@ namespace Nexus.Auth.Repository.Services
             return new GenericCommandResult<OrderServiceResponseDto>(true, "Error", default, StatusCodes.Status400BadRequest);
         }
 
+        public async Task<GenericCommandResult<List<OrderServiceResponseDto>>> GetByChassi(GetByChassi obj, string path)
+        {
+            var result = await _accessDataService.PostDataAsync<List<OrderServiceResponseDto>>(path, "api/v1/OrderService/GetByChassi", obj);
+            if (result is not null)
+                return new GenericCommandResult<List<OrderServiceResponseDto>>(true, "Success", result, StatusCodes.Status200OK);
+
+            return new GenericCommandResult<List<OrderServiceResponseDto>>(true, "Error", default, StatusCodes.Status400BadRequest);
+        }
+
         public async Task<GenericCommandResult<OrderServiceServiceInfoDto>> GetServiceByIdAsync(GetById obj, string path)
         {
             var result = await _accessDataService.PostDataAsync<OrderServiceServiceInfoDto>(path, "api/v1/OrderService/GetServiceByIdAsync", obj);
