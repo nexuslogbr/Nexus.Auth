@@ -17,7 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Add the reverse proxy capability to the server
 builder.Services.AddReverseProxy()
-    //.LoadFromMemory(new List<RouteConfig> { new RouteConfig { } })
     // Initialize the reverse proxy from the "ReverseProxy" section of configuration
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
     .AddTransforms(yarp =>
@@ -26,8 +25,6 @@ builder.Services.AddReverseProxy()
         {
             if (context.ProxyResponse != null && context.ProxyResponse?.Content != null)
             {
-
-
                 var status = (int)context.ProxyResponse!.StatusCode;
                 var mediaType = context.ProxyResponse.Content.Headers.ContentType?.MediaType;
 
