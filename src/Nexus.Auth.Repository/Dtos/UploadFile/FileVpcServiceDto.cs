@@ -1,8 +1,0 @@
-﻿namespace Nexus.Auth.Repository.Dtos.UploadFile
-{
-    public class FileVpcServiceDto
-    {
-        public string? Service { get; set; }
-        public int ServiceId { get; set; }
-    }
-}

@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Chassis\" />
-    <Folder Include="Dtos\Sla\" />
     <Folder Include="Handlers\" />
   </ItemGroup>
 
