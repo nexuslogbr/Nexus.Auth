@@ -171,5 +171,12 @@ namespace Nexus.Auth.Api.Controllers
         /// <returns></returns>
         [HttpPost("GetOrdersbyStreetAsync")]
         public async Task<IActionResult> GetOrdersbyStreetAsync(OrderServiceByStreetDto obj) => Ok(await _orderServiceService.GetOrdersbyStreetAsync(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
+
+        /// POST: api/v1/OrderService/UpdateServicesOfOrder
+        /// <summary>
+        /// Endpoint to update services
+        /// <returns></returns>
+        [HttpPost("UpdateServicesOfOrder")]
+        public async Task<IActionResult> UpdateServicesOfOrder(OrderServiceUpdateDto obj) => Ok(await _orderServiceService.PutServicesOfOrder(obj, _configuration["ConnectionStrings:NexusVpcApi"]));
     }
 }

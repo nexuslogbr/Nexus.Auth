@@ -18,5 +18,6 @@ namespace Nexus.Auth.Repository.Services.Interfaces
         Task<GenericCommandResult<OrderServiceStreetsListDto>> GetUniqueStreetsAsync(GetByIdsDto obj, string path);
         Task<GenericCommandResult<List<OrderServiceResponseDto>>> GetOrdersbyStreetAsync(OrderServiceByStreetDto obj, string path);
         Task<GenericCommandResult<List<OrderServiceResponseDto>>> GetByChassi(GetByChassi obj, string path);
+        Task<GenericCommandResult<OrderServiceResponseDto>> PutServicesOfOrder(OrderServiceUpdateDto obj, string path);
     }
 }
