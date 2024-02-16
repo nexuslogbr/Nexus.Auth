@@ -58,6 +58,7 @@ builder.Services.AddReverseProxy()
 builder.Services.AddEndpointsApiExplorer();
 
 var connectionString = builder.Configuration.GetConnectionString("NexusAuthConnection");
+
 builder.Services.AddDbContext<NexusAuthContext>(
     x => x.UseSqlServer(connectionString,
     b => b.MigrationsAssembly("Nexus.Auth.Infra"))
@@ -93,13 +94,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = false,
             ValidateAudience = false,
         };
-    })
-    .AddCookie("CookieAuthScheme", options =>
-    {
-        options.Cookie.Name = "NexusAuthCookie";
-        options.LoginPath = "/api/v1/Auth/Login";
-        options.LogoutPath = "/api/v1/Auth/Logout";
-    }); ;
+    });
+
+    //.AddCookie("CookieAuthScheme", options =>
+    //{
+    //    options.Cookie.Name = "NexusAuthCookie";
+    //    options.LoginPath = "/api/v1/Auth/Login";
+    //    options.LogoutPath = "/api/v1/Auth/Logout";
+    //}); ;
 
 // Injection Dependency Configuration 
 builder.Services.RegisterDependencies(builder.Configuration);
