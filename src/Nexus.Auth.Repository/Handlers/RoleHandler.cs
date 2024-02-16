@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
-using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Repository.Handlers.Interfaces;
-using Nexus.Auth.Repository.Services.Interfaces;
-using Nexus.Auth.Repository.Dtos.Generics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Nexus.Auth.Domain.Entities;
+using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.Role;
+using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Models;
-using Nexus.Auth.Repository.Services;
+using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Auth.Repository.Utils;
 
 namespace Nexus.Auth.Repository.Handlers
