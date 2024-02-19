@@ -1,21 +1,18 @@
-﻿using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Repository.Handlers.Interfaces;
-using Nexus.Auth.Repository.Services.Interfaces;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Nexus.Auth.Domain.Entities;
+using Nexus.Auth.Repository.Dtos.Auth;
+using Nexus.Auth.Repository.Dtos.Role;
+using Nexus.Auth.Repository.Dtos.User;
+using Nexus.Auth.Repository.Handlers.Interfaces;
+using Nexus.Auth.Repository.Models;
+using Nexus.Auth.Repository.Services.Interfaces;
+using Nexus.Auth.Repository.Utils;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using AutoMapper;
-using Nexus.Auth.Repository.Utils;
-using Nexus.Auth.Repository.Dtos.User;
-using Nexus.Auth.Repository.Dtos.Auth;
-using Nexus.Auth.Repository.Models;
-using Nexus.Auth.Repository.Dtos.Role;
-using Nexus.Auth.Repository.Dtos.Generics;
-using Nexus.Auth.Repository.Services;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -48,7 +45,7 @@ namespace Nexus.Auth.Repository.Handlers
         {
             var user = _mapper.Map<User>(entity);
 
-            var place = (await _placeService.GetById(new GetById { Id = (int)entity.PlaceId }, _config["ConnectionStrings:NexusCustomerApi"])).Data;
+            var place = (await _placeService.GetById(entity.PlaceId)).Data;
             if (place is null) throw new Exception("Local inválido");
 
             user.PlaceId = place.Id;
@@ -72,7 +69,8 @@ namespace Nexus.Auth.Repository.Handlers
             await _userService.DeleteRoles(user.Id);
             var updated = _mapper.Map(entity, user);
 
-            var place = (await _placeService.GetById(new GetById { Id = (int)entity.PlaceId }, _config["ConnectionStrings:NexusCustomerApi"])).Data;
+            var place = (await _placeService.GetById(entity.PlaceId)).Data;
+
             if (place is null) throw new Exception("Local inválido");
 
             updated.PlaceId = place.Id;

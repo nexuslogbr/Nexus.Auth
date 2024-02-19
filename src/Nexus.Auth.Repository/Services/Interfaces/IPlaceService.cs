@@ -1,9 +1,11 @@
-﻿using Nexus.Auth.Repository.Dtos.Place;
-using Nexus.Auth.Repository.Interfaces;
+﻿using Nexus.Auth.Repository.Dtos.Generics;
+using Nexus.Auth.Repository.Dtos.Place;
+using Nexus.Auth.Repository.Utils;
 
 namespace Nexus.Auth.Repository.Services.Interfaces
 {
-    public interface IPlaceService : IGenericService<PlaceDto, PlaceResponseDto>
+    public interface IPlaceService
     {
+        Task<GenericCommandResult<PlaceResponseDto?>> GetById(int id);
     }
 }
