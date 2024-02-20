@@ -45,7 +45,7 @@ builder.Services.AddReverseProxy()
                     }
                     else
                     {
-                        var result = new GenericCommandResult<object?>(true, "Error", obj, status);
+                        var result = new GenericCommandResult<object?>(false, "Error", obj, status);
                         await context.HttpContext.Response.WriteAsJsonAsync(result);
                     }
 
