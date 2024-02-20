@@ -1,20 +1,64 @@
-using Nexus.Auth.Infra.Context;
-using Nexus.Auth.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Nexus.Auth.API.Dependency;
 using Nexus.Auth.Api.Helpers;
-using Swashbuckle.AspNetCore.SwaggerUI;
+using Nexus.Auth.API.Dependency;
+using Nexus.Auth.Domain.Entities;
+using Nexus.Auth.Infra.Context;
+using Nexus.Auth.Repository.Utils;
+using System.Dynamic;
+using System.Text;
+using System.Text.Json;
+using Yarp.ReverseProxy.Transforms;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+// Add the reverse proxy capability to the server
+builder.Services.AddReverseProxy()
+    // Initialize the reverse proxy from the "ReverseProxy" section of configuration
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+    .AddTransforms(yarp =>
+    {
+        yarp.AddResponseTransform(async context =>
+        {
+            if (context.ProxyResponse != null && context.ProxyResponse?.Content != null)
+            {
+                var status = (int)context.ProxyResponse!.StatusCode;
+                var mediaType = context.ProxyResponse.Content.Headers.ContentType?.MediaType;
+
+                if (mediaType == "application/json")
+                {
+                    var stream = await context.ProxyResponse.Content.ReadAsStreamAsync();
+                    using var reader = new StreamReader(stream);
+                    var content = await reader.ReadToEndAsync();
+
+                    context.SuppressResponseBody = true;
+                    var obj = JsonSerializer.Deserialize<object?>(content);
+
+
+                    if (context.ProxyResponse?.IsSuccessStatusCode == true)
+                    {
+                        var result = new GenericCommandResult<object?>(true, "Success", obj, status);
+                        await context.HttpContext.Response.WriteAsJsonAsync(result);
+                    }
+                    else
+                    {
+                        var result = new GenericCommandResult<object?>(false, "Error", obj, status);
+                        await context.HttpContext.Response.WriteAsJsonAsync(result);
+                    }
+
+                }
+            }
+
+        });
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 
 var connectionString = builder.Configuration.GetConnectionString("NexusAuthConnection");
+
 builder.Services.AddDbContext<NexusAuthContext>(
     x => x.UseSqlServer(connectionString,
     b => b.MigrationsAssembly("Nexus.Auth.Infra"))
@@ -46,17 +90,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
-            .GetBytes(builder.Configuration.GetSection("AppSettings:Key").Value)),
+            .GetBytes(builder.Configuration.GetSection("AppSettings:Key").Value!)),
             ValidateIssuer = false,
             ValidateAudience = false,
         };
-    })
-    .AddCookie("CookieAuthScheme", options =>
-    {
-        options.Cookie.Name = "NexusAuthCookie";
-        options.LoginPath = "/api/v1/Auth/Login";
-        options.LogoutPath = "/api/v1/Auth/Logout";
-    }); ;
+    });
+
+    //.AddCookie("CookieAuthScheme", options =>
+    //{
+    //    options.Cookie.Name = "NexusAuthCookie";
+    //    options.LoginPath = "/api/v1/Auth/Login";
+    //    options.LogoutPath = "/api/v1/Auth/Logout";
+    //}); ;
 
 // Injection Dependency Configuration 
 builder.Services.RegisterDependencies(builder.Configuration);
@@ -98,5 +143,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapReverseProxy();
 
 app.Run();

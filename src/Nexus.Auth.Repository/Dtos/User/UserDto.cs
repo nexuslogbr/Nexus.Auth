@@ -8,7 +8,7 @@ namespace Nexus.Auth.Repository.Dtos.User
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public int? PlaceId { get; set; }
+        public int PlaceId { get; set; }
         public bool Blocked { get; set; }
         public IList<RoleUserDto> Roles { get; set; }
     }

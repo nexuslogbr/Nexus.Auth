@@ -2,10 +2,8 @@
 using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Repository.Handlers;
 using Nexus.Auth.Repository.Handlers.Interfaces;
-using Nexus.Auth.Repository.Interfaces;
 using Nexus.Auth.Repository.Services;
 using Nexus.Auth.Repository.Services.Interfaces;
-using Nexus.Repository.Services;
 using Polly;
 
 namespace Nexus.Auth.API.Dependency
@@ -33,24 +31,7 @@ namespace Nexus.Auth.API.Dependency
             services.AddScoped<IUserService<User>, UserService>();
             services.AddScoped<IMenuHandler<Menu>, MenuHandler>();
             services.AddScoped<IMenuService<Menu>, MenuService>();
-            services.AddScoped<IServiceService, ServiceService>();
-            services.AddScoped<ICustomerService, CustomerService>();
-            services.AddScoped<IManufacturerService, ManufacturerService>();
-            services.AddScoped<IModelService, ModelService>();
-            services.AddScoped<IVpcItemService, VpcItemService>();
-            services.AddScoped<IRequesterService, RequesterService>();
-            services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IDamageTypeService, DamageTypeService>();
-            services.AddScoped<IDelayReasonService, DelayReasonService>();
-            services.AddScoped<IVpcStorageService, VpcStorageService>();
-            services.AddScoped<IServiceTypeService, ServiceTypeService>();
-            services.AddScoped<ISlaService, SlaService>();
-            services.AddScoped<IChassisService, ChassisService>();
-            services.AddScoped<IVehicleService, VehicleService>();
-            services.AddScoped<IUploadFileService, UploadFileService>();
-            services.AddScoped<IPlaceService, PlaceService>();
-            services.AddScoped<IFileVpcService, FileVpcService>();
-            services.AddScoped<IOrderServiceService, OrderServiceService>();
+            services.AddScoped<IPlaceService, PlaceService>();  
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Repository.Services.Interfaces;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Nexus.Auth.Repository.Dtos.Generics;
+using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Infra.Context;
+using Nexus.Auth.Repository.Dtos.Generics;
+using Nexus.Auth.Repository.Services.Interfaces;
 
 namespace Nexus.Auth.Repository.Services
 {

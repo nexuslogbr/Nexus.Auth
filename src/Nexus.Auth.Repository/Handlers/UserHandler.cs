@@ -1,17 +1,15 @@
-﻿using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Repository.Handlers.Interfaces;
-using Nexus.Auth.Repository.Services.Interfaces;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Nexus.Auth.Repository.Dtos.Generics;
-using System.Data;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Nexus.Auth.Repository.Models;
-using Nexus.Auth.Repository.Utils;
 using Microsoft.Extensions.Configuration;
-using System.Web;
+using Nexus.Auth.Domain.Entities;
+using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.User;
-using Nexus.Auth.Repository.Services;
+using Nexus.Auth.Repository.Handlers.Interfaces;
+using Nexus.Auth.Repository.Models;
+using Nexus.Auth.Repository.Services.Interfaces;
+using Nexus.Auth.Repository.Utils;
+using System.Web;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -87,7 +85,7 @@ namespace Nexus.Auth.Repository.Handlers
         {
             var user = _mapper.Map<User>(entity);
 
-            var place = (await _placeService.GetById(new GetById { Id = (int)entity.PlaceId }, _configuration["ConnectionStrings:NexusCustomerApi"])).Data;
+            var place = (await _placeService.GetById(entity.PlaceId)).Data;
             if (place is null) throw new Exception("Local inválido");
 
             user.PlaceId = place.Id;
@@ -108,7 +106,7 @@ namespace Nexus.Auth.Repository.Handlers
             await _userService.DeleteRoles(user.Id);
             var updated = _mapper.Map(entity, user);
 
-            var place = (await _placeService.GetById(new GetById { Id = (int)entity.PlaceId }, _configuration["ConnectionStrings:NexusCustomerApi"])).Data;
+            var place = (await _placeService.GetById(entity.PlaceId)).Data;
             if (place is null)  throw new Exception("Local inválido");
 
             updated.PlaceId = place.Id;
