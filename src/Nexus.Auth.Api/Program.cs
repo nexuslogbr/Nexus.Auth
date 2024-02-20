@@ -35,7 +35,7 @@ builder.Services.AddReverseProxy()
                     var content = await reader.ReadToEndAsync();
 
                     context.SuppressResponseBody = true;
-                    var obj = JsonSerializer.Deserialize<ExpandoObject>(content);
+                    var obj = JsonSerializer.Deserialize<object?>(content);
 
 
                     if (context.ProxyResponse?.IsSuccessStatusCode == true)
