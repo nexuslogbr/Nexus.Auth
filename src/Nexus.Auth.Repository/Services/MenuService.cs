@@ -21,8 +21,25 @@ namespace Nexus.Auth.Repository.Services
             IQueryable<Menu> query = _context.Menus.AsQueryable();
 
             query = query
-                .Where(x => x.Name.ToLower().Contains(pageParams.Term.ToLower()))
-                .OrderBy(x => x.Id);
+                .Where(x => x.Name.ToLower().Contains(pageParams.Term.ToLower()));
+
+            if (!string.IsNullOrEmpty(pageParams.OrderByProperty))
+            {
+                switch (pageParams.OrderByProperty.ToLower())
+                {
+                    case "name":
+                        query = pageParams.Asc ? query.OrderBy(u => u.Name) : query.OrderByDescending(u => u.Name);
+                        break;
+                    case "changeDate":
+                        query = pageParams.Asc ? query.OrderBy(u => u.ChangeDate) : query.OrderByDescending(u => u.ChangeDate);
+                        break;
+                    default:
+                        query = query.OrderBy(u => u.Id);
+                        break;
+                }
+            }
+            else
+                query = query.OrderBy(u => u.Id);
 
             var count = await _context.Menus.CountAsync();
             var items = await query.Skip((pageParams.PageNumber - 1) * pageParams.PageSize).Take(pageParams.PageSize).ToListAsync();
