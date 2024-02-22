@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MailKit.Search;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Infra.Context;
@@ -32,9 +33,32 @@ namespace Nexus.Auth.Repository.Services
                             )
                 )
                 .Include(x => x.UserRoles)
-                .ThenInclude(x => x.Role)
-                .OrderBy(x => x.Id);
+                .ThenInclude(x => x.Role);
 
+            if (!string.IsNullOrEmpty(pageParams.OrderByProperty))
+            {
+                switch (pageParams.OrderByProperty.ToLower())
+                {
+                    case "name":
+                        query = pageParams.Asc ? query.OrderBy(u => u.Name) : query.OrderByDescending(u => u.Name);
+                        break;
+                    case "username":
+                        query = pageParams.Asc ? query.OrderBy(u => u.UserName) : query.OrderByDescending(u => u.UserName);
+                        break;
+                    case "email":
+                        query = pageParams.Asc ? query.OrderBy(u => u.Email) : query.OrderByDescending(u => u.Email);
+                        break;
+                    case "changeDate":
+                        query = pageParams.Asc ? query.OrderBy(u => u.ChangeDate) : query.OrderByDescending(u => u.ChangeDate);
+                        break;
+                    default:
+                        query = query.OrderBy(u => u.Id);
+                        break;
+                }
+            }
+            else
+                query = query.OrderBy(u => u.Id);
+            
             var items = await query.Skip((pageParams.PageNumber - 1) * pageParams.PageSize).Take(pageParams.PageSize).ToListAsync();
             return items;
         }
