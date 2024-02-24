@@ -63,7 +63,17 @@ namespace Nexus.Auth.Api.Controllers
         {
             try
             {
-                var result = await _authHandler.Login(dto, EmailChecker.IsValidEmail(dto.UserName));
+                string clientType = "";
+                clientType = HttpContext.Request.Headers["X-Client-Type"];
+
+                //if (string.IsNullOrEmpty(clientType))
+                //    return new GenericCommandResult<AuthResult>(false, "Invalid requester", null, StatusCodes.Status403Forbidden);
+
+                var result = await _authHandler.Login(
+                    dto, 
+                    EmailChecker.IsValidEmail(dto.UserName), 
+                    clientType == "Mobile" ? true : false
+                );
 
                 if (result is not null)
                     return new GenericCommandResult<AuthResult>(
