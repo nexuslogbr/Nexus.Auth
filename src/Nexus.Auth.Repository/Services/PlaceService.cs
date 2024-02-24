@@ -19,13 +19,13 @@ namespace Nexus.Auth.Repository.Services
         }
 
 
-        public async Task<GenericCommandResult<PlaceResponseDto?>> GetById(int id)
+        public async Task<GenericCommandResult<PlaceResponseDto>> GetById(int id)
         {
-            var result = await _accessDataService.PostDataAsync<PlaceResponseDto>(_url, "api/v1/Place/GetById", new GetById { Id = id });
+            var result = await _accessDataService.PostDataAsync<GenericCommandResult<PlaceResponseDto>>(_url, "Place/GetById", new GetById { Id = id });
             if (result is not null)
-                return new GenericCommandResult<PlaceResponseDto?>(true, "Success", result, StatusCodes.Status200OK);
+                return result;
 
-            return new GenericCommandResult<PlaceResponseDto?>(true, "Error", null, StatusCodes.Status400BadRequest);
+            return new GenericCommandResult<PlaceResponseDto>(true, "Error", null, StatusCodes.Status400BadRequest);
         }
 
     }

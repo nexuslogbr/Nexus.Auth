@@ -136,6 +136,24 @@ namespace Nexus.Auth.Api.Controllers
             }
         }
 
+        /// POST: api/v1/User/PutPassword
+        /// <summary>
+        /// Endpoint to update password of user
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("PutPassword")]
+        public async Task<GenericCommandResult<UserModel>> PutPassword(UserIdDto dto)
+        {
+            try
+            {
+                return new GenericCommandResult<UserModel>(true, "Success", _mapper.Map<UserModel>(await _authHandler.UpdatePassword(dto)), StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                return new GenericCommandResult<UserModel>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+            }
+        }
+
         /// POST: api/v1/User/Remove
         /// <summary>
         /// Endpoint to remove an user

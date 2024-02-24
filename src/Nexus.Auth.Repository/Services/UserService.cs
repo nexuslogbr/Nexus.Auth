@@ -68,10 +68,11 @@ namespace Nexus.Auth.Repository.Services
             var query = _userManager.Users.AsQueryable();
             
             query = query
+                .Where(u => u.Id == id)
                 .Include(x => x.UserRoles)
                 .ThenInclude(x => x.Role);
 
-            return await query.FirstOrDefaultAsync(x => x.Id == id);
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<User> GetByNameAsync(string name)
