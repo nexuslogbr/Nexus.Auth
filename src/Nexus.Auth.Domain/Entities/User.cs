@@ -25,6 +25,7 @@ namespace Nexus.Auth.Domain.Entities
 
         public List<UserRole> UserRoles { get; set; }
 
+        public bool Mobile { get; set; }
         public int? PlaceId { get; set; }
         [Column(TypeName = "varchar(20)")]
         public string? PlaceName { get; set; }
