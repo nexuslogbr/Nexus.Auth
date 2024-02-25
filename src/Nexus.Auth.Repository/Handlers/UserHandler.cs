@@ -201,7 +201,9 @@ namespace Nexus.Auth.Repository.Handlers
         private string GeneratePasswordResetLink(string email, string token)
         {
             var path = _configuration["AppSettings:ResetPassword"];
-            return $"{path}/{HttpUtility.UrlEncode(email)}/{HttpUtility.UrlEncode(token)}";
+            var encodedEmail = HttpUtility.UrlEncode(email);
+            var encodedToken = HttpUtility.UrlEncode(token);
+            return $"{path}?email={encodedEmail}&token={encodedToken}";
         }
     }
 }
