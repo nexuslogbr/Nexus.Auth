@@ -76,17 +76,17 @@ namespace Nexus.Auth.Repository.Handlers
             }
 
             var user = await _userService.GetByIdAsync(entity.Id);
-            var updated = _mapper.Map(entity, user);
             if (user is null)
                 throw new Exception("Usuário não encontrado.");
 
-            user.PlaceId = place is not null ? place.Id : 0;
-            user.PlaceName = place is not null ? place.Name + " - " + place.Acronym : string.Empty;
-            user.ChangeDate = DateTime.Now;
-            user.Roles = updated.Roles;
+            var updated = _mapper.Map(entity, user);
 
-            await _userService.DeleteRoles(user.Id);
-            var result = !string.IsNullOrEmpty(entity.Password) ? await UpdateUserWithPass(user, entity.Password) :  await _authService.UpdateUserNoPass(user);
+            updated.PlaceId = place is not null ? place.Id : 0;
+            updated.PlaceName = place is not null ? place.Name + " - " + place.Acronym : string.Empty;
+            updated.ChangeDate = DateTime.Now;
+
+            await _userService.DeleteRoles(updated.Id);
+            var result = !string.IsNullOrEmpty(entity.Password) ? await UpdateUserWithPass(updated, entity.Password) : await _authService.UpdateUserNoPass(updated);
 
             if (!result.Succeeded)
                 throw new Exception("Erro ao salvar usuário.");
