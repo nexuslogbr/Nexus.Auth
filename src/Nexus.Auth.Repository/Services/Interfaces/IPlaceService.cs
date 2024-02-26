@@ -6,6 +6,6 @@ namespace Nexus.Auth.Repository.Services.Interfaces
 {
     public interface IPlaceService
     {
-        Task<GenericCommandResult<PlaceResponseDto?>> GetById(int id);
+        Task<PlaceResponseDto?> GetById(int id);
     }
 }
