@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.Place;
 using Nexus.Auth.Repository.Services.Interfaces;
-using Nexus.Auth.Repository.Utils;
 
 namespace Nexus.Auth.Repository.Services
 {
@@ -19,13 +17,9 @@ namespace Nexus.Auth.Repository.Services
         }
 
 
-        public async Task<GenericCommandResult<PlaceResponseDto>> GetById(int id)
+        public async Task<PlaceResponseDto> GetById(int id)
         {
-            var result = await _accessDataService.PostDataAsync<GenericCommandResult<PlaceResponseDto>>(_url, "Place/GetById", new GetById { Id = id });
-            if (result is not null)
-                return result;
-
-            return new GenericCommandResult<PlaceResponseDto>(true, "Error", null, StatusCodes.Status400BadRequest);
+            return await _accessDataService.PostDataAsync<PlaceResponseDto>(_url, "Place/GetById", new GetById { Id = id });
         }
 
     }
