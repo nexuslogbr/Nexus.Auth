@@ -85,7 +85,7 @@ namespace Nexus.Auth.Repository.Handlers
         {
             var user = _mapper.Map<User>(entity);
 
-            var place = await _placeService.GetById(entity.PlaceId);
+            var place = (await _placeService.GetById(entity.PlaceId)).Data;
             if (place is null) throw new Exception("Local inválido");
 
             user.PlaceId = place.Id;
@@ -106,7 +106,7 @@ namespace Nexus.Auth.Repository.Handlers
             await _userService.DeleteRoles(user.Id);
             var updated = _mapper.Map(entity, user);
 
-            var place = await _placeService.GetById(entity.PlaceId);
+            var place = (await _placeService.GetById(entity.PlaceId)).Data;
             if (place is null)  throw new Exception("Local inválido");
 
             updated.PlaceId = place.Id;
