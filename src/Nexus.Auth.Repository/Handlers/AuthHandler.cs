@@ -49,7 +49,7 @@ namespace Nexus.Auth.Repository.Handlers
 
             if (entity.Mobile)
             {
-                place = (await _placeService.GetById(entity.PlaceId)).Data;
+                place = await _placeService.GetById(entity.PlaceId);
                 if (place is null) throw new Exception("Local inválido");
             }
 
@@ -71,7 +71,7 @@ namespace Nexus.Auth.Repository.Handlers
             PlaceResponseDto place = null;
             if (entity.Mobile)
             {
-                place = (await _placeService.GetById(entity.PlaceId)).Data;
+                place = await _placeService.GetById(entity.PlaceId);
                 if (place is null || place.Id == 0) throw new Exception("Local inválido");
             }
 
