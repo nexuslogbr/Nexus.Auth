@@ -8,6 +8,7 @@ namespace Nexus.Auth.Repository.Models
         public string Name { get; set; }
         [DefaultValue(false)]
         public bool Mobile { get; set; }
+        public IList<SubMenuModel> SubMenus { get; set; }
         public string RegisterDate { get; set; }
         public string ChangeDate { get; set; }
     }

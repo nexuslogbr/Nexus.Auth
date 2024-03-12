@@ -18,7 +18,9 @@ namespace Nexus.Auth.Repository.Services
         public async Task<List<Menu>> GetAllAsync(PageParams pageParams)
         {
 
-            IQueryable<Menu> query = _context.Menus.AsQueryable();
+            IQueryable<Menu> query = _context.Menus
+                .Include(x => x.SubMenus)
+                .AsQueryable();
 
             query = query
                 .Where(x => x.Name.ToLower().Contains(pageParams.Term.ToLower()));
@@ -48,7 +50,9 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<Menu> GetByIdAsync(int id)
         {
-            return await _context.Menus.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Menus
+                .Include(x => x.SubMenus)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IList<Menu>> GetByRoleIdAsync(int roleId)
@@ -64,7 +68,9 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<Menu> GetByNameAsync(string name)
         {
-            return await _context.Menus.FirstOrDefaultAsync(x => x.Name == name);
+            return await _context.Menus
+                .Include(x => x.SubMenus)
+                .FirstOrDefaultAsync(x => x.Name == name);
         }
 
         public async Task<bool> Add(Menu entity)

@@ -53,7 +53,11 @@ namespace Nexus.Auth.Api.Helpers
             
             CreateMap<Menu, MenuDto>().ReverseMap();
             CreateMap<Menu, MenuIdDto>().ReverseMap();
+            CreateMap<SubMenu, SubMenuModel>().ReverseMap();
             CreateMap<Menu, MenuModel>().ReverseMap();
+            CreateMap<Menu, MenuModel>()
+            .ForMember(dest => dest.SubMenus, opt => opt.MapFrom(src => src.SubMenus)); 
+
             CreateMap<Menu, GetById>().ReverseMap();
 
             CreateMap<RoleMenu, MenuIdDto>()

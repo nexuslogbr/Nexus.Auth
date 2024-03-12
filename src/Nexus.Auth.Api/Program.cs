@@ -10,6 +10,7 @@ using Nexus.Auth.Repository.Utils;
 using System.Dynamic;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Yarp.ReverseProxy.Transforms;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -116,7 +117,11 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader());
 });
 builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerConfiguration();

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Infra.Context;
 using Nexus.Auth.Repository.Dtos.Generics;
+using Nexus.Auth.Repository.Dtos.Menu;
 using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Services.Interfaces;
@@ -22,9 +23,25 @@ namespace Nexus.Auth.Repository.Handlers
             _mapper = mapper;
         }
 
-        public async Task<PageList<MenuModel>>  GetAll(PageParams pageParams)
+        public async Task<PageList<MenuModel>> GetAll(PageParams pageParams)
         {
             var menus = await _menuService.GetAllAsync(pageParams);
+
+            var result = menus.Select(m => new MenuModel
+            {
+                Id = m.Id,
+                Name = m.Name,
+                Mobile = m.Mobile,
+                SubMenus = m.SubMenus.Select(sm => new SubMenuModel
+                {
+                    Name = sm.Name,
+                    Link = sm.Link,
+                    Mobile = sm.Mobile
+                }).ToList(),
+                RegisterDate = m.RegisterDate.ToString(),
+                ChangeDate = m.ChangeDate.ToString()
+            });
+
             var count = await _context.Menus.CountAsync();
             
             return new PageList<MenuModel>(
@@ -34,14 +51,48 @@ namespace Nexus.Auth.Repository.Handlers
                 pageParams.PageSize);
         }
 
-        async Task<Menu> IMenuHandler<Menu>.GetById(int id)
+        public async Task<MenuModel> GetById(int id)
         {
-            return await _menuService.GetByIdAsync(id);
+            var result = await _menuService.GetByIdAsync(id);
+
+            if (result is not null)
+            {
+                return new MenuModel()
+                {
+                    Id = result.Id,
+                    Name = result.Name,
+                    Mobile = result.Mobile,
+                    SubMenus = result.SubMenus.Select(sb => new SubMenuModel
+                    {
+                        Name= sb.Name,
+                        Link = sb.Link,
+                        Mobile = sb.Mobile
+                    }).ToList()
+                };
+            }
+            return null;
         }
 
-        async Task<Menu>  IMenuHandler<Menu>.GetByName(string name)
+        public async Task<MenuModel> GetByName(string name)
         {
-            return await _menuService.GetByNameAsync(name);
+            var result = await _menuService.GetByNameAsync(name);
+
+            if (result is not null)
+            {
+                return new MenuModel()
+                {
+                    Id = result.Id,
+                    Name = result.Name,
+                    Mobile = result.Mobile,
+                    SubMenus = result.SubMenus.Select(sb => new SubMenuModel
+                    {
+                        Name = sb.Name,
+                        Link = sb.Link,
+                        Mobile = sb.Mobile
+                    }).ToList()
+                };
+            }
+            return null;
         }
 
         public async Task<Menu> Add(Menu entity)
@@ -67,7 +118,7 @@ namespace Nexus.Auth.Repository.Handlers
             return null;
         }
 
-        async Task<bool> IBaseHandler<Menu>.Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             var removed = await _menuService.Delete(id);
 
@@ -82,10 +133,9 @@ namespace Nexus.Auth.Repository.Handlers
             throw new NotImplementedException();
         }
 
-        Task<Menu> IBaseHandler<Menu>.SaveChangesAsync()
+        public Task<Menu> SaveChangesAsync()
         {
             throw new NotImplementedException();
         }
-
     }
 }

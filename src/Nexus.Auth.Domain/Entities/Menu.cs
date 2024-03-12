@@ -14,5 +14,6 @@ namespace Nexus.Auth.Domain.Entities
         [DefaultValue(false)]
         public bool Mobile { get; set; }
 
+        public virtual List<SubMenu> SubMenus { get; set; }
     }
 }

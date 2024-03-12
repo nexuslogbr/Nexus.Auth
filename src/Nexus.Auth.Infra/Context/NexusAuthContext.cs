@@ -13,6 +13,7 @@ namespace Nexus.Auth.Infra.Context
         public NexusAuthContext(DbContextOptions<NexusAuthContext> options) : base(options) { }
 
         public DbSet<Menu> Menus { get; set; }
+        public DbSet<SubMenu> SubMenus { get; set; }
         public DbSet<RoleMenu> RoleMenus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
