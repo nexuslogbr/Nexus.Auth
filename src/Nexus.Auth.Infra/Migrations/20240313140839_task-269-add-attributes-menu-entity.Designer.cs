@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nexus.Auth.Infra.Context;
 
@@ -11,9 +12,11 @@ using Nexus.Auth.Infra.Context;
 namespace Nexus.Auth.Infra.Migrations
 {
     [DbContext(typeof(NexusAuthContext))]
-    partial class NexusAuthContextModelSnapshot : ModelSnapshot
+    [Migration("20240313140839_task-269-add-attributes-menu-entity")]
+    partial class task269addattributesmenuentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,9 +132,6 @@ namespace Nexus.Auth.Infra.Migrations
 
                     b.Property<string>("Link")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("MenuSectionId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("Mobile")
                         .HasColumnType("bit");

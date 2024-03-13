@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nexus.Auth.Infra.Context;
 
@@ -11,9 +12,11 @@ using Nexus.Auth.Infra.Context;
 namespace Nexus.Auth.Infra.Migrations
 {
     [DbContext(typeof(NexusAuthContext))]
-    partial class NexusAuthContextModelSnapshot : ModelSnapshot
+    [Migration("20240312222545_task-269-add-column-mobile-in-role")]
+    partial class task269addcolumnmobileinrole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,15 +127,6 @@ namespace Nexus.Auth.Infra.Migrations
                     b.Property<DateTime>("ChangeDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Link")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("MenuSectionId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Mobile")
                         .HasColumnType("bit");
 
@@ -142,9 +136,6 @@ namespace Nexus.Auth.Infra.Migrations
 
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -227,6 +218,44 @@ namespace Nexus.Auth.Infra.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("RoleMenus");
+                });
+
+            modelBuilder.Entity("Nexus.Auth.Domain.Entities.SubMenu", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Blocked")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ChangeDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Link")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MenuId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Mobile")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuId");
+
+                    b.ToTable("SubMenus");
                 });
 
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.User", b =>
@@ -392,6 +421,17 @@ namespace Nexus.Auth.Infra.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Nexus.Auth.Domain.Entities.SubMenu", b =>
+                {
+                    b.HasOne("Nexus.Auth.Domain.Entities.Menu", "Menu")
+                        .WithMany("SubMenus")
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Menu");
+                });
+
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.UserRole", b =>
                 {
                     b.HasOne("Nexus.Auth.Domain.Entities.Role", "Role")
@@ -409,6 +449,11 @@ namespace Nexus.Auth.Infra.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Nexus.Auth.Domain.Entities.Menu", b =>
+                {
+                    b.Navigation("SubMenus");
                 });
 
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.Role", b =>
