@@ -13,6 +13,8 @@ namespace Nexus.Auth.Domain.Entities
         [DefaultValue(false)]
         public bool Blocked { get; set; }
 
+        public bool Mobile { get; set; }
+
         public DateTime RegisterDate
         {
             get { return _registerDate; }
@@ -23,5 +25,8 @@ namespace Nexus.Auth.Domain.Entities
 
         public virtual List<UserRole> UserRoles { get; set; }
         public virtual IList<RoleMenu> RoleMenus { get; set; }
+
+        [NotMapped]
+        public virtual IList<Menu> Menus { get; set; }
     }
 }

@@ -117,7 +117,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<IActionResult> Put(MenuIdDto dto)
+        public async Task<IActionResult> Put(MenuDto dto)
         {
             try
             {

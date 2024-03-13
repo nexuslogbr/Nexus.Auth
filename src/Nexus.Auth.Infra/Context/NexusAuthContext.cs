@@ -13,7 +13,6 @@ namespace Nexus.Auth.Infra.Context
         public NexusAuthContext(DbContextOptions<NexusAuthContext> options) : base(options) { }
 
         public DbSet<Menu> Menus { get; set; }
-        public DbSet<SubMenu> SubMenus { get; set; }
         public DbSet<RoleMenu> RoleMenus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,9 +26,6 @@ namespace Nexus.Auth.Infra.Context
                 userRole.HasOne(r => r.Role).WithMany(x => x.UserRoles).HasForeignKey(s => s.RoleId).IsRequired();
                 userRole.HasOne(r => r.User).WithMany(x => x.UserRoles).HasForeignKey(s => s.UserId).IsRequired();
             });
-
-            //Especifica a relação de n para n e definindo quais são os identificadores
-            //modelBuilder.Entity<RoleMenu>().HasKey(p => new { p.RoleId, p.MenuId });
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

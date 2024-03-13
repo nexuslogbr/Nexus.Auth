@@ -33,11 +33,9 @@ namespace Nexus.Auth.Api.Helpers
                 .ForMember(d => d.Id, src => src.Ignore())
                 .ForMember(d => d.RoleId, src => src.MapFrom(e => e.Id));
             CreateMap<Role, RoleModel>()
-                .ForMember(d => d.Menus, src => src.MapFrom(e => e.RoleMenus))
                 .ReverseMap();
             CreateMap<Role, RoleDto>()
-                .ReverseMap()
-                .ForMember(e => e.RoleMenus, src => src.MapFrom(d => d.Menus));
+                .ReverseMap();
             
             CreateMap<RoleMenu, RoleMenuDto>().ReverseMap();
             CreateMap<RoleMenu, GetById>()
@@ -52,18 +50,15 @@ namespace Nexus.Auth.Api.Helpers
             CreateMap<UserRole, UserDto>().ReverseMap();
             
             CreateMap<Menu, MenuDto>().ReverseMap();
-            CreateMap<Menu, MenuIdDto>().ReverseMap();
-            CreateMap<SubMenu, SubMenuModel>().ReverseMap();
             CreateMap<Menu, MenuModel>().ReverseMap();
-            CreateMap<Menu, MenuModel>()
-            .ForMember(dest => dest.SubMenus, opt => opt.MapFrom(src => src.SubMenus)); 
 
             CreateMap<Menu, GetById>().ReverseMap();
 
-            CreateMap<RoleMenu, MenuIdDto>()
-                .ForMember(e => e.Name, src => src.MapFrom(d => d.Menu.Name))
-                .ForMember(e => e.Mobile, src => src.MapFrom(d => d.Menu.Mobile))
-                .ForMember(e => e.Id, src => src.MapFrom(d => d.MenuId));
+            //CreateMap<Menu, MenuIdDto>().ReverseMap();
+            //CreateMap<RoleMenu, MenuIdDto>()
+            //    .ForMember(e => e.Name, src => src.MapFrom(d => d.Menu.Name))
+            //    .ForMember(e => e.Mobile, src => src.MapFrom(d => d.Menu.Mobile))
+            //    .ForMember(e => e.Id, src => src.MapFrom(d => d.MenuId));
 
         }
     }

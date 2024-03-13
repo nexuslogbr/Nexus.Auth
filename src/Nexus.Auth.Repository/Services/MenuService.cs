@@ -19,7 +19,6 @@ namespace Nexus.Auth.Repository.Services
         {
 
             IQueryable<Menu> query = _context.Menus
-                .Include(x => x.SubMenus)
                 .AsQueryable();
 
             query = query
@@ -51,7 +50,6 @@ namespace Nexus.Auth.Repository.Services
         public async Task<Menu> GetByIdAsync(int id)
         {
             return await _context.Menus
-                .Include(x => x.SubMenus)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -69,7 +67,6 @@ namespace Nexus.Auth.Repository.Services
         public async Task<Menu> GetByNameAsync(string name)
         {
             return await _context.Menus
-                .Include(x => x.SubMenus)
                 .FirstOrDefaultAsync(x => x.Name == name);
         }
 

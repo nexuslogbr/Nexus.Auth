@@ -8,6 +8,7 @@ using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Auth.Repository.Utils;
+using System.Data;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -29,6 +30,14 @@ namespace Nexus.Auth.Repository.Handlers
         public async Task<PageList<RoleModel>> GetAll(PageParams pageParams)
         {
             var roles = await _roleService.GetAllAsync(pageParams);
+
+            foreach (var role in roles)
+            {
+                role.Menus = new List<Menu>();
+                foreach (var item in role.RoleMenus) 
+                    role.Menus.Add(item.Menu);
+            }
+
             var count = await _roleManager.Roles.CountAsync();
             return new PageList<RoleModel>(
                 _mapper.Map<List<RoleModel>>(roles),
@@ -39,17 +48,42 @@ namespace Nexus.Auth.Repository.Handlers
 
         public async Task<RoleModel> GetById(int id)
         {
-            return _mapper.Map<RoleModel>(await _roleService.GetByIdAsync(id));
+            var role = await _roleService.GetByIdAsync(id);
+            if (role is not null)
+            {
+                role.Menus = new List<Menu>();
+                foreach (var item in role.RoleMenus)
+                    role.Menus.Add(item.Menu);
+
+                return _mapper.Map<RoleModel>(role);
+            }
+
+            return null;
         }
 
         public async Task<RoleModel> GetByName(string name)
         {
-            return _mapper.Map<RoleModel>(await _roleService.GetByNameAsync(name));
+            var role = await _roleService.GetByNameAsync(name);
+            if (role is not null)
+            {
+                role.Menus = new List<Menu>();
+                foreach (var item in role.RoleMenus)
+                    role.Menus.Add(item.Menu);
+
+                return _mapper.Map<RoleModel>(role);
+            }
+
+            return null;
         }
 
         public async Task<RoleModel> Add(RoleDto dto)
         {
             var role = _mapper.Map<Role>(dto);
+            role.RoleMenus = new List<RoleMenu>();
+
+            foreach (var menu in dto.Menus)
+                role.RoleMenus.Add(new RoleMenu { MenuId = menu.Id, RegisterDate = DateTime.Now });
+
             var success = await _roleService.Add(role);
             if (!success)
                 throw new Exception("Cargo inválido.");
@@ -67,7 +101,12 @@ namespace Nexus.Auth.Repository.Handlers
                 throw new Exception("Perfil sem menus vinculados.");
 
             var currentDate = DateTimeExtensions.GetCurrentDate();
-            var roleMenusToSave = entity.Menus.Select(menu => new RoleMenu { RoleId = role.Id, MenuId = menu.Id, RegisterDate = currentDate, ChangeDate = currentDate, Blocked = false }).ToList();
+            var roleMenusToSave = entity.Menus.Select(menu => new RoleMenu { 
+                RoleId = role.Id, 
+                MenuId = menu.Id, 
+                ChangeDate = currentDate, 
+            }).ToList();
+
             var roleMenusToRemove = await _menuService.GetMenuByRoleIdAsync(role.Id);
 
             if (await _menuService.AddRange(roleMenusToSave))

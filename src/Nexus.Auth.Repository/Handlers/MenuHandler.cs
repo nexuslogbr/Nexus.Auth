@@ -32,12 +32,8 @@ namespace Nexus.Auth.Repository.Handlers
                 Id = m.Id,
                 Name = m.Name,
                 Mobile = m.Mobile,
-                SubMenus = m.SubMenus.Select(sm => new SubMenuModel
-                {
-                    Name = sm.Name,
-                    Link = sm.Link,
-                    Mobile = sm.Mobile
-                }).ToList(),
+                Link = m.Link,
+                Type = m.Type,
                 RegisterDate = m.RegisterDate.ToString(),
                 ChangeDate = m.ChangeDate.ToString()
             });
@@ -56,20 +52,8 @@ namespace Nexus.Auth.Repository.Handlers
             var result = await _menuService.GetByIdAsync(id);
 
             if (result is not null)
-            {
-                return new MenuModel()
-                {
-                    Id = result.Id,
-                    Name = result.Name,
-                    Mobile = result.Mobile,
-                    SubMenus = result.SubMenus.Select(sb => new SubMenuModel
-                    {
-                        Name= sb.Name,
-                        Link = sb.Link,
-                        Mobile = sb.Mobile
-                    }).ToList()
-                };
-            }
+                return _mapper.Map<MenuModel>(result);
+
             return null;
         }
 
@@ -78,20 +62,8 @@ namespace Nexus.Auth.Repository.Handlers
             var result = await _menuService.GetByNameAsync(name);
 
             if (result is not null)
-            {
-                return new MenuModel()
-                {
-                    Id = result.Id,
-                    Name = result.Name,
-                    Mobile = result.Mobile,
-                    SubMenus = result.SubMenus.Select(sb => new SubMenuModel
-                    {
-                        Name = sb.Name,
-                        Link = sb.Link,
-                        Mobile = sb.Mobile
-                    }).ToList()
-                };
-            }
+                return _mapper.Map<MenuModel>(result);
+
             return null;
         }
 

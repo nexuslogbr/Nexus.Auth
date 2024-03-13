@@ -117,11 +117,7 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader());
 });
 builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    });
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerConfiguration();
