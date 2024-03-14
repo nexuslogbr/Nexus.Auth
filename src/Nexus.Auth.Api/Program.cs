@@ -10,6 +10,7 @@ using Nexus.Auth.Repository.Utils;
 using System.Dynamic;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Yarp.ReverseProxy.Transforms;
 
 var builder = WebApplication.CreateBuilder(args);

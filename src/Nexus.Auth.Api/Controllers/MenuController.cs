@@ -54,7 +54,7 @@ namespace Nexus.Auth.Api.Controllers
                 var result = await _menuHandler.GetById(dto.Id);
 
                 if (result is not null)
-                    return Ok(_mapper.Map<MenuIdDto>(result));
+                    return Ok(result);
 
                 return BadRequest(result);
             }
@@ -77,7 +77,7 @@ namespace Nexus.Auth.Api.Controllers
                 var result = await _menuHandler.GetByName(dto.Name);
 
                 if (result is not null)
-                    return Ok(_mapper.Map<MenuDto>(result));
+                    return Ok(result);
 
                 return BadRequest(result);
             }
@@ -117,7 +117,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<IActionResult> Put(MenuIdDto dto)
+        public async Task<IActionResult> Put(MenuDto dto)
         {
             try
             {
