@@ -1,5 +1,4 @@
-﻿using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Repository.Dtos.Generics;
+﻿using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Handlers.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -124,7 +123,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<GenericCommandResult<UserModel>> Put(UserIdDto dto)
+        public async Task<GenericCommandResult<UserModel>> Put(UserDto dto)
         {
             try
             {
@@ -142,7 +141,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("PutPassword")]
-        public async Task<GenericCommandResult<UserModel>> PutPassword(UserIdDto dto)
+        public async Task<GenericCommandResult<UserModel>> PutPassword(UserDto dto)
         {
             try
             {

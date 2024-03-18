@@ -1,6 +1,6 @@
 ﻿namespace Nexus.Auth.Repository.Dtos.User
 {
-    public class UserRoleDto
+    public class UserPlaceDto
     {
         public int Id { get; set; }
     }
