@@ -1,5 +1,4 @@
-﻿using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Repository.Dtos.Generics;
+﻿using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Handlers.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -124,7 +123,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<GenericCommandResult<UserModel>> Put(UserIdDto dto)
+        public async Task<GenericCommandResult<UserModel>> Put(UserDto dto)
         {
             try
             {
@@ -142,7 +141,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("PutPassword")]
-        public async Task<GenericCommandResult<UserModel>> PutPassword(UserIdDto dto)
+        public async Task<GenericCommandResult<UserModel>> PutPassword(UserDto dto)
         {
             try
             {
@@ -199,5 +198,25 @@ namespace Nexus.Auth.Api.Controllers
                 return new GenericCommandResult<object>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
+
+
+        /// POST: api/v1/User/ChangePlace
+        /// <summary>
+        /// Endpoint to change location
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ChangePlace")]
+        public async Task<GenericCommandResult<UserPlaceModel>> ChangePlace(UserPlaceDto dto)
+        {
+            try
+            {
+                return new GenericCommandResult<UserPlaceModel>(true, "Success", await _userHandler.ChangePlace(dto), StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                return new GenericCommandResult<UserPlaceModel>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+            }
+        }
+
     }
 }

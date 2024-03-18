@@ -14,6 +14,7 @@ namespace Nexus.Auth.Infra.Context
 
         public DbSet<Menu> Menus { get; set; }
         public DbSet<RoleMenu> RoleMenus { get; set; }
+        public DbSet<UserPlace> UserPlaces { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

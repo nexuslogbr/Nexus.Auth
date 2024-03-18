@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Nexus.Auth.Domain.Entities;
+using Nexus.Auth.Domain.Model;
 using Nexus.Auth.Infra.Context;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Services.Interfaces;
@@ -33,7 +34,8 @@ namespace Nexus.Auth.Repository.Services
                             )
                 )
                 .Include(x => x.UserRoles)
-                .ThenInclude(x => x.Role);
+                .ThenInclude(x => x.Role)
+                .Include(y => y.UserPlaces);
 
             if (!string.IsNullOrEmpty(pageParams.OrderByProperty))
             {
@@ -70,7 +72,8 @@ namespace Nexus.Auth.Repository.Services
             query = query
                 .Where(u => u.Id == id)
                 .Include(x => x.UserRoles)
-                .ThenInclude(x => x.Role);
+                .ThenInclude(x => x.Role)
+                .Include(y => y.UserPlaces);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -180,6 +183,11 @@ namespace Nexus.Auth.Repository.Services
         public async Task<IdentityResult> RemoveRoles(User user, IList<string> userRoles)
         {
             return await _userManager.RemoveFromRolesAsync(user, userRoles);
+        }
+
+        public async Task<List<UserPlace>> GetPlacesByUserId(int userId)
+        {
+            return await _context.UserPlaces.Where(_ => _.UserId == userId).ToListAsync();
         }
     }
 }

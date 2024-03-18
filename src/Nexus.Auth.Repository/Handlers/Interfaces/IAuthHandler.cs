@@ -9,8 +9,8 @@ namespace Nexus.Auth.Repository.Handlers.Interfaces
     public interface IAuthHandler
     {
         Task<UserModel> Register(UserDto entity);
-        Task<UserModel> Update(UserIdDto entity);
-        Task<UserModel> UpdatePassword(UserIdDto entity);
+        Task<UserModel> Update(UserDto entity);
+        Task<UserModel> UpdatePassword(UserDto entity);
         Task<AuthResult> Login(UserLoginDto dto, bool isEmail, bool mobile);
         Task<GenericCommandResult<object>> RegisterRolesToUser(List<UserRole> entity);
         Task<bool> Logout();

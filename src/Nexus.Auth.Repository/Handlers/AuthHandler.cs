@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Repository.Dtos.Auth;
+using Nexus.Auth.Repository.Dtos.Menu;
 using Nexus.Auth.Repository.Dtos.Place;
 using Nexus.Auth.Repository.Dtos.Role;
 using Nexus.Auth.Repository.Dtos.User;
@@ -26,6 +27,7 @@ namespace Nexus.Auth.Repository.Handlers
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly IPlaceService _placeService;
+        private readonly IMenuService<Menu> _menuService;
 
         public AuthHandler(
             IAuthService authService,
@@ -33,7 +35,8 @@ namespace Nexus.Auth.Repository.Handlers
             IConfiguration config,
             IRoleService<Role> roleService,
             IMapper mapper,
-            IPlaceService placeService)
+            IPlaceService placeService,
+            IMenuService<Menu> menuService)
         {
             _authService = authService;
             _userService = userService;
@@ -41,48 +44,27 @@ namespace Nexus.Auth.Repository.Handlers
             _roleService = roleService;
             _mapper = mapper;
             _placeService = placeService;
+            _menuService = menuService;
         }
 
         public async Task<UserModel> Register(UserDto entity)
         {
-            PlaceResponseDto place = null;
-
-            if (entity.Mobile)
-            {
-                place = (await _placeService.GetById(entity.PlaceId)).Data;
-                if (place is null) throw new Exception("Local inválido");
-            }
-
             var user = _mapper.Map<User>(entity);
-            user.PlaceId = place is not null ? place.Id : 0;
-            user.PlaceName = place is not null ? place.Name + " - "+ place.Acronym : string.Empty;
-            user.RegisterDate = DateTime.Now;
-            user.Roles = _mapper.Map<List<Role>>(entity.Roles);
             var result = await _authService.Register(user, entity.Password);
 
             if (!result.Succeeded)
-                throw new Exception("Erro ao salvar usuário.");
+                throw new Exception(result.Errors.First().Code + ": " + result.Errors.First().Description);
 
             return _mapper.Map<UserModel>(user);
         }
 
-        public async Task<UserModel> Update(UserIdDto entity)
+        public async Task<UserModel> Update(UserDto entity)
         {
-            PlaceResponseDto place = null;
-            if (entity.Mobile)
-            {
-                place = (await _placeService.GetById(entity.PlaceId)).Data;
-                if (place is null || place.Id == 0) throw new Exception("Local inválido");
-            }
-
             var user = await _userService.GetByIdAsync(entity.Id);
             if (user is null)
                 throw new Exception("Usuário não encontrado.");
 
             var updated = _mapper.Map(entity, user);
-
-            updated.PlaceId = place is not null ? place.Id : 0;
-            updated.PlaceName = place is not null ? place.Name + " - " + place.Acronym : string.Empty;
             updated.ChangeDate = DateTime.Now;
 
             await _userService.DeleteRoles(updated.Id);
@@ -94,7 +76,7 @@ namespace Nexus.Auth.Repository.Handlers
             return _mapper.Map<UserModel>(user);
         }
 
-        public async Task<UserModel> UpdatePassword(UserIdDto entity)
+        public async Task<UserModel> UpdatePassword(UserDto entity)
         {
             var user = await _userService.GetByEmailAsync(entity.Email);
             if (user is null)
@@ -148,18 +130,26 @@ namespace Nexus.Auth.Repository.Handlers
 
             if (user is null)
                 return null;
-            else if (mobile && !user.Mobile)
-                return null;
             else
             {
-                user.ResetPasswordToken = await _userService.GeneratePasswordResetTokenAsync(user);
+                var userResult = _mapper.Map<UserResult>(user);
+
+                var userLocations = await _userService.GetPlacesByUserId(user.Id);
+                var locations = userLocations.Select(_ => _.PlaceId).ToList();
+                userResult.Location = (await _placeService.GetById(user.PlaceId)).Data;
+                userResult.ResetPasswordToken = await _userService.GeneratePasswordResetTokenAsync(user);
+                var places = (await _placeService.GetByIds(locations)).Data;
+
+                var menus = await _menuService.GetMenuByRoleIdAsync(user.Roles.First().Id);
                 var result = await _authService.CheckPasswordSignIn(user, dto.Password);
                 if (result.Succeeded)
                     return new AuthResult
                     {
                         Token = await GenerateJWToken(user),
-                        User = _mapper.Map<UserResult>(user),
-                        Roles = _mapper.Map<RoleResult[]>(user.Roles)
+                        User = userResult,
+                        Roles = _mapper.Map<RoleResult[]>(user.Roles),
+                        Menus = _mapper.Map<MenuResult[]>(menus.Select(roleMenu => roleMenu.Menu).ToList()),
+                        Places = _mapper.Map<PlaceResult[]>(places)
                     };
             }
 
@@ -173,7 +163,6 @@ namespace Nexus.Auth.Repository.Handlers
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Locality, user.PlaceName)
             };
 
             var roles = await _roleService.GetByUserIdAsync(user.Id);

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nexus.Auth.Infra.Context;
 
@@ -11,9 +12,11 @@ using Nexus.Auth.Infra.Context;
 namespace Nexus.Auth.Infra.Migrations
 {
     [DbContext(typeof(NexusAuthContext))]
-    partial class NexusAuthContextModelSnapshot : ModelSnapshot
+    [Migration("20240314233129_task-270-create-entity-user-place")]
+    partial class task270createentityuserplace
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -284,9 +287,6 @@ namespace Nexus.Auth.Infra.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PlaceId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
@@ -328,6 +328,9 @@ namespace Nexus.Auth.Infra.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlaceName")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("RegisterDate")
