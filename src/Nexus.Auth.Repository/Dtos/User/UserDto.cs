@@ -1,21 +1,15 @@
-﻿using Nexus.Auth.Repository.Dtos.Role;
-using System.ComponentModel.DataAnnotations;
+﻿using Nexus.Auth.Repository.Dtos.Generics;
 
 namespace Nexus.Auth.Repository.Dtos.User
 {
     public class UserDto
     {
-        public string? Name { get; set; }
-        public string? UserName { get; set; }
-        public string? Email { get; set; }
-        public string? Password { get; set; }
-        public int PlaceId { get; set; }
-        public IList<RoleUserDto>? Roles { get; set; }
-        public bool Mobile { get; set; }
-    }
-
-    public class UserIdDto : UserDto
-    {
         public int Id { get; set; }
+        public required string Name { get; set; }
+        public required string UserName { get; set; }
+        public required IList<GetById> Roles { get; set; }
+        public required IList<GetById> Places { get; set; }
+        public required string Email { get; set; }
+        public required string Password { get; set; }
     }
 }

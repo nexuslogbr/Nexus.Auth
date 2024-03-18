@@ -1,4 +1,5 @@
 ﻿using Nexus.Auth.Repository.Dtos.Menu;
+using Nexus.Auth.Repository.Dtos.Place;
 using Nexus.Auth.Repository.Dtos.Role;
 using Nexus.Auth.Repository.Dtos.User;
 
@@ -10,5 +11,6 @@ namespace Nexus.Auth.Repository.Dtos.Auth
         public UserResult? User { get; set; }
         public IList<RoleResult>? Roles { get; set; }
         public IList<MenuResult>? Menus { get; set; }
+        public IList<PlaceResult>? Places { get; set; }
     }
 }
