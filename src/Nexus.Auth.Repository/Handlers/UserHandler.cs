@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Nexus.Auth.Domain.Entities;
+using Nexus.Auth.Domain.Model;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.User;
 using Nexus.Auth.Repository.Handlers.Interfaces;
@@ -48,6 +49,19 @@ namespace Nexus.Auth.Repository.Handlers
             foreach (var user in users)
                 user.Roles = await _roleService.GetByUserIdAsync(user.Id);
 
+            foreach (var user in users)
+            {
+                user.Places = new List<PlaceModel>();
+                user.Places = _mapper.Map<List<PlaceModel>>((await _placeService.GetByIds(user.UserPlaces.Select(p => p.Id).ToList())).Data);
+
+                var ids = user.UserPlaces.Select(p => p.PlaceId).ToList();
+
+                var njhk = (await _placeService.GetByIds(user.UserPlaces.Select(p => p.Id).ToList())).Data;
+
+                //if (njhk is not null && njhk.Count > 0)
+                //    var dfd = _mapper.Map<List<PlaceModel>>(njhk);
+            }
+
             var count = await _userManager.Users.CountAsync();
 
             return new PageList<UserModel>(
@@ -63,7 +77,11 @@ namespace Nexus.Auth.Repository.Handlers
 
             if (user is null) return null;
 
+            var places = new List<PlaceModel>();
+            foreach (var place in user.UserPlaces) places.Add(new PlaceModel { Id = place.PlaceId });
+
             user.Roles = user is not null ? await _roleService.GetByUserIdAsync(user.Id) : throw new Exception("Error load entity");
+            user.Places = user is not null ? places : throw new Exception("Error load locations");
             return user;
         }
 
@@ -84,12 +102,8 @@ namespace Nexus.Auth.Repository.Handlers
         public async Task<UserModel> Add(UserDto entity)
         {
             var user = _mapper.Map<User>(entity);
+            user.PlaceId = entity.Places.FirstOrDefault().Id;
 
-            var place = (await _placeService.GetById(entity.PlaceId)).Data;
-            if (place is null) throw new Exception("Local inválido");
-
-            user.PlaceId = place.Id;
-            user.PlaceName = place.Name;
             user.ChangeDate = DateTime.Now;
             user.RegisterDate = DateTime.Now;
             var result = await _userService.Add(user);
@@ -100,17 +114,12 @@ namespace Nexus.Auth.Repository.Handlers
             return _mapper.Map<UserModel>(user);
         }
 
-        public async Task<UserModel> Update(UserIdDto entity)
+        public async Task<UserModel> Update(UserDto entity)
         {
             var user = await _userService.GetByIdAsync(entity.Id);
             await _userService.DeleteRoles(user.Id);
+
             var updated = _mapper.Map(entity, user);
-
-            var place = (await _placeService.GetById(entity.PlaceId)).Data;
-            if (place is null)  throw new Exception("Local inválido");
-
-            updated.PlaceId = place.Id;
-            updated.PlaceName = place.Name;
             updated.ChangeDate = DateTime.Now;
             var result = await _userService.Update(updated);
             
@@ -205,5 +214,25 @@ namespace Nexus.Auth.Repository.Handlers
             var encodedToken = HttpUtility.UrlEncode(token);
             return $"{path}?email={encodedEmail}&token={encodedToken}";
         }
+
+        public async Task<UserPlaceModel> ChangePlace(UserPlaceDto entity)
+        {
+            var user = await _userService.GetByEmailAsync(entity.UserEmail);
+            var place = (await _placeService.GetById(entity.PlaceId)).Data;
+
+            if (user is not null && place is not null && place.Id > 0)
+                user.PlaceId = place.Id;
+
+            user.ChangeDate = DateTime.Now;
+            var result = await _userService.Update(user);
+
+            if (!result)
+                throw new Exception("Error update of entity");
+
+            var mapped =  _mapper.Map<UserPlaceModel>(user);
+            mapped.Location = _mapper.Map<PlaceModel>(place);
+            return mapped;
+        }
+
     }
 }

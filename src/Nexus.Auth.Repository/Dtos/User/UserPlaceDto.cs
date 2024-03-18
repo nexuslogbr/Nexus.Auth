@@ -2,6 +2,7 @@
 {
     public class UserPlaceDto
     {
-        public int Id { get; set; }
+        public required string UserEmail { get; set; }
+        public int PlaceId { get; set; }
     }
 }

@@ -198,5 +198,25 @@ namespace Nexus.Auth.Api.Controllers
                 return new GenericCommandResult<object>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
+
+
+        /// POST: api/v1/User/ChangePlace
+        /// <summary>
+        /// Endpoint to change location
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ChangePlace")]
+        public async Task<GenericCommandResult<UserPlaceModel>> ChangePlace(UserPlaceDto dto)
+        {
+            try
+            {
+                return new GenericCommandResult<UserPlaceModel>(true, "Success", await _userHandler.ChangePlace(dto), StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                return new GenericCommandResult<UserPlaceModel>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+            }
+        }
+
     }
 }

@@ -24,6 +24,8 @@ namespace Nexus.Auth.Domain.Entities
 
         public DateTime ChangeDate { get; set; }
 
+        public int PlaceId { get; set; }
+
         public required List<UserRole> UserRoles { get; set; }
         public required List<UserPlace> UserPlaces { get; set; }
 
