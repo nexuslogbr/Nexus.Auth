@@ -42,30 +42,21 @@ namespace Nexus.Auth.Repository.Handlers
             _placeService = placeService;
         }
 
-        public async Task<PageList<UserModel>> GetAll(PageParams pageParams)
+        public async Task<PageList<GetAllUserModel>> GetAll(PageParams pageParams)
         {
             var users = await _userService.GetAllAsync(pageParams);
 
             foreach (var user in users)
-                user.Roles = await _roleService.GetByUserIdAsync(user.Id);
-
-            foreach (var user in users)
             {
+                user.Roles = await _roleService.GetByUserIdAsync(user.Id);
                 user.Places = new List<PlaceModel>();
-                user.Places = _mapper.Map<List<PlaceModel>>((await _placeService.GetByIds(user.UserPlaces.Select(p => p.Id).ToList())).Data);
-
-                var ids = user.UserPlaces.Select(p => p.PlaceId).ToList();
-
-                var njhk = (await _placeService.GetByIds(user.UserPlaces.Select(p => p.Id).ToList())).Data;
-
-                //if (njhk is not null && njhk.Count > 0)
-                //    var dfd = _mapper.Map<List<PlaceModel>>(njhk);
+                user.Places = _mapper.Map<List<PlaceModel>>((await _placeService.GetByIds(user.UserPlaces.Select(p => p.PlaceId).ToList())).Data);
             }
 
             var count = await _userManager.Users.CountAsync();
 
-            return new PageList<UserModel>(
-                _mapper.Map<List<UserModel>>(users),
+            return new PageList<GetAllUserModel>(
+                _mapper.Map<List<GetAllUserModel>>(users),
                 count,
                 pageParams.PageNumber,
                 pageParams.PageSize);
