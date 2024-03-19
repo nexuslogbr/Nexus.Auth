@@ -33,20 +33,20 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("GetAll")]
-        public async Task<GenericCommandResult<PageList<UserModel>>> GetAll(PageParams pageParams)
+        public async Task<GenericCommandResult<PageList<GetAllUserModel>>> GetAll(PageParams pageParams)
         {
             try
             {
                 var result = await _userHandler.GetAll(pageParams);
 
                 if (result.TotalCount > 0)
-                    return new GenericCommandResult<PageList<UserModel>>(true, "Success", result, StatusCodes.Status200OK);
+                    return new GenericCommandResult<PageList<GetAllUserModel>>(true, "Success", result, StatusCodes.Status200OK);
 
-                return new GenericCommandResult<PageList<UserModel>>(false, "No data", null, StatusCodes.Status404NotFound);
+                return new GenericCommandResult<PageList<GetAllUserModel>>(false, "No data", null, StatusCodes.Status404NotFound);
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult<PageList<UserModel>>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<PageList<GetAllUserModel>>(false, "Query error" + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
