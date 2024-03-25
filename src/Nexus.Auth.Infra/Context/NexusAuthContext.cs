@@ -46,6 +46,21 @@ namespace Nexus.Auth.Infra.Context
                 }
             }
 
+            foreach (var entityEntry in ChangeTracker.Entries<User>())
+            {
+                switch (entityEntry.State)
+                {
+                    case EntityState.Added:
+                        entityEntry.Entity.RegisterDate = DateTime.Now;
+                        entityEntry.Entity.ChangeDate = DateTime.Now;
+                        entityEntry.Entity.Blocked = false;
+                        break;
+                    case EntityState.Modified:
+                        entityEntry.Entity.ChangeDate = DateTime.Now;
+                        break;
+                }
+            }
+
             return base.SaveChangesAsync(cancellationToken);
         }
     }

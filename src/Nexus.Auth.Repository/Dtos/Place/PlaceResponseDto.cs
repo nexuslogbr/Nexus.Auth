@@ -7,7 +7,7 @@ namespace Nexus.Auth.Repository.Dtos.Place
         public string Name { get; set; }
         public string Acronym { get; set; }
         public string Country { get; set; }
-        public string ChangeDate { get; set; }
+        public DateTime ChangeDate { get; set; }
         public bool Blocked { get; set; }
     }
 }

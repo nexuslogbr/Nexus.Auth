@@ -48,7 +48,7 @@ namespace Nexus.Auth.Repository.Handlers
 
             foreach (var user in users)
             {
-                user.Roles = await _roleService.GetByUserIdAsync(user.Id);
+                user.Roles = user.UserRoles.Select(r => r.Role).ToList();
                 user.Places = new List<PlaceModel>();
                 user.Places = _mapper.Map<List<PlaceModel>>((await _placeService.GetByIds(user.UserPlaces.Select(p => p.PlaceId).ToList())).Data);
             }
@@ -95,8 +95,6 @@ namespace Nexus.Auth.Repository.Handlers
             var user = _mapper.Map<User>(entity);
             user.PlaceId = entity.Places.FirstOrDefault().Id;
 
-            user.ChangeDate = DateTime.Now;
-            user.RegisterDate = DateTime.Now;
             var result = await _userService.Add(user);
 
             if (result)
