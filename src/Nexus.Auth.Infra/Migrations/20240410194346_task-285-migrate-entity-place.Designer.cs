@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nexus.Auth.Infra.Context;
 
@@ -11,9 +12,11 @@ using Nexus.Auth.Infra.Context;
 namespace Nexus.Auth.Infra.Migrations
 {
     [DbContext(typeof(NexusAuthContext))]
-    partial class NexusAuthContextModelSnapshot : ModelSnapshot
+    [Migration("20240410194346_task-285-migrate-entity-place")]
+    partial class task285migrateentityplace
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -344,8 +347,6 @@ namespace Nexus.Auth.Infra.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("PlaceId");
-
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -452,17 +453,6 @@ namespace Nexus.Auth.Infra.Migrations
                     b.Navigation("Menu");
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("Nexus.Auth.Domain.Entities.User", b =>
-                {
-                    b.HasOne("Nexus.Auth.Domain.Entities.Place", "Place")
-                        .WithMany()
-                        .HasForeignKey("PlaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Place");
                 });
 
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.UserPlace", b =>

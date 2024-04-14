@@ -27,7 +27,7 @@ namespace Nexus.Auth.Repository.Handlers
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly IPlaceService _placeService;
-        private readonly IMenuService<Menu> _menuService;
+        private readonly IMenuService _menuService;
 
         public AuthHandler(
             IAuthService authService,
@@ -36,7 +36,7 @@ namespace Nexus.Auth.Repository.Handlers
             IRoleService<Role> roleService,
             IMapper mapper,
             IPlaceService placeService,
-            IMenuService<Menu> menuService)
+            IMenuService menuService)
         {
             _authService = authService;
             _userService = userService;
@@ -136,9 +136,9 @@ namespace Nexus.Auth.Repository.Handlers
 
                 var userLocations = await _userService.GetPlacesByUserId(user.Id);
                 var locations = userLocations.Select(_ => _.PlaceId).ToList();
-                userResult.Location = (await _placeService.GetById(user.PlaceId)).Data;
+                userResult.Location = _mapper.Map<PlaceResponseDto>(await _placeService.GetByIdAsync(user.PlaceId));
                 userResult.ResetPasswordToken = await _userService.GeneratePasswordResetTokenAsync(user);
-                var places = (await _placeService.GetByIds(locations)).Data;
+                var places = await _placeService.GetByIdsAsync(locations);
 
                 var menus = await _menuService.GetMenuByRoleIdAsync(user.Roles.First().Id);
                 var result = await _authService.CheckPasswordSignIn(user, dto.Password);

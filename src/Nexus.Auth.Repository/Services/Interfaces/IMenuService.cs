@@ -1,8 +1,9 @@
 ﻿using Nexus.Auth.Domain.Entities;
+using Nexus.Auth.Infra.Services.Interfaces;
 
 namespace Nexus.Auth.Repository.Services.Interfaces
 {
-    public interface IMenuService<T> : IBaseService<T> where T : class
+    public interface IMenuService : IBaseDataService<Menu>
     {
         Task<Menu> GetByIdAsync(int id);
         Task<Menu> GetByNameAsync(string name);

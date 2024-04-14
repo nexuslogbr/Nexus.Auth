@@ -18,10 +18,10 @@ public interface IBaseDataService<TEntity> : IBaseReadOnlyDataService<TEntity> w
     IEnumerable<TEntity> DeleteMany(IEnumerable<TEntity> entities);
     Task<IEnumerable<TEntity>> DeleteByFilterAsync(Expression<Func<TEntity, bool>> filter);
 
-    TEntity DisableOne(TEntity entity);
-    Task<TEntity> DisableByIdAsync(int id);
-    IEnumerable<TEntity> DisableMany(IEnumerable<TEntity> entities);
-    Task<IEnumerable<TEntity>> DisableByFilterAsync(Expression<Func<TEntity, bool>> filter);
+    TEntity ChangeStatus(TEntity entity, bool status);
+    Task<TEntity> ChangeStatusByIdAsync(int id, bool status);
+    IEnumerable<TEntity> ChangeStatusRange(IEnumerable<TEntity> entities, bool status);
+    Task<IEnumerable<TEntity>> ChangeStatusByFilterAsync(Expression<Func<TEntity, bool>> filter, bool status);
 
     Task<bool> SaveChangesAsync();
 }
