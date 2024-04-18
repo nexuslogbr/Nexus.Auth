@@ -36,14 +36,21 @@ namespace Nexus.Auth.Repository.Services
         public async Task<User> FindUserByUserName(string username)
         {
             var user = await _context.Users
-                //.Include(_ => _.Roles)
-                .Include(_ => _.Places)
+                .Include(_ => _.Place)
                 .FirstOrDefaultAsync(x => x.UserName == username);
+
             //var user = await _userManager.FindByNameAsync(username);
             //if (user == null) { return null; }
 
-            //var r = await _context.UserRoles.Where(x => x.UserId == user.Id).ToListAsync();
-            //user.Roles = r.Select(_ => _.Role).ToList();
+            var role = await _context.UserRoles.Where(x => x.UserId == user.Id)
+                .Include(_ => _.Role)
+               .ToListAsync();
+            user.Roles = role.Select(_ => _.Role).ToList();
+
+            var place = await _context.UserPlaces.Where(x => x.UserId == user.Id)
+                .Include(_ => _.Place)
+                .ToListAsync();
+            user.Places = place.Select(_ => _.Place).ToList();
 
             return user;
         } 
@@ -51,14 +58,21 @@ namespace Nexus.Auth.Repository.Services
         public async Task<User> FindUserByEmail(string email)
         {
             var user = await _context.Users
-                //.Include(_ => _.Roles)
-                .Include(_ => _.Places)
+                .Include(_ => _.Place)
                 .FirstOrDefaultAsync(x => x.Email == email);
+
             //var user = await _userManager.FindByEmailAsync(email);
             //if (user == null) { return null; }
 
-            //var role = await _context.UserRoles.Where(x => x.UserId == user.Id).ToListAsync();
-            //user.Roles = role.Select(_ => _.Role).ToList();
+            var role = await _context.UserRoles.Where(x => x.UserId == user.Id)
+                .Include(_ => _.Role)
+                .ToListAsync();
+            user.Roles = role.Select(_ => _.Role).ToList();
+
+            var place = await _context.UserPlaces.Where(x => x.UserId == user.Id)
+                .Include(_ => _.Place)
+                .ToListAsync();
+            user.Places = place.Select(_ => _.Place).ToList();
 
             return user;
 

@@ -180,7 +180,12 @@ namespace Nexus.Auth.Infra.Migrations
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Places");
                 });
@@ -221,12 +226,17 @@ namespace Nexus.Auth.Infra.Migrations
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -435,6 +445,20 @@ namespace Nexus.Auth.Infra.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Nexus.Auth.Domain.Entities.Place", b =>
+                {
+                    b.HasOne("Nexus.Auth.Domain.Entities.User", null)
+                        .WithMany("Places")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Nexus.Auth.Domain.Entities.Role", b =>
+                {
+                    b.HasOne("Nexus.Auth.Domain.Entities.User", null)
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.RoleMenu", b =>
                 {
                     b.HasOne("Nexus.Auth.Domain.Entities.Menu", "Menu")
@@ -512,6 +536,10 @@ namespace Nexus.Auth.Infra.Migrations
 
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.User", b =>
                 {
+                    b.Navigation("Places");
+
+                    b.Navigation("Roles");
+
                     b.Navigation("UserPlaces");
 
                     b.Navigation("UserRoles");
