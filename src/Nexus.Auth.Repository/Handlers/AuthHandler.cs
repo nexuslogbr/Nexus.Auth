@@ -134,7 +134,6 @@ namespace Nexus.Auth.Repository.Handlers
             {
                 var userResult = _mapper.Map<UserResult>(user);
 
-                //var userLocations = await _userService.GetPlacesByUserId(user.Id);
                 userResult.Location = _mapper.Map<PlaceResponseDto>(await _placeService.GetByIdAsync(user.PlaceId));
                 userResult.ResetPasswordToken = await _userService.GeneratePasswordResetTokenAsync(user);
 
@@ -167,7 +166,6 @@ namespace Nexus.Auth.Repository.Handlers
                 new Claim(ClaimTypes.Role, user.Roles.First().Name),
                 new Claim(ClaimTypes.Locality, user.Place.Name),
                 new Claim(ClaimTypes.Country, user.Place.Acronym),
-                new Claim(ClaimTypes., user.Place.Acronym),
             };
 
             var roles = await _roleService.GetByUserIdAsync(user.Id);

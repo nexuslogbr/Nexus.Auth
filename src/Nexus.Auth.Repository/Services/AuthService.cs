@@ -39,9 +39,6 @@ namespace Nexus.Auth.Repository.Services
                 .Include(_ => _.Place)
                 .FirstOrDefaultAsync(x => x.UserName == username);
 
-            //var user = await _userManager.FindByNameAsync(username);
-            //if (user == null) { return null; }
-
             var role = await _context.UserRoles.Where(x => x.UserId == user.Id)
                 .Include(_ => _.Role)
                .ToListAsync();
@@ -60,9 +57,6 @@ namespace Nexus.Auth.Repository.Services
             var user = await _context.Users
                 .Include(_ => _.Place)
                 .FirstOrDefaultAsync(x => x.Email == email);
-
-            //var user = await _userManager.FindByEmailAsync(email);
-            //if (user == null) { return null; }
 
             var role = await _context.UserRoles.Where(x => x.UserId == user.Id)
                 .Include(_ => _.Role)
