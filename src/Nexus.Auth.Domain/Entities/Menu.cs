@@ -14,5 +14,6 @@ namespace Nexus.Auth.Domain.Entities
         public MenuTypeEnum Type { get; set; }
 
         public int? MenuSectionId { get; set; }
+        public int Order { get; set; }
     }
 }
