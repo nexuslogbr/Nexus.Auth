@@ -57,7 +57,11 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<IList<RoleMenu>> GetMenuByRoleIdAsync(int roleId)
         {
-            return await _context.RoleMenus.Include(_ => _.Menu).Where(x => x.RoleId == roleId).ToListAsync();
+            return await _context.RoleMenus
+                .Include(_ => _.Menu)
+                .Where(x => x.RoleId == roleId)
+                .OrderBy(x => x.Menu.Order)
+                .ToListAsync();
         }
 
         public async Task<Menu> GetByNameAsync(string name)
