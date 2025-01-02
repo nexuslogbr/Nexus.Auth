@@ -2,11 +2,9 @@
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Models;
 using AutoMapper;
-using Microsoft.AspNetCore.Routing.Constraints;
 using Nexus.Auth.Repository.Dtos.User;
 using Nexus.Auth.Repository.Dtos.Role;
 using Nexus.Auth.Repository.Dtos.Menu;
-using Nexus.Auth.Domain.Model;
 using Nexus.Auth.Repository.Dtos.Place;
 
 namespace Nexus.Auth.Api.Helpers
@@ -67,6 +65,9 @@ namespace Nexus.Auth.Api.Helpers
 
             CreateMap<PlaceResult, PlaceResponseDto>().ReverseMap();
             CreateMap<PlaceModel, PlaceResponseDto>().ReverseMap();
+
+            CreateMap<Place, PlaceResponseDto>().ReverseMap();
+            CreateMap<Place, PlaceResult>().ReverseMap();
         }
     }
 }

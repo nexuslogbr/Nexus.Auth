@@ -27,7 +27,7 @@ namespace Nexus.Auth.Repository.Handlers
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly IPlaceService _placeService;
-        private readonly IMenuService<Menu> _menuService;
+        private readonly IMenuService _menuService;
 
         public AuthHandler(
             IAuthService authService,
@@ -36,7 +36,7 @@ namespace Nexus.Auth.Repository.Handlers
             IRoleService<Role> roleService,
             IMapper mapper,
             IPlaceService placeService,
-            IMenuService<Menu> menuService)
+            IMenuService menuService)
         {
             _authService = authService;
             _userService = userService;
@@ -134,14 +134,14 @@ namespace Nexus.Auth.Repository.Handlers
             {
                 var userResult = _mapper.Map<UserResult>(user);
 
-                var userLocations = await _userService.GetPlacesByUserId(user.Id);
-                var locations = userLocations.Select(_ => _.PlaceId).ToList();
-                userResult.Location = (await _placeService.GetById(user.PlaceId)).Data;
+                userResult.Location = _mapper.Map<PlaceResponseDto>(await _placeService.GetByIdAsync(user.PlaceId));
                 userResult.ResetPasswordToken = await _userService.GeneratePasswordResetTokenAsync(user);
-                var places = (await _placeService.GetByIds(locations)).Data;
 
+                var locations = user.UserPlaces.Select(_ => _.PlaceId).ToList();
+                var places = await _placeService.GetByIdsAsync(locations);
                 var menus = await _menuService.GetMenuByRoleIdAsync(user.Roles.First().Id);
                 var result = await _authService.CheckPasswordSignIn(user, dto.Password);
+
                 if (result.Succeeded)
                     return new AuthResult
                     {
@@ -163,6 +163,9 @@ namespace Nexus.Auth.Repository.Handlers
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Roles.First().Name),
+                new Claim(ClaimTypes.Locality, user.Place.Name),
+                new Claim(ClaimTypes.Country, user.Place.Acronym),
             };
 
             var roles = await _roleService.GetByUserIdAsync(user.Id);

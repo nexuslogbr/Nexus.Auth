@@ -1,8 +1,6 @@
-﻿using MailKit.Search;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Domain.Model;
 using Nexus.Auth.Infra.Context;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Services.Interfaces;
@@ -187,7 +185,10 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<List<UserPlace>> GetPlacesByUserId(int userId)
         {
-            return await _context.UserPlaces.Where(_ => _.UserId == userId).ToListAsync();
+            return await _context.UserPlaces
+                .Where(_ => _.UserId == userId)
+                .Include(p => p.Place)
+                .ToListAsync();
         }
     }
 }

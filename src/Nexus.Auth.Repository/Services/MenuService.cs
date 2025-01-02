@@ -3,17 +3,13 @@ using Nexus.Auth.Infra.Context;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Nexus.Auth.Infra.Services;
 
 namespace Nexus.Auth.Repository.Services
 {
-    public class MenuService : IMenuService<Menu>
+    public class MenuService : BaseDataService<Menu>, IMenuService
     {
-        private readonly NexusAuthContext _context;
-        
-        public MenuService(NexusAuthContext context)
-        {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-        }
+        public MenuService(NexusAuthContext context) : base(context) { }
 
         public async Task<List<Menu>> GetAllAsync(PageParams pageParams)
         {
@@ -74,21 +70,9 @@ namespace Nexus.Auth.Repository.Services
                 .FirstOrDefaultAsync(x => x.Name == name);
         }
 
-        public async Task<bool> Add(Menu entity)
-        {
-            var result = await _context.Menus.AddAsync(entity);
-            return await SaveChangesAsync();
-        }
-
         public async Task<bool> AddRange(IList<RoleMenu> menus)
         {
             await _context.RoleMenus.AddRangeAsync(menus);
-            return await SaveChangesAsync();
-        }
-
-        public async Task<bool> Update(Menu entity)
-        {
-            var result = _context.Menus.Update(entity).Entity;
             return await SaveChangesAsync();
         }
 
@@ -104,20 +88,10 @@ namespace Nexus.Auth.Repository.Services
             return false;
         }
 
-        public async Task<bool> DeleteRange(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> DeleteRange(IList<RoleMenu> menus)
         {
             _context.RoleMenus.RemoveRange(menus);
             return await SaveChangesAsync();
-        }
-
-        public async Task<bool> SaveChangesAsync()
-        {
-            return (await _context.SaveChangesAsync()) > 0;
         }
     }
 }

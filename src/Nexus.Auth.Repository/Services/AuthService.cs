@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
+using Nexus.Auth.Infra.Context;
 
 namespace Nexus.Auth.Repository.Services
 {
@@ -13,15 +14,17 @@ namespace Nexus.Auth.Repository.Services
         private readonly RoleManager<Role> _roleManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly NexusAuthContext _context;
 
         public AuthService() { }
 
-        public AuthService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, IHttpContextAccessor httpContextAccessor)
+        public AuthService(UserManager<User> userManager, RoleManager<Role> roleManager, SignInManager<User> signInManager, IHttpContextAccessor httpContextAccessor, NexusAuthContext context)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
+            _context = context;
         }
 
         public async Task<User> FindUser(string username) => await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username.ToUpper());
@@ -32,22 +35,38 @@ namespace Nexus.Auth.Repository.Services
 
         public async Task<User> FindUserByUserName(string username)
         {
-            var user = await _userManager.FindByNameAsync(username);
-            if (user == null) { return null; }
+            var user = await _context.Users
+                .Include(_ => _.Place)
+                .FirstOrDefaultAsync(x => x.UserName == username);
 
-            var roles = await _userManager.GetRolesAsync(user);
-            user.Roles = await _roleManager.Roles.Where(r => roles.Contains(r.Name)).ToListAsync();
+            var role = await _context.UserRoles.Where(x => x.UserId == user.Id)
+                .Include(_ => _.Role)
+               .ToListAsync();
+            user.Roles = role.Select(_ => _.Role).ToList();
+
+            var place = await _context.UserPlaces.Where(x => x.UserId == user.Id)
+                .Include(_ => _.Place)
+                .ToListAsync();
+            user.Places = place.Select(_ => _.Place).ToList();
 
             return user;
         } 
         
         public async Task<User> FindUserByEmail(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null) { return null; }
+            var user = await _context.Users
+                .Include(_ => _.Place)
+                .FirstOrDefaultAsync(x => x.Email == email);
 
-            var roles = await _userManager.GetRolesAsync(user);
-            user.Roles = await _roleManager.Roles.Where(r => roles.Contains(r.Name)).ToListAsync();
+            var role = await _context.UserRoles.Where(x => x.UserId == user.Id)
+                .Include(_ => _.Role)
+                .ToListAsync();
+            user.Roles = role.Select(_ => _.Role).ToList();
+
+            var place = await _context.UserPlaces.Where(x => x.UserId == user.Id)
+                .Include(_ => _.Place)
+                .ToListAsync();
+            user.Places = place.Select(_ => _.Place).ToList();
 
             return user;
 

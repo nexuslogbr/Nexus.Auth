@@ -1,4 +1,3 @@
-using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Models;
@@ -6,6 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Nexus.Auth.Repository.Dtos.Menu;
+using Nexus.Auth.Repository.Params;
 
 namespace Nexus.Auth.Api.Controllers
 {
@@ -14,10 +14,10 @@ namespace Nexus.Auth.Api.Controllers
     [Route("api/v1/[controller]")]
     public class MenuController : ControllerBase
     {
-        private readonly IMenuHandler<Menu> _menuHandler;
+        private readonly IMenuHandler _menuHandler;
         private readonly IMapper _mapper;
 
-        public MenuController(IMenuHandler<Menu> menuHandler, IMapper mapper)
+        public MenuController(IMenuHandler menuHandler, IMapper mapper)
         {
             _menuHandler = menuHandler ?? throw new ArgumentNullException(nameof(menuHandler));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -29,7 +29,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("GetAll")]
-        public async Task<IActionResult> GetAll(PageParams pageParams)
+        public async Task<IActionResult> GetAll(MenuParams pageParams)
         {
             try
             {
@@ -97,8 +97,7 @@ namespace Nexus.Auth.Api.Controllers
         {
             try
             {
-                var menu = _mapper.Map<Menu>(dto);
-                var result = await _menuHandler.Add(menu);
+                var result = await _menuHandler.Add(dto);
 
                 if (result is not null)
                     return Created("", _mapper.Map<MenuModel>(result));
@@ -117,12 +116,11 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<IActionResult> Put(MenuDto dto)
+        public async Task<IActionResult> Put(MenuPutDto dto)
         {
             try
             {
-                var role = _mapper.Map<Menu>(dto);
-                var result = await _menuHandler.Update(role);
+                var result = await _menuHandler.Update(dto);
 
                 if (result is not null)
                     return Ok(_mapper.Map<MenuModel>(result));

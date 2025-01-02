@@ -66,9 +66,6 @@ namespace Nexus.Auth.Api.Controllers
                 string clientType = "";
                 clientType = HttpContext.Request.Headers["X-Client-Type"];
 
-                //if (string.IsNullOrEmpty(clientType))
-                //    return new GenericCommandResult<AuthResult>(false, "Invalid requester", null, StatusCodes.Status403Forbidden);
-
                 var result = await _authHandler.Login(
                     dto, 
                     EmailChecker.IsValidEmail(dto.UserName), 
@@ -86,7 +83,7 @@ namespace Nexus.Auth.Api.Controllers
             }
             catch (Exception ex)
             {
-                return new GenericCommandResult<AuthResult>(false, "Invalids data" + ex.Message, null, StatusCodes.Status500InternalServerError);
+                return new GenericCommandResult<AuthResult>(false, "Invalids data: " + ex.Message, null, StatusCodes.Status500InternalServerError);
             }
         }
 
