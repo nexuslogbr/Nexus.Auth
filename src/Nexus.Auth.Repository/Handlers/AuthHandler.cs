@@ -175,8 +175,14 @@ namespace Nexus.Auth.Repository.Handlers
                 claims.Add(new Claim(ClaimTypes.Role, role.Name));
                 claims.Add(new Claim("menus", string.Join(",", menus)));
             }
+            var keyString = _config.GetSection("AppSettings:Key").Value;
 
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config.GetSection("AppSettings:Key").Value));
+            if (string.IsNullOrEmpty(keyString) || keyString.Length < 64)
+            {
+                throw new InvalidOperationException("A chave de criptografia deve ter pelo menos 64 caracteres.");
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(keyString));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
