@@ -1,6 +1,4 @@
-﻿using Nexus.Auth.Domain.Model;
-
-namespace Nexus.Auth.Repository.Models
+﻿namespace Nexus.Auth.Repository.Models
 {
     public class UserPlaceModel
     {

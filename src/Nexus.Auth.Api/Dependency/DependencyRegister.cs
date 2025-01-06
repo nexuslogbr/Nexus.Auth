@@ -29,8 +29,8 @@ namespace Nexus.Auth.API.Dependency
             services.AddScoped<IRoleService<Role>, RoleService>();
             services.AddScoped<IUserHandler, UserHandler>();
             services.AddScoped<IUserService<User>, UserService>();
-            services.AddScoped<IMenuHandler<Menu>, MenuHandler>();
-            services.AddScoped<IMenuService<Menu>, MenuService>();
+            services.AddScoped<IMenuHandler, MenuHandler>();
+            services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IPlaceService, PlaceService>();  
         }
     }

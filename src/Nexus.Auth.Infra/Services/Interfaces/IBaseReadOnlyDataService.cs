@@ -12,6 +12,7 @@ public interface IBaseReadOnlyDataService<TEntity> where TEntity : EntityBase
         int? pageSize = null,
         Expression<Func<TEntity, bool>> filter = null,
         string orderBy = null,
+        bool asc = true,
         string includeProps = null,
         bool asNoTracking = true);
 

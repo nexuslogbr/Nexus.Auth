@@ -11,9 +11,9 @@ namespace Nexus.Auth.Repository.Services
     {
         private readonly RoleManager<Role> _roleManager;
         private readonly NexusAuthContext _context;
-        private readonly IMenuService<Menu> _menuService;
+        private readonly IMenuService _menuService;
 
-        public RoleService(RoleManager<Role> roleManager, NexusAuthContext context, IMenuService<Menu> menuService)
+        public RoleService(RoleManager<Role> roleManager, NexusAuthContext context, IMenuService menuService)
         {
             _roleManager = roleManager;
             _context = context;

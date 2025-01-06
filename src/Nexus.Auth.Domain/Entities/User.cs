@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Nexus.Auth.Domain.Model;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,14 +24,13 @@ namespace Nexus.Auth.Domain.Entities
         public DateTime ChangeDate { get; set; }
 
         public int PlaceId { get; set; }
+        public Place Place { get; set; }
 
         public required List<UserRole> UserRoles { get; set; }
         public required List<UserPlace> UserPlaces { get; set; }
 
-        [NotMapped]
-        public IList<Role> Roles { get; set; }
-        [NotMapped]
-        public IList<PlaceModel> Places { get; set; }
+        public virtual IList<Role> Roles { get; set; }
+        public virtual IList<Place> Places { get; set; }
         [NotMapped]
         public string ResetPasswordToken { get; set; }
     }

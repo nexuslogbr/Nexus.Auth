@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Nexus.Auth.Domain.Entities;
-using Nexus.Auth.Domain.Model;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.User;
 using Nexus.Auth.Repository.Handlers.Interfaces;
@@ -49,8 +48,8 @@ namespace Nexus.Auth.Repository.Handlers
             foreach (var user in users)
             {
                 user.Roles = user.UserRoles.Select(r => r.Role).ToList();
-                user.Places = new List<PlaceModel>();
-                user.Places = _mapper.Map<List<PlaceModel>>((await _placeService.GetByIds(user.UserPlaces.Select(p => p.PlaceId).ToList())).Data);
+                user.Places = new List<Place>();
+                user.Places = _mapper.Map<List<Place>>(await _placeService.GetByIdsAsync(user.UserPlaces.Select(p => p.PlaceId).ToList()));
             }
 
             var count = await _userManager.Users.CountAsync();
@@ -68,8 +67,8 @@ namespace Nexus.Auth.Repository.Handlers
 
             if (user is null) return null;
 
-            var places = new List<PlaceModel>();
-            foreach (var place in user.UserPlaces) places.Add(new PlaceModel { Id = place.PlaceId });
+            var places = new List<Place>();
+            //foreach (var place in user.UserPlaces) places.Add(new Place { Id = place.PlaceId });
 
             user.Roles = user is not null ? await _roleService.GetByUserIdAsync(user.Id) : throw new Exception("Error load entity");
             user.Places = user is not null ? places : throw new Exception("Error load locations");
@@ -207,7 +206,7 @@ namespace Nexus.Auth.Repository.Handlers
         public async Task<UserPlaceModel> ChangePlace(UserPlaceDto entity)
         {
             var user = await _userService.GetByEmailAsync(entity.UserEmail);
-            var place = (await _placeService.GetById(entity.PlaceId)).Data;
+            var place = await _placeService.GetByIdAsync(entity.PlaceId);
 
             if (user is not null && place is not null && place.Id > 0)
                 user.PlaceId = place.Id;

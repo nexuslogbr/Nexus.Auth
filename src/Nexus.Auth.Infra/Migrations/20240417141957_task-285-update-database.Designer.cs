@@ -12,8 +12,8 @@ using Nexus.Auth.Infra.Context;
 namespace Nexus.Auth.Infra.Migrations
 {
     [DbContext(typeof(NexusAuthContext))]
-    [Migration("20240315002123_task-270-remove-column-placename")]
-    partial class task270removecolumnplacename
+    [Migration("20240417141957_task-285-update-database")]
+    partial class task285updatedatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -154,6 +154,45 @@ namespace Nexus.Auth.Infra.Migrations
                     b.ToTable("Menus");
                 });
 
+            modelBuilder.Entity("Nexus.Auth.Domain.Entities.Place", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Acronym")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Blocked")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ChangeDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Places");
+                });
+
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -190,12 +229,17 @@ namespace Nexus.Auth.Infra.Migrations
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -287,6 +331,9 @@ namespace Nexus.Auth.Infra.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
@@ -309,6 +356,8 @@ namespace Nexus.Auth.Infra.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("PlaceId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -337,6 +386,8 @@ namespace Nexus.Auth.Infra.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PlaceId");
 
                     b.HasIndex("UserId");
 
@@ -397,6 +448,20 @@ namespace Nexus.Auth.Infra.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Nexus.Auth.Domain.Entities.Place", b =>
+                {
+                    b.HasOne("Nexus.Auth.Domain.Entities.User", null)
+                        .WithMany("Places")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Nexus.Auth.Domain.Entities.Role", b =>
+                {
+                    b.HasOne("Nexus.Auth.Domain.Entities.User", null)
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.RoleMenu", b =>
                 {
                     b.HasOne("Nexus.Auth.Domain.Entities.Menu", "Menu")
@@ -416,13 +481,32 @@ namespace Nexus.Auth.Infra.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Nexus.Auth.Domain.Entities.User", b =>
+                {
+                    b.HasOne("Nexus.Auth.Domain.Entities.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+                });
+
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.UserPlace", b =>
                 {
+                    b.HasOne("Nexus.Auth.Domain.Entities.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Nexus.Auth.Domain.Entities.User", "User")
                         .WithMany("UserPlaces")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Place");
 
                     b.Navigation("User");
                 });
@@ -455,6 +539,10 @@ namespace Nexus.Auth.Infra.Migrations
 
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.User", b =>
                 {
+                    b.Navigation("Places");
+
+                    b.Navigation("Roles");
+
                     b.Navigation("UserPlaces");
 
                     b.Navigation("UserRoles");

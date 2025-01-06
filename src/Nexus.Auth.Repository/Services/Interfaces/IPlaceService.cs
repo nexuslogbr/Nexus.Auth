@@ -1,11 +1,12 @@
-﻿using Nexus.Auth.Repository.Dtos.Place;
-using Nexus.Auth.Repository.Utils;
+﻿using Nexus.Auth.Domain.Entities;
+using Nexus.Auth.Infra.Services.Interfaces;
 
 namespace Nexus.Auth.Repository.Services.Interfaces
 {
-    public interface IPlaceService
+    public interface IPlaceService : IBaseDataService<Place>
     {
-        Task<GenericCommandResult<PlaceResponseDto?>> GetById(int id);
-        Task<GenericCommandResult<List<PlaceResponseDto>>> GetByIds(List<int> dto);
+        Task<Place> GetByIdAsync(int id);
+        Task<Place> GetByNameAsync(string name);
+        Task<List<Place>> GetByIdsAsync(List<int> ids);
     }
 }
