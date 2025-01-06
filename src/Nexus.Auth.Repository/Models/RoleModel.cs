@@ -1,6 +1,4 @@
-﻿using Nexus.Auth.Repository.Dtos.Menu;
-
-namespace Nexus.Auth.Repository.Models
+﻿namespace Nexus.Auth.Repository.Models
 {
     public class RoleModel
     {

@@ -6,26 +6,28 @@ using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.Menu;
 using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Models;
+using Nexus.Auth.Repository.Params;
 using Nexus.Auth.Repository.Services.Interfaces;
 
 namespace Nexus.Auth.Repository.Handlers
 {
-    public class MenuHandler : IMenuHandler<Menu>
+    public class MenuHandler : IMenuHandler
     {
-        private readonly IMenuService<Menu> _menuService;
+        private readonly IMenuService _menuService;
         private readonly NexusAuthContext _context;
         private readonly IMapper _mapper;
 
-        public MenuHandler(IMenuService<Menu> menuService, NexusAuthContext context, IMapper mapper)
+        public MenuHandler(IMenuService menuService, NexusAuthContext context, IMapper mapper)
         {
             _menuService = menuService ?? throw new ArgumentNullException(nameof(menuService));
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<PageList<MenuModel>> GetAll(PageParams pageParams)
+        public async Task<PageList<MenuModel>> GetAll(MenuParams pageParams)
         {
-            var menus = await _menuService.GetAllAsync(pageParams);
+            var menus = await _menuService.GetAsync(
+                pageParams.PageNumber, pageParams.pageSize, pageParams.Filter(), pageParams.OrderByProperty, pageParams.Asc, includeProps: "");
 
             var result = menus.Select(m => new MenuModel
             {
@@ -67,37 +69,31 @@ namespace Nexus.Auth.Repository.Handlers
             return null;
         }
 
-        public async Task<Menu> Add(Menu entity)
+        public async Task<MenuModel> Add(MenuDto entity)
         {
-            if (await _menuService.Add(entity))
-            {
-                return await _menuService.GetByNameAsync(entity.Name);
-            }
-
-            return null;
+            var menu = await _menuService.AddAsync(_mapper.Map<Menu>(entity));
+            await _menuService.SaveChangesAsync();
+            return _mapper.Map<MenuModel>(menu);
         }
 
-        public async Task<Menu> Update(Menu entity)
+        public async Task<MenuModel> Update(MenuPutDto entity)
         {
             var menu = await _menuService.GetByIdAsync(entity.Id);
-            menu.Name = string.IsNullOrEmpty(entity.Name) ? menu.Name : entity.Name;
-            menu.Mobile = entity.Mobile;
-            menu.ChangeDate = DateTime.Now;
+            if (menu is null)
+                throw new Exception("Menu não encontrado.");
 
-            if (await _menuService.Update(menu))
-                return await _menuService.GetByNameAsync(entity.Name);
+            var updated = _mapper.Map(entity, menu);
+            var response = _menuService.Update(updated);
 
-            return null;
+            
+            await _menuService.SaveChangesAsync();
+            return _mapper.Map<MenuModel>(response);
         }
 
         public async Task<bool> Delete(int id)
         {
-            var removed = await _menuService.Delete(id);
-
-            if (removed)
-                return true;
-
-            return false;
+            await _menuService.DeleteByIdAsync(id);
+            return await _menuService.SaveChangesAsync();
         }
 
         public Task<Menu> DeleteRange(Menu[] entity)
@@ -108,6 +104,16 @@ namespace Nexus.Auth.Repository.Handlers
         public Task<Menu> SaveChangesAsync()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<ChangeStatusDto> ChangeStatus(ChangeStatusDto dto)
+        {
+            var menu = await _menuService.GetByIdAsync(dto.Id);
+            if (menu is null)
+                throw new Exception("Menu não encontrado.");
+            _menuService.ChangeStatus(menu, dto.Blocked);
+            await _menuService.SaveChangesAsync();
+            return dto;
         }
     }
 }

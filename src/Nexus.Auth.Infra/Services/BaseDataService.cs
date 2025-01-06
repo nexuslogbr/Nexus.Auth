@@ -71,30 +71,30 @@ public class BaseDataService<TEntity> : BaseReadOnlyDataService<TEntity>, IBaseD
         return DeleteMany(entities);
     }
 
-    public TEntity DisableOne(TEntity entity)
+    public TEntity ChangeStatus(TEntity entity, bool status)
     {
-        entity.Blocked = true;
+        entity.Blocked = status;
         return Update(entity);
     }
 
-    public async Task<TEntity> DisableByIdAsync(int id)
+    public async Task<TEntity> ChangeStatusByIdAsync(int id, bool status)
     {
         var entity = await GetByIdAsync(id);
-        return DisableOne(entity);
+        return ChangeStatus(entity, status);
     }
 
-    public IEnumerable<TEntity> DisableMany(IEnumerable<TEntity> entities)
+    public IEnumerable<TEntity> ChangeStatusRange(IEnumerable<TEntity> entities, bool status)
     {
         foreach (var entity in entities)
-            entity.Blocked = true;
+            entity.Blocked = status;
         return UpdateRange(entities);
     }
 
-    public async Task<IEnumerable<TEntity>> DisableByFilterAsync(Expression<Func<TEntity, bool>> filter)
+    public async Task<IEnumerable<TEntity>> ChangeStatusByFilterAsync(Expression<Func<TEntity, bool>> filter, bool status)
     {
         var entities = await GetAsync(filter: filter);
         foreach (var entity in entities)
-            entity.Blocked = false;
+            entity.Blocked = status;
         return UpdateRange(entities);
     }
 

@@ -28,10 +28,11 @@ public class BaseReadOnlyDataService<TEntity> : IBaseReadOnlyDataService<TEntity
         int? pageSize = null,
         Expression<Func<TEntity, bool>> filter = null,
         string orderBy = null,
+        bool asc = true,
         string includeProps = null,
         bool asNoTracking = true)
     {
-        return await GetQueryable(pageNumber, pageSize, filter, orderBy, includeProps, asNoTracking).ToListAsync();
+        return await GetQueryable(pageNumber, pageSize, filter, orderBy, asc, includeProps, asNoTracking).ToListAsync();
     }
 
     public async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> filter = null, string includeProps = null, bool asNoTracking = true)
@@ -64,6 +65,7 @@ public class BaseReadOnlyDataService<TEntity> : IBaseReadOnlyDataService<TEntity
         int? pageSize = null,
         Expression<Func<TEntity, bool>> filter = null,
         string orderBy = null,
+        bool asc = true,
         string includeProps = null,
         bool asNoTracking = true)
     {
@@ -77,7 +79,7 @@ public class BaseReadOnlyDataService<TEntity> : IBaseReadOnlyDataService<TEntity
             query = query.Where(filter);
 
         if (!string.IsNullOrEmpty(orderBy))
-            query = query.OrderBy(orderBy);
+            query = query.OrderBy(orderBy, !asc);
 
         if (asNoTracking)
             query = query.AsNoTracking();

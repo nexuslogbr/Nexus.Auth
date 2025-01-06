@@ -15,11 +15,11 @@ namespace Nexus.Auth.Repository.Handlers
     public class RoleHandler : IRoleHandler
     {
         private readonly IRoleService<Role> _roleService;
-        private readonly IMenuService<Menu> _menuService;
+        private readonly IMenuService _menuService;
         private readonly RoleManager<Role> _roleManager;
         private readonly IMapper _mapper;
 
-        public RoleHandler(IRoleService<Role> roleService, IMenuService<Menu> menuService, RoleManager<Role> roleManager, IMapper mapper)
+        public RoleHandler(IRoleService<Role> roleService, IMenuService menuService, RoleManager<Role> roleManager, IMapper mapper)
         {
             _roleService = roleService;
             _menuService = menuService;
@@ -81,8 +81,8 @@ namespace Nexus.Auth.Repository.Handlers
             var role = _mapper.Map<Role>(dto);
             role.RoleMenus = new List<RoleMenu>();
 
-            foreach (var menu in dto.Menus)
-                role.RoleMenus.Add(new RoleMenu { MenuId = menu.Id, RegisterDate = DateTime.Now });
+            //foreach (var menu in dto.Menus)
+            //    role.RoleMenus.Add(new RoleMenu { MenuId = menu.Id, RegisterDate = DateTime.Now });
 
             var success = await _roleService.Add(role);
             if (!success)
@@ -103,7 +103,8 @@ namespace Nexus.Auth.Repository.Handlers
             var currentDate = DateTimeExtensions.GetCurrentDate();
             var roleMenusToSave = entity.Menus.Select(menu => new RoleMenu { 
                 RoleId = role.Id, 
-                MenuId = menu.Id, 
+                MenuId = 0,
+                //MenuId = menu.Id, 
                 ChangeDate = currentDate, 
             }).ToList();
 

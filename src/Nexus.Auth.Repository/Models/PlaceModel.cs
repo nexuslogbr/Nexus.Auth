@@ -1,5 +1,4 @@
-﻿
-namespace Nexus.Auth.Domain.Model
+﻿namespace Nexus.Auth.Repository.Models
 {
     public class PlaceModel
     {
