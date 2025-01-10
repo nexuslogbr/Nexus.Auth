@@ -8,5 +8,6 @@ namespace Nexus.Auth.Repository.Services.Interfaces
         Task<Place> GetByIdAsync(int id);
         Task<Place> GetByNameAsync(string name);
         Task<List<Place>> GetByIdsAsync(List<int> ids);
+        Task<IList<Place>> GetByUserIdAsync(int userId);
     }
 }

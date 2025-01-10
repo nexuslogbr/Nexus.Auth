@@ -71,7 +71,7 @@ namespace Nexus.Auth.Repository.Handlers
             //foreach (var place in user.UserPlaces) places.Add(new Place { Id = place.PlaceId });
 
             user.Roles = user is not null ? await _roleService.GetByUserIdAsync(user.Id) : throw new Exception("Error load entity");
-            user.Places = user is not null ? places : throw new Exception("Error load locations");
+            user.Places = user is not null ? await _placeService.GetByUserIdAsync(user.Id) : throw new Exception("Error load entity");
             return user;
         }
 
@@ -79,6 +79,7 @@ namespace Nexus.Auth.Repository.Handlers
         {
             var user = await _userService.GetByNameAsync(name);
             user.Roles = user is not null ? await _roleService.GetByUserIdAsync(user.Id) : throw new Exception("Error load entity");
+            user.Places = user is not null ? await _placeService.GetByUserIdAsync(user.Id) : throw new Exception("Error load entity");
             return user;
         }
 
@@ -86,6 +87,7 @@ namespace Nexus.Auth.Repository.Handlers
         {
             var user = await _userService.GetByEmailAsync(email);
             user.Roles = user is not null ? await _roleService.GetByUserIdAsync(user.Id) : throw new Exception("Error load entity");
+            user.Places = user is not null ? await _placeService.GetByUserIdAsync(user.Id) : throw new Exception("Error load entity");
             return user;
         }
 

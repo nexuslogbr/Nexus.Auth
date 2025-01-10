@@ -24,5 +24,15 @@ namespace Nexus.Auth.Repository.Services
         {
             return await _context.Places.Where(x => ids.Contains(x.Id)).ToListAsync();
         }
+
+        public async Task<IList<Place>> GetByUserIdAsync(int userId)
+        {
+            var userRoles = _context
+                .UserPlaces
+                .Include(_ => _.Place)
+                .Where(x => x.UserId == userId);
+            return await userRoles.Where(x => x.Place != null).Select(x => x.Place).ToListAsync();
+        }
+
     }
 }
