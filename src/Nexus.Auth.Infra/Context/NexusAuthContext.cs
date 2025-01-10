@@ -28,6 +28,24 @@ namespace Nexus.Auth.Infra.Context
                 userRole.HasOne(r => r.Role).WithMany(x => x.UserRoles).HasForeignKey(s => s.RoleId).IsRequired();
                 userRole.HasOne(r => r.User).WithMany(x => x.UserRoles).HasForeignKey(s => s.UserId).IsRequired();
             });
+
+            modelBuilder.Entity<User>(user =>
+            {
+                user.HasKey(u => u.Id);
+                user.Ignore(u => u.Roles);
+                user.Ignore(u => u.Places);
+            });
+
+           
+            modelBuilder.Entity<Role>(role =>
+            {
+                role.HasKey(r => r.Id);
+            });
+
+            modelBuilder.Entity<Place>(place =>
+            {
+                place.HasKey(p => p.Id);
+            });
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
