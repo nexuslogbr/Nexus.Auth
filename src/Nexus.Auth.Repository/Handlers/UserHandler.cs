@@ -102,7 +102,7 @@ namespace Nexus.Auth.Repository.Handlers
             return _mapper.Map<UserModel>(user);
         }
 
-        public async Task<UserModel> Update(UserDto entity)
+        public async Task<UserModel> Update(UserPutDto entity)
         {
             var user = await _userService.GetByIdAsync(entity.Id);
             await _userService.DeleteRoles(user.Id);

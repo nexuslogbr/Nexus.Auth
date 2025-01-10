@@ -21,7 +21,7 @@ namespace Nexus.Auth.Repository.Handlers.Interfaces
         Task<bool> ChangeStatus(ChangeStatusDto dto);
         Task<bool> Delete(int id);
         Task<UserModel> Add(UserDto dto);
-        Task<UserModel> Update(UserDto entity);
+        Task<UserModel> Update(UserPutDto entity);
         Task<UserPlaceModel> ChangePlace(UserPlaceDto entity);
     }
 }

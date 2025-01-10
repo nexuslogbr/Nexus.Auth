@@ -63,10 +63,9 @@ namespace Nexus.Auth.Api.Helpers
                 .ForMember(d => d.Id, src => src.Ignore())
                 .ForMember(d => d.PlaceId, src => src.MapFrom(e => e.Id));
 
-            CreateMap<PlaceResult, PlaceResponseDto>().ReverseMap();
-            CreateMap<PlaceModel, PlaceResponseDto>().ReverseMap();
-
-            CreateMap<Place, PlaceResponseDto>().ReverseMap();
+            CreateMap<Place, PlaceDto>().ReverseMap();
+            CreateMap<Place, GetById>().ReverseMap();
+            CreateMap<Place, PlaceModel>().ReverseMap();
             CreateMap<Place, PlaceResult>().ReverseMap();
         }
     }

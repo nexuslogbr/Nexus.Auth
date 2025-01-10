@@ -6,6 +6,7 @@ using Nexus.Auth.Repository.Models;
 using Microsoft.AspNetCore.Authorization;
 using Nexus.Auth.Repository.Utils;
 using Nexus.Auth.Repository.Dtos.User;
+using System.Security.Claims;
 
 namespace Nexus.Auth.Api.Controllers
 {
@@ -109,7 +110,9 @@ namespace Nexus.Auth.Api.Controllers
                 if (dto.Roles.Count == 0)
                     return new GenericCommandResult<UserModel>(true, "Role list is required", null, StatusCodes.Status204NoContent);
 
-                return new GenericCommandResult<UserModel>(true, "Success", await _authHandler.Register(dto), StatusCodes.Status200OK);
+                var userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                return new GenericCommandResult<UserModel>(true, "Success", await _authHandler.Register(dto, int.Parse(userId)), StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
@@ -123,7 +126,7 @@ namespace Nexus.Auth.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("Put")]
-        public async Task<GenericCommandResult<UserModel>> Put(UserDto dto)
+        public async Task<GenericCommandResult<UserModel>> Put(UserPutDto dto)
         {
             try
             {

@@ -151,7 +151,7 @@ namespace Nexus.Auth.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Menus");
+                    b.ToTable("Menus", (string)null);
                 });
 
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.Place", b =>
@@ -185,7 +185,7 @@ namespace Nexus.Auth.Infra.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Places");
+                    b.ToTable("Places", (string)null);
                 });
 
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.Role", b =>
@@ -263,7 +263,7 @@ namespace Nexus.Auth.Infra.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleMenus");
+                    b.ToTable("RoleMenus", (string)null);
                 });
 
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.User", b =>
@@ -381,7 +381,7 @@ namespace Nexus.Auth.Infra.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserPlaces");
+                    b.ToTable("UserPlaces", (string)null);
                 });
 
             modelBuilder.Entity("Nexus.Auth.Domain.Entities.UserRole", b =>

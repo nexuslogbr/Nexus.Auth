@@ -1,4 +1,4 @@
-﻿using Nexus.Auth.Repository.Dtos.Place;
+﻿using Nexus.Auth.Repository.Models;
 
 namespace Nexus.Auth.Repository.Dtos.User
 {
@@ -8,6 +8,6 @@ namespace Nexus.Auth.Repository.Dtos.User
         public string? UserName { get; set; }
         public string? Email { get; set; }
         public required string ResetPasswordToken { get; set; }
-        public required PlaceResponseDto Location { get; set; }
+        public required PlaceModel Location { get; set; }
     }
 }

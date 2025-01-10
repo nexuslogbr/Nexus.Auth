@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Nexus.Auth.Repository.Utils;
 using Nexus.Auth.Repository.Dtos.User;
 using Nexus.Auth.Repository.Dtos.Auth;
+using System.Security.Claims;
 
 namespace Nexus.Auth.Api.Controllers
 {
@@ -43,7 +44,9 @@ namespace Nexus.Auth.Api.Controllers
                 if (dto.Roles.Count == 0)
                     return new GenericCommandResult<UserModel>(true, "Role list is required", null, StatusCodes.Status204NoContent);
 
-                var result = await _authHandler.Register(dto);
+                var userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                var result = await _authHandler.Register(dto, int.Parse(userId));
                 return new GenericCommandResult<UserModel>(true, "User created", result, StatusCodes.Status200OK);
             }
             catch (Exception ex)

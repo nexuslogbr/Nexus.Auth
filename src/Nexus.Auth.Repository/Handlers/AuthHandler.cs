@@ -47,9 +47,11 @@ namespace Nexus.Auth.Repository.Handlers
             _menuService = menuService;
         }
 
-        public async Task<UserModel> Register(UserDto entity)
+        public async Task<UserModel> Register(UserDto entity, int userId)
         {
             var user = _mapper.Map<User>(entity);
+            var userLogged = await _userService.GetByIdAsync(userId);
+            user.PlaceId = userLogged.PlaceId;
             var result = await _authService.Register(user, entity.Password);
 
             if (!result.Succeeded)
@@ -58,7 +60,7 @@ namespace Nexus.Auth.Repository.Handlers
             return _mapper.Map<UserModel>(user);
         }
 
-        public async Task<UserModel> Update(UserDto entity)
+        public async Task<UserModel> Update(UserPutDto entity)
         {
             var user = await _userService.GetByIdAsync(entity.Id);
             if (user is null)
@@ -134,7 +136,7 @@ namespace Nexus.Auth.Repository.Handlers
             {
                 var userResult = _mapper.Map<UserResult>(user);
 
-                userResult.Location = _mapper.Map<PlaceResponseDto>(await _placeService.GetByIdAsync(user.PlaceId));
+                userResult.Location = _mapper.Map<PlaceModel>(await _placeService.GetByIdAsync(user.PlaceId));
                 userResult.ResetPasswordToken = await _userService.GeneratePasswordResetTokenAsync(user);
 
                 var locations = user.UserPlaces.Select(_ => _.PlaceId).ToList();
