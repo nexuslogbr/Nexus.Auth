@@ -26,12 +26,12 @@ namespace Nexus.Auth.Domain.Entities
         public int PlaceId { get; set; }
         public Place Place { get; set; }
 
-        public required List<UserRole> UserRoles { get; set; }
-        public required List<UserPlace> UserPlaces { get; set; }
+        public required IList<UserRole> UserRoles { get; set; }
+        public required IList<UserPlace> UserPlaces { get; set; }
 
-        public virtual IList<Role> Roles { get; set; }
-        public virtual IList<Place> Places { get; set; }
+        public virtual IList<Role>? Roles { get; set; }
+        public virtual IList<Place>? Places { get; set; }
         [NotMapped]
-        public string ResetPasswordToken { get; set; }
+        public string? ResetPasswordToken { get; set; }
     }
 }

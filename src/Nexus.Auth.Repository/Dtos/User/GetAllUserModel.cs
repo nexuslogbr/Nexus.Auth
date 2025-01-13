@@ -11,5 +11,6 @@ namespace Nexus.Auth.Repository.Dtos.User
         public IList<GetById> Places { get; set; }
         public IList<GetById> Roles { get; set; }
         public DateTime ChangeDate { get; set; }
+        public bool Blocked { get; set; }
     }
 }
