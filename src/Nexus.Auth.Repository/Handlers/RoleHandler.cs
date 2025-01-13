@@ -81,8 +81,8 @@ namespace Nexus.Auth.Repository.Handlers
             var role = _mapper.Map<Role>(dto);
             role.RoleMenus = new List<RoleMenu>();
 
-            //foreach (var menu in dto.Menus)
-            //    role.RoleMenus.Add(new RoleMenu { MenuId = menu.Id, RegisterDate = DateTime.Now });
+            foreach (var menu in dto.Menus)
+                role.RoleMenus.Add(new RoleMenu { MenuId = menu.Id, RegisterDate = DateTime.Now });
 
             var success = await _roleService.Add(role);
             if (!success)
