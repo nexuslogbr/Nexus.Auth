@@ -102,9 +102,8 @@ namespace Nexus.Auth.Repository.Handlers
 
             var currentDate = DateTimeExtensions.GetCurrentDate();
             var roleMenusToSave = entity.Menus.Select(menu => new RoleMenu { 
-                RoleId = role.Id, 
-                MenuId = 0,
-                //MenuId = menu.Id, 
+                RoleId = role.Id,
+                MenuId = menu.Id,
                 ChangeDate = currentDate, 
             }).ToList();
 
