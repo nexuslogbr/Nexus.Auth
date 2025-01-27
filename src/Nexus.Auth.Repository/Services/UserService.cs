@@ -4,6 +4,7 @@ using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Infra.Context;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Services.Interfaces;
+using System.Globalization;
 
 namespace Nexus.Auth.Repository.Services
 {
@@ -24,18 +25,25 @@ namespace Nexus.Auth.Repository.Services
         {
             var query = _userManager.Users.AsQueryable();
 
-            query = query
-                .Where(x => (
-                             x.Name.ToLower().Contains(pageParams.Term.ToLower())
-                             || x.UserName.ToLower().Contains(pageParams.Term.ToLower())
-                             || x.Email.ToLower().Contains(pageParams.Term.ToLower())
-                             || x.UserPlaces.Any(x => x.Place.Name.ToLower().Contains(pageParams.Term.ToLower()))
-                            )
-                )
-                .Include(x => x.UserRoles)
-                .ThenInclude(x => x.Role)
-                .Include(y => y.UserPlaces)
-                .ThenInclude(y => y.Place);
+            // Tentar identificar se o termo é uma data ou contém números
+            string term = pageParams.Term.ToLower();
+            bool isDateTerm = DateTime.TryParseExact(term, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate);
+
+            query = query.Where(x =>
+                x.Name.ToLower().Contains(term) ||
+                x.UserName.ToLower().Contains(term) ||
+                x.Email.ToLower().Contains(term) ||
+                (isDateTerm && x.ChangeDate.Date == parsedDate.Date) || // Busca data completa
+                x.ChangeDate.Year.ToString().Contains(term) ||          // Verifica o ano
+                x.ChangeDate.Month.ToString().Contains(term) ||         // Verifica o mês
+                x.ChangeDate.Day.ToString().Contains(term) ||           // Verifica o dia
+                x.UserPlaces.Any(up => up.Place.Name.ToLower().Contains(term))
+            )
+            .Include(x => x.UserRoles)
+            .ThenInclude(x => x.Role)
+            .Include(y => y.UserPlaces)
+            .ThenInclude(y => y.Place);
+
 
             if (!string.IsNullOrEmpty(pageParams.OrderByProperty))
             {
@@ -50,7 +58,7 @@ namespace Nexus.Auth.Repository.Services
                     case "email":
                         query = pageParams.Asc ? query.OrderBy(u => u.Email) : query.OrderByDescending(u => u.Email);
                         break;
-                    case "changeDate":
+                    case "changedate":
                         query = pageParams.Asc ? query.OrderBy(u => u.ChangeDate) : query.OrderByDescending(u => u.ChangeDate);
                         break;
                     case "places":
