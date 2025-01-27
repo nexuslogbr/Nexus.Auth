@@ -29,11 +29,13 @@ namespace Nexus.Auth.Repository.Services
                              x.Name.ToLower().Contains(pageParams.Term.ToLower())
                              || x.UserName.ToLower().Contains(pageParams.Term.ToLower())
                              || x.Email.ToLower().Contains(pageParams.Term.ToLower())
+                             || x.UserPlaces.Any(x => x.Place.Name.ToLower().Contains(pageParams.Term.ToLower()))
                             )
                 )
                 .Include(x => x.UserRoles)
                 .ThenInclude(x => x.Role)
-                .Include(y => y.UserPlaces);
+                .Include(y => y.UserPlaces)
+                .ThenInclude(y => y.Place);
 
             if (!string.IsNullOrEmpty(pageParams.OrderByProperty))
             {
@@ -50,6 +52,11 @@ namespace Nexus.Auth.Repository.Services
                         break;
                     case "changeDate":
                         query = pageParams.Asc ? query.OrderBy(u => u.ChangeDate) : query.OrderByDescending(u => u.ChangeDate);
+                        break;
+                    case "places":
+                        query = pageParams.Asc 
+                            ? query.OrderBy(u => u.UserPlaces.OrderBy(y => y.Place.Name).FirstOrDefault().Place.Name) 
+                            : query.OrderByDescending(u => u.UserPlaces.OrderBy(y => y.Place.Name).FirstOrDefault().Place.Name);
                         break;
                     default:
                         query = query.OrderBy(u => u.Id);
