@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Infra.Context;
+using System.Globalization;
 
 namespace Nexus.Auth.Repository.Services
 {
@@ -24,8 +25,17 @@ namespace Nexus.Auth.Repository.Services
         {
             var query = _roleManager.Roles.AsQueryable();
 
-            query = query
-                .Where(x => x.Name.ToLower().Contains(pageParams.Term.ToLower()))
+            string term = pageParams.Term?.ToLower() ?? string.Empty;
+            bool isDateTerm = DateTime.TryParseExact(term, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate);
+
+            query = query.Where(
+                x => x.Name.ToLower().Contains(term) ||
+                     (isDateTerm && x.ChangeDate.Date == parsedDate.Date) ||
+                     x.ChangeDate.Year.ToString().Contains(term) ||
+                     x.ChangeDate.Month.ToString().Contains(term) ||
+                     x.ChangeDate.Day.ToString().Contains(term) ||
+                     x.RoleMenus.Any(rm => rm.Menu.Name.ToLower().Contains(term))
+            )
                 .Include(x => x.RoleMenus)
                 .ThenInclude(x => x.Menu);
 
@@ -36,10 +46,12 @@ namespace Nexus.Auth.Repository.Services
                     case "name":
                         query = pageParams.Asc ? query.OrderBy(u => u.Name) : query.OrderByDescending(u => u.Name);
                         break;
-                    case "description":
-                        query = pageParams.Asc ? query.OrderBy(u => u.Description) : query.OrderByDescending(u => u.Description);
+                    case "menuslist":
+                        query = pageParams.Asc
+                            ? query.OrderBy(r => r.RoleMenus.Select(rm => rm.Menu.Name).FirstOrDefault())
+                            : query.OrderByDescending(r => r.RoleMenus.Select(rm => rm.Menu.Name).FirstOrDefault());
                         break;
-                    case "changeDate":
+                    case "changedate":
                         query = pageParams.Asc ? query.OrderBy(u => u.ChangeDate) : query.OrderByDescending(u => u.ChangeDate);
                         break;
                     default:
