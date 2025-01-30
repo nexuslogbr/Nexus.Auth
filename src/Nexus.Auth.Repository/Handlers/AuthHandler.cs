@@ -168,6 +168,7 @@ namespace Nexus.Auth.Repository.Handlers
                 new Claim(ClaimTypes.Role, user.Roles.First().Name),
                 new Claim(ClaimTypes.Locality, user.Place.Name),
                 new Claim(ClaimTypes.Country, user.Place.Acronym),
+                new Claim("PlaceId", user.PlaceId.ToString())
             };
 
             var roles = await _roleService.GetByUserIdAsync(user.Id);
