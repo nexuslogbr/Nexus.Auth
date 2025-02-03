@@ -30,11 +30,11 @@ namespace Nexus.Auth.Repository.Services
 
             query = query.Where(
                 x => x.Name.ToLower().Contains(term) ||
-                     (isDateTerm && x.ChangeDate.Date == parsedDate.Date) ||
-                     x.ChangeDate.Year.ToString().Contains(term) ||
-                     x.ChangeDate.Month.ToString().Contains(term) ||
-                     x.ChangeDate.Day.ToString().Contains(term) ||
-                     x.RoleMenus.Any(rm => rm.Menu.Name.ToLower().Contains(term))
+                (isDateTerm && x.ChangeDate.Date == parsedDate.Date) ||
+                x.ChangeDate.Year.ToString().Contains(term) ||
+                x.ChangeDate.Month.ToString().Contains(term) ||
+                x.ChangeDate.Day.ToString().Contains(term) ||
+                x.RoleMenus.Any(rm => rm.Menu.Name.ToLower().Contains(term))
             )
                 .Include(x => x.RoleMenus)
                 .ThenInclude(x => x.Menu);
@@ -61,6 +61,8 @@ namespace Nexus.Auth.Repository.Services
             }
             else
                 query = query.OrderBy(u => u.Id);
+
+            query = query.Where(x => x.Blocked == pageParams.Blocked);
 
             var count = await _roleManager.Roles.CountAsync();
             var items = await query.Skip((pageParams.PageNumber - 1) * pageParams.PageSize).Take(pageParams.PageSize).ToListAsync();
