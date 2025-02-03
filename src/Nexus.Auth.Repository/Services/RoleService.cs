@@ -62,7 +62,8 @@ namespace Nexus.Auth.Repository.Services
             else
                 query = query.OrderBy(u => u.Id);
 
-            query = query.Where(x => x.Blocked == pageParams.Blocked);
+            if (pageParams.Blocked is not null)
+                query = query.Where(x => x.Blocked == pageParams.Blocked);
 
             var count = await _roleManager.Roles.CountAsync();
             var items = await query.Skip((pageParams.PageNumber - 1) * pageParams.PageSize).Take(pageParams.PageSize).ToListAsync();
