@@ -44,6 +44,7 @@ namespace Nexus.Auth.Repository.Handlers
             var user = _mapper.Map<User>(entity);
             var userLogged = await _userService.GetByIdAsync(userId);
             user.PlaceId = userLogged.PlaceId;
+            user.PlaceData = userLogged.PlaceId;
             var result = await _authService.Register(user, entity.Password);
 
             if (!result.Succeeded)

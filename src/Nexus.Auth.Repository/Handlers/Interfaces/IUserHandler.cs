@@ -8,7 +8,7 @@ namespace Nexus.Auth.Repository.Handlers.Interfaces
 {
     public interface IUserHandler
     {
-        Task<PageList<GetAllUserModel>> GetAll(PageParams pageParams);
+        Task<PageList<GetAllUserModel>> GetAll(PageParams pageParams, int placeId);
         Task<User> GetById(int id);
         Task<User> GetByName(string name);
         Task<User> GetByEmail(string email);

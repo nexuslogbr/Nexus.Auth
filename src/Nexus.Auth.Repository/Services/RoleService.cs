@@ -21,7 +21,7 @@ namespace Nexus.Auth.Repository.Services
             _menuService = menuService;
         }
 
-        public async Task<List<Role>> GetAllAsync(PageParams pageParams)
+        public async Task<List<Role>> GetAllAsync(PageParams pageParams, int placeId)
         {
             var query = _roleManager.Roles.AsQueryable();
 
@@ -34,7 +34,8 @@ namespace Nexus.Auth.Repository.Services
                 x.ChangeDate.Year.ToString().Contains(term) ||
                 x.ChangeDate.Month.ToString().Contains(term) ||
                 x.ChangeDate.Day.ToString().Contains(term) ||
-                x.RoleMenus.Any(rm => rm.Menu.Name.ToLower().Contains(term))
+                x.RoleMenus.Any(rm => rm.Menu.Name.ToLower().Contains(term)) &&
+                x.PlaceData == placeId
             )
                 .Include(x => x.RoleMenus)
                 .ThenInclude(x => x.Menu);

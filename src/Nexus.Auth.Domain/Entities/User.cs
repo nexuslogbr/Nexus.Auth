@@ -33,5 +33,7 @@ namespace Nexus.Auth.Domain.Entities
         public virtual IList<Place>? Places { get; set; }
         [NotMapped]
         public string? ResetPasswordToken { get; set; }
+
+        public int PlaceData { get; set; }
     }
 }

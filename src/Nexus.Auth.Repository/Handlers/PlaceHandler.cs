@@ -20,13 +20,15 @@ namespace Nexus.Auth.Repository.Handlers
             _mapper = mapper;
         }
 
-        public async Task<PageList<PlaceModel>> GetAll(PlaceParams pageParams)
+        public async Task<PageList<PlaceModel>> GetAll(PlaceParams pageParams, int placeId)
         {
-            var response = await _placeService.GetAsync(
-                pageParams.PageNumber, pageParams.pageSize, pageParams.Filter(), pageParams.OrderByProperty, pageParams.Asc, includeProps: "");
+            var response = (await _placeService.GetAsync(
+                pageParams.PageNumber, pageParams.pageSize, pageParams.Filter(), pageParams.OrderByProperty, pageParams.Asc, includeProps: "")).Where(x => x.PlaceData == placeId);
+
             return new PageList<PlaceModel>(
                 _mapper.Map<List<PlaceModel>>(response),
-                await _placeService.CountAsync(),
+                //await _placeService.CountAsync(),
+                response.Count(),
                 pageParams.PageNumber,
                 pageParams.PageSize);
         }

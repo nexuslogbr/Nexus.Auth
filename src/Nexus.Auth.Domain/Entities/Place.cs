@@ -6,5 +6,6 @@ namespace Nexus.Auth.Domain.Entities
         public required string Name { get; set; }
         public required string Acronym { get; set; }
         public required string Country { get; set; }
+        public int PlaceData { get; set; }
     }
 }

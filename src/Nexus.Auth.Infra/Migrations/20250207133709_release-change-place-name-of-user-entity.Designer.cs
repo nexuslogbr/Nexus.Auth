@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nexus.Auth.Infra.Context;
 
@@ -11,9 +12,11 @@ using Nexus.Auth.Infra.Context;
 namespace Nexus.Auth.Infra.Migrations
 {
     [DbContext(typeof(NexusAuthContext))]
-    partial class NexusAuthContextModelSnapshot : ModelSnapshot
+    [Migration("20250207133709_release-change-place-name-of-user-entity")]
+    partial class releasechangeplacenameofuserentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,9 +183,6 @@ namespace Nexus.Auth.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PlaceData")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
@@ -223,9 +223,6 @@ namespace Nexus.Auth.Infra.Migrations
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-
-                    b.Property<int>("PlaceData")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
@@ -293,6 +290,9 @@ namespace Nexus.Auth.Infra.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("DefaultPlace")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -326,9 +326,6 @@ namespace Nexus.Auth.Infra.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<int>("PlaceData")
-                        .HasColumnType("int");
 
                     b.Property<int>("PlaceId")
                         .HasColumnType("int");

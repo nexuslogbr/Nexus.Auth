@@ -35,7 +35,7 @@ namespace Nexus.Auth.Api.Controllers
         {
             try
             {
-                var result = await _roleHandler.GetAll(pageParams);
+                var result = await _roleHandler.GetAll(pageParams, int.Parse(User?.FindFirst("PlaceId")?.Value));
 
                 if (result.TotalCount > 0)
                     return new GenericCommandResult<PageList<RoleModel>>(true, "Success", result, StatusCodes.Status200OK);

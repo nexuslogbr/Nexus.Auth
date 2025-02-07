@@ -47,9 +47,9 @@ namespace Nexus.Auth.Repository.Handlers
             _jwtTokenService = jwtTokenService;
         }
 
-        public async Task<PageList<GetAllUserModel>> GetAll(PageParams pageParams)
+        public async Task<PageList<GetAllUserModel>> GetAll(PageParams pageParams, int placeId)
         {
-            var users = await _userService.GetAllAsync(pageParams);
+            var users = await _userService.GetAllAsync(pageParams, placeId);
 
             foreach (var user in users)
             {
@@ -58,7 +58,7 @@ namespace Nexus.Auth.Repository.Handlers
                 user.Places = _mapper.Map<List<Place>>(await _placeService.GetByIdsAsync(user.UserPlaces.Select(p => p.PlaceId).ToList()));
             }
 
-            var count = await _userManager.Users.CountAsync();
+            var count = await _userManager.Users.Where(x => x.PlaceData == placeId).CountAsync();
 
             return new PageList<GetAllUserModel>(
                 _mapper.Map<List<GetAllUserModel>>(users),

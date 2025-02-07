@@ -27,9 +27,9 @@ namespace Nexus.Auth.Repository.Handlers
             _mapper = mapper;
         }
 
-        public async Task<PageList<RoleModel>> GetAll(PageParams pageParams)
+        public async Task<PageList<RoleModel>> GetAll(PageParams pageParams, int placeId)
         {
-            var roles = await _roleService.GetAllAsync(pageParams);
+            var roles = await _roleService.GetAllAsync(pageParams, placeId);
 
             foreach (var role in roles)
             {

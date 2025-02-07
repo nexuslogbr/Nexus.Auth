@@ -21,7 +21,7 @@ namespace Nexus.Auth.Repository.Services
             _context = context;
         }
 
-        public async Task<List<User>> GetAllAsync(PageParams pageParams)
+        public async Task<List<User>> GetAllAsync(PageParams pageParams, int placeId)
         {
             var query = _userManager.Users.AsQueryable();
 
@@ -36,7 +36,8 @@ namespace Nexus.Auth.Repository.Services
                 x.ChangeDate.Year.ToString().Contains(term) ||
                 x.ChangeDate.Month.ToString().Contains(term) ||
                 x.ChangeDate.Day.ToString().Contains(term) ||
-                x.UserPlaces.Any(x => x.Place.Name.ToLower().Contains(term))
+                x.UserPlaces.Any(x => x.Place.Name.ToLower().Contains(term)) &&
+                x.PlaceData == placeId
             )
             .Include(x => x.UserRoles)
             .ThenInclude(x => x.Role)

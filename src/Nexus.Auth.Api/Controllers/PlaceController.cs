@@ -24,7 +24,7 @@ namespace Nexus.Auth.Api.Controllers
         {
             try
             {
-                return Ok(await _placeHandler.GetAll(pageParams));
+                return Ok(await _placeHandler.GetAll(pageParams, int.Parse(User?.FindFirst("PlaceId")?.Value)));
             }
             catch (Exception ex)
             {

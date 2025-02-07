@@ -10,7 +10,7 @@ namespace Nexus.Auth.Repository.Handlers.Interfaces
         Task<PlaceModel> Add(PlaceDto entity);
         Task<PlaceModel> Update(PlacePutDto entity);
         Task<bool> Delete(int id);
-        Task<PageList<PlaceModel>> GetAll(PlaceParams pageParams);
+        Task<PageList<PlaceModel>> GetAll(PlaceParams pageParams, int placeId);
         Task<PlaceModel> GetById(int id);
         Task<PlaceModel> GetByName(string name);
         Task<ChangeStatusDto> ChangeStatus(ChangeStatusDto dto);

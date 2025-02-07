@@ -28,5 +28,7 @@ namespace Nexus.Auth.Domain.Entities
 
         [NotMapped]
         public virtual IList<Menu>? Menus { get; set; }
+
+        public int PlaceData { get; set; }
     }
 }
