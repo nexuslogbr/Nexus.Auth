@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Repository.Dtos.Auth;
 using Nexus.Auth.Repository.Dtos.Menu;
@@ -13,9 +11,6 @@ using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Auth.Repository.Utils;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Nexus.Auth.Repository.Handlers
 {
@@ -23,28 +18,25 @@ namespace Nexus.Auth.Repository.Handlers
     {
         private readonly IAuthService _authService;
         private readonly IUserService<User> _userService;
-        private readonly IRoleService<Role> _roleService;
-        private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly IPlaceService _placeService;
         private readonly IMenuService _menuService;
+        private readonly IJwtTokenService _jwtTokenService;
 
         public AuthHandler(
             IAuthService authService,
             IUserService<User> userService,
-            IConfiguration config,
-            IRoleService<Role> roleService,
             IMapper mapper,
             IPlaceService placeService,
-            IMenuService menuService)
+            IMenuService menuService,
+            IJwtTokenService jwtTokenService)
         {
             _authService = authService;
             _userService = userService;
-            _config = config;
-            _roleService = roleService;
             _mapper = mapper;
             _placeService = placeService;
             _menuService = menuService;
+            _jwtTokenService = jwtTokenService;
         }
 
         public async Task<UserModel> Register(UserDto entity, int userId)
@@ -147,7 +139,7 @@ namespace Nexus.Auth.Repository.Handlers
                 if (result.Succeeded)
                     return new AuthResult
                     {
-                        Token = await GenerateJWToken(user),
+                        Token = await _jwtTokenService.GenerateJWToken(user),
                         User = userResult,
                         Roles = _mapper.Map<RoleResult[]>(user.Roles),
                         Menus = _mapper.Map<MenuResult[]>(menus.Select(roleMenu => roleMenu.Menu).ToList()),
@@ -156,48 +148,6 @@ namespace Nexus.Auth.Repository.Handlers
             }
 
             return null;
-        }
-
-        private async Task<string> GenerateJWToken(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Roles.First().Name),
-                new Claim(ClaimTypes.Locality, user.Place.Name),
-                new Claim(ClaimTypes.Country, user.Place.Acronym),
-                new Claim("PlaceId", user.PlaceId.ToString())
-            };
-
-            var roles = await _roleService.GetByUserIdAsync(user.Id);
-            foreach (var role in roles)
-            {
-                var menus = role.RoleMenus.Select(x => x.Menu).Select(x => x.Name);
-                claims.Add(new Claim(ClaimTypes.Role, role.Name));
-                claims.Add(new Claim("menus", string.Join(",", menus)));
-            }
-            var keyString = _config.GetSection("AppSettings:Key").Value;
-
-            if (string.IsNullOrEmpty(keyString) || keyString.Length < 64)
-            {
-                throw new InvalidOperationException("A chave de criptografia deve ter pelo menos 64 caracteres.");
-            }
-
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(keyString));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
         }
 
         public async Task<bool> Logout()

@@ -33,6 +33,7 @@ namespace Nexus.Auth.API.Dependency
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IPlaceHandler, PlaceHandler>();  
             services.AddScoped<IPlaceService, PlaceService>();
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
         }
     }
 }

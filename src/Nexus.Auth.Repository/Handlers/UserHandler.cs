@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Nexus.Auth.Domain.Entities;
 using Nexus.Auth.Repository.Dtos.Generics;
 using Nexus.Auth.Repository.Dtos.User;
@@ -10,9 +9,6 @@ using Nexus.Auth.Repository.Handlers.Interfaces;
 using Nexus.Auth.Repository.Models;
 using Nexus.Auth.Repository.Services.Interfaces;
 using Nexus.Auth.Repository.Utils;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Web;
 
 namespace Nexus.Auth.Repository.Handlers
@@ -27,7 +23,7 @@ namespace Nexus.Auth.Repository.Handlers
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly IPlaceService _placeService;
-        private readonly IConfiguration _config;
+        private readonly IJwtTokenService _jwtTokenService;
 
         public UserHandler(
             IUserService<User> userService,
@@ -38,7 +34,7 @@ namespace Nexus.Auth.Repository.Handlers
             IConfiguration configuration,
             IPlaceService placeService,
             IAuthService authService,
-            IConfiguration config)
+            IJwtTokenService jwtTokenService)
         {
             _userService = userService;
             _roleService = roleService;
@@ -48,7 +44,7 @@ namespace Nexus.Auth.Repository.Handlers
             _configuration = configuration;
             _placeService = placeService;
             _authService = authService;
-            _config = config;
+            _jwtTokenService = jwtTokenService;
         }
 
         public async Task<PageList<GetAllUserModel>> GetAll(PageParams pageParams)
@@ -231,50 +227,8 @@ namespace Nexus.Auth.Repository.Handlers
 
             var mapped =  _mapper.Map<UserPlaceModel>(user);
             mapped.Location = _mapper.Map<PlaceModel>(place);
-            mapped.Token = await GenerateJWToken(user);
+            mapped.Token = await _jwtTokenService.GenerateJWToken(user);
             return mapped;
-        }
-
-        public async Task<string> GenerateJWToken(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Roles.First().Name),
-                new Claim(ClaimTypes.Locality, user.Place.Name),
-                new Claim(ClaimTypes.Country, user.Place.Acronym),
-                new Claim("PlaceId", user.PlaceId.ToString())
-            };
-
-            var roles = await _roleService.GetByUserIdAsync(user.Id);
-            foreach (var role in roles)
-            {
-                var menus = role.RoleMenus.Select(x => x.Menu).Select(x => x.Name);
-                claims.Add(new Claim(ClaimTypes.Role, role.Name));
-                claims.Add(new Claim("menus", string.Join(",", menus)));
-            }
-            var keyString = _config.GetSection("AppSettings:Key").Value;
-
-            if (string.IsNullOrEmpty(keyString) || keyString.Length < 64)
-            {
-                throw new InvalidOperationException("A chave de criptografia deve ter pelo menos 64 caracteres.");
-            }
-
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(keyString));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
         }
     }
 }
