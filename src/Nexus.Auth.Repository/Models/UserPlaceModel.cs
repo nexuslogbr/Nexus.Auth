@@ -7,5 +7,6 @@
         public string UserName { get; set; }
         public string Email { get; set; }
         public PlaceModel Location { get; set; }
+        public required string Token { get; set; }
     }
 }
