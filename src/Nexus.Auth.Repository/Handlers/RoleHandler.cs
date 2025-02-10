@@ -38,7 +38,7 @@ namespace Nexus.Auth.Repository.Handlers
                     role.Menus.Add(item.Menu);
             }
 
-            var count = await _roleManager.Roles.CountAsync();
+            var count = await _roleManager.Roles.Where(x => x.PlaceData == placeId).CountAsync();
             return new PageList<RoleModel>(
                 _mapper.Map<List<RoleModel>>(roles),
                 count,
