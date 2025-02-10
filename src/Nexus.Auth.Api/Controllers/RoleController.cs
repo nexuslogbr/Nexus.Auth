@@ -107,7 +107,7 @@ namespace Nexus.Auth.Api.Controllers
                 if (dto.Menus.Count == 0)
                     return new GenericCommandResult<RoleModel>(true, "Menus list is required", null, StatusCodes.Status204NoContent);
 
-                return new GenericCommandResult<RoleModel>(true, "Success", await _roleHandler.Add(dto), StatusCodes.Status200OK);
+                return new GenericCommandResult<RoleModel>(true, "Success", await _roleHandler.Add(dto, int.Parse(User?.FindFirst("PlaceId")?.Value)), StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {

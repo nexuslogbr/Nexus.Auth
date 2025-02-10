@@ -76,10 +76,11 @@ namespace Nexus.Auth.Repository.Handlers
             return null;
         }
 
-        public async Task<RoleModel> Add(RoleDto dto)
+        public async Task<RoleModel> Add(RoleDto dto, int placeId)
         {
             var role = _mapper.Map<Role>(dto);
             role.RoleMenus = new List<RoleMenu>();
+            role.PlaceData = placeId;
 
             foreach (var menu in dto.Menus)
                 role.RoleMenus.Add(new RoleMenu { MenuId = menu.Id, RegisterDate = DateTime.Now });
