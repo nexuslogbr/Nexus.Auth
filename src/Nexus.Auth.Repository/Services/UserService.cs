@@ -29,15 +29,15 @@ namespace Nexus.Auth.Repository.Services
             bool isDateTerm = DateTime.TryParseExact(term, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate);
 
             query = query.Where(x =>
-                x.Name.ToLower().Contains(term) ||
+                x.PlaceData == placeId &&
+                (x.Name.ToLower().Contains(term) ||
                 x.UserName.ToLower().Contains(term) ||
                 x.Email.ToLower().Contains(term) ||
                 (isDateTerm && x.ChangeDate.Date == parsedDate.Date) ||
                 x.ChangeDate.Year.ToString().Contains(term) ||
                 x.ChangeDate.Month.ToString().Contains(term) ||
                 x.ChangeDate.Day.ToString().Contains(term) ||
-                x.UserPlaces.Any(x => x.Place.Name.ToLower().Contains(term)) &&
-                x.PlaceData == placeId
+                x.UserPlaces.Any(x => x.Place.Name.ToLower().Contains(term)))
             )
             .Include(x => x.UserRoles)
             .ThenInclude(x => x.Role)
