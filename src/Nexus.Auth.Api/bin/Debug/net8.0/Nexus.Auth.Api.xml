@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nexus.Auth.Api</name>
+    </assembly>
+    <members>
+        <member name="M:Nexus.Auth.Api.Controllers.AuthController.Register(Nexus.Auth.Repository.Dtos.User.UserDto)">
+            POST: api/v1/Authentication/Register
+            <summary>
+            Endpoint to create new user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.AuthController.Login(Nexus.Auth.Repository.Dtos.User.UserLoginDto)">
+            POST: api/v1/Authentication/Login
+            <summary>
+            Service to login of user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.AuthController.Logout">
+            POST: api/v1/Authentication/Logout
+            <summary>
+            Service to logout of user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.AuthController.RequestPasswordReset(Auth.Repository.Dtos.Generics.RequestResetPasswordDto)">
+            POST: api/v1/Authentication/RequestPasswordReset
+            <summary>
+            Service to request reset password
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.AuthController.ResetPassword(Nexus.Auth.Repository.Dtos.Auth.ResetPasswordDto)">
+            POST: api/v1/Authentication/ResetPassword
+            <summary>
+            Service to reset password
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.MenuController.GetAll(Nexus.Auth.Repository.Params.MenuParams)">
+            GET: api/v1/Menu/GetAll
+            <summary>
+            Endpoint to get all menus
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.MenuController.GetById(Nexus.Auth.Repository.Dtos.Generics.GetById)">
+            POST: api/v1/Menu/GetById
+            <summary>
+            Endpoint to get menus by id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.MenuController.GetByName(Nexus.Auth.Repository.Dtos.Generics.GetByName)">
+            POST: api/v1/Menu/GetByName
+            <summary>
+            Endpoint to get menus by name
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.MenuController.Post(Nexus.Auth.Repository.Dtos.Menu.MenuDto)">
+            POST: api/v1/Menu/Post
+            <summary>
+            Endpoint to create new menus
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.MenuController.Put(Nexus.Auth.Repository.Dtos.Menu.MenuPutDto)">
+            POST: api/v1/Menu/Put
+            <summary>
+            Endpoint to change an menus
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.MenuController.Delete(Nexus.Auth.Repository.Dtos.Generics.GetById)">
+            POST: api/v1/Menu/Remove
+            <summary>
+            Endpoint to remove an menus
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.RoleController.GetAll(Nexus.Auth.Repository.Dtos.Generics.PageParams)">
+            GET: api/v1/Role/GetAll
+            <summary>
+            Endpoint to get all roles
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.RoleController.GetById(Nexus.Auth.Repository.Dtos.Generics.GetById)">
+            POST: api/v1/Role/GetById
+            <summary>
+            Endpoint to get roles by id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.RoleController.GetByName(Nexus.Auth.Repository.Dtos.Generics.GetByName)">
+            POST: api/v1/Role/GetByName
+            <summary>
+            Endpoint to get roles by name
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.RoleController.Post(Nexus.Auth.Repository.Dtos.Role.RoleDto)">
+            POST: api/v1/Role/Post
+            <summary>
+            Endpoint to create new roles
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.RoleController.Put(Nexus.Auth.Repository.Dtos.Role.RoleIdDto)">
+            POST: api/v1/Role/Put
+            <summary>
+            Endpoint to change an roles
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.RoleController.Delete(Nexus.Auth.Repository.Dtos.Generics.GetById)">
+            POST: api/v1/Role/Remove
+            <summary>
+            Endpoint to remove an roles
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.RoleController.ChangeStatus(Nexus.Auth.Repository.Dtos.Generics.ChangeStatusDto)">
+            POST: api/v1/Role/ChangeStatus
+            <summary>
+            Endpoint to change the status for role
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.UserController.GetAll(Nexus.Auth.Repository.Dtos.Generics.PageParams)">
+            GET: api/v1/User/GetAll
+            <summary>
+            Endpoint to get all users
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.UserController.GetById(Nexus.Auth.Repository.Dtos.Generics.GetById)">
+            POST: api/v1/User/GetById
+            <summary>
+            Endpoint to get user by id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.UserController.GetByName(Nexus.Auth.Repository.Dtos.Generics.GetByName)">
+            POST: api/v1/User/GetByName
+            <summary>
+            Endpoint to get user by name
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.UserController.Post(Nexus.Auth.Repository.Dtos.User.UserDto)">
+            POST: api/v1/User/Post
+            <summary>
+            Endpoint to create new user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.UserController.Put(Nexus.Auth.Repository.Dtos.User.UserPutDto)">
+            POST: api/v1/User/Put
+            <summary>
+            Endpoint to change an user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.UserController.PutPassword(Nexus.Auth.Repository.Dtos.User.UserDto)">
+            POST: api/v1/User/PutPassword
+            <summary>
+            Endpoint to update password of user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.UserController.Delete(Nexus.Auth.Repository.Dtos.Generics.GetById)">
+            POST: api/v1/User/Remove
+            <summary>
+            Endpoint to remove an user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.UserController.ChangeStatus(Nexus.Auth.Repository.Dtos.Generics.ChangeStatusDto)">
+            POST: api/v1/User/ChangeStatus
+            <summary>
+            Endpoint to change the status for user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nexus.Auth.Api.Controllers.UserController.ChangePlace(Nexus.Auth.Repository.Dtos.User.UserPlaceDto)">
+            POST: api/v1/User/ChangePlace
+            <summary>
+            Endpoint to change location
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,38 @@
+name: dockercompose11303445663672357455
+services:
+  nexus.auth.api:
+    build:
+      context: F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth
+      dockerfile: src/Nexus.Auth.Api/Dockerfile
+    container_name: nexus.auth.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+    image: nexusauthapi
+    networks:
+      nexus_network: null
+    ports:
+      - mode: ingress
+        target: 80
+        protocol: tcp
+      - mode: ingress
+        target: 443
+        published: "44385"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\Users\delia\AppData\Roaming/Microsoft/UserSecrets
+        target: /root/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\delia\AppData\Roaming/ASP.NET/Https
+        target: /root/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+networks:
+  nexus_network:
+    name: nexus_network
+    driver: bridge

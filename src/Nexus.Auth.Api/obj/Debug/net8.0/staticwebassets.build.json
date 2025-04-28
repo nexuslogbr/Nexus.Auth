@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "XO3OQwgR7fEv+BpDvXUCWdWtdoh7pDGDRTlDUn5t3Kk=",
+  "Source": "Nexus.Auth.Api",
+  "BasePath": "_content/Nexus.Auth.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

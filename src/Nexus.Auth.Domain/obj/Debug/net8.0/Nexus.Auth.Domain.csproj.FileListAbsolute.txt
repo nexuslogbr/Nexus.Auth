@@ -1,0 +1,13 @@
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\bin\Debug\net8.0\Nexus.Auth.Domain.deps.json
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\bin\Debug\net8.0\Nexus.Auth.Domain.dll
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\bin\Debug\net8.0\Nexus.Auth.Domain.pdb
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\obj\Debug\net8.0\Nexus.Auth.Domain.csproj.AssemblyReference.cache
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\obj\Debug\net8.0\Nexus.Auth.Domain.GeneratedMSBuildEditorConfig.editorconfig
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\obj\Debug\net8.0\Nexus.Auth.Domain.AssemblyInfoInputs.cache
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\obj\Debug\net8.0\Nexus.Auth.Domain.AssemblyInfo.cs
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\obj\Debug\net8.0\Nexus.Auth.Domain.csproj.CoreCompileInputs.cache
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\obj\Debug\net8.0\Nexus.Auth.Domain.sourcelink.json
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\obj\Debug\net8.0\Nexus.Auth.Domain.dll
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\obj\Debug\net8.0\refint\Nexus.Auth.Domain.dll
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\obj\Debug\net8.0\Nexus.Auth.Domain.pdb
+F:\8_Projetos\Nexus\projects_to_migration\Nexus.Auth\src\Nexus.Auth.Domain\obj\Debug\net8.0\ref\Nexus.Auth.Domain.dll

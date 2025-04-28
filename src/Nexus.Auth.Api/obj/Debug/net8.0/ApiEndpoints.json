@@ -1,0 +1,766 @@
+[
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/v1/Auth/Login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.User.UserLoginDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Dtos.Auth.AuthResult, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.AuthController",
+    "Method": "Logout",
+    "RelativePath": "api/v1/Auth/Logout",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.AuthController",
+    "Method": "Register",
+    "RelativePath": "api/v1/Auth/Register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.User.UserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Models.UserModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.AuthController",
+    "Method": "RequestPasswordReset",
+    "RelativePath": "api/v1/Auth/RequestPasswordReset",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Auth.Repository.Dtos.Generics.RequestResetPasswordDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.AuthController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/v1/Auth/ResetPassword",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Auth.ResetPasswordDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Microsoft.AspNetCore.Identity.IdentityResult, Microsoft.Extensions.Identity.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.MenuController",
+    "Method": "Delete",
+    "RelativePath": "api/v1/Menu/Delete",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetById",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.MenuController",
+    "Method": "GetAll",
+    "RelativePath": "api/v1/Menu/GetAll",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageParams",
+        "Type": "Nexus.Auth.Repository.Params.MenuParams",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.MenuController",
+    "Method": "GetById",
+    "RelativePath": "api/v1/Menu/GetById",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetById",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.MenuController",
+    "Method": "GetByName",
+    "RelativePath": "api/v1/Menu/GetByName",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetByName",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.MenuController",
+    "Method": "Post",
+    "RelativePath": "api/v1/Menu/Post",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Menu.MenuDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.MenuController",
+    "Method": "Put",
+    "RelativePath": "api/v1/Menu/Put",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Menu.MenuPutDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.PlaceController",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/v1/Place/ChangeStatus",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.ChangeStatusDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.PlaceController",
+    "Method": "Delete",
+    "RelativePath": "api/v1/Place/Delete",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetById",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.PlaceController",
+    "Method": "GetAll",
+    "RelativePath": "api/v1/Place/GetAll",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageParams",
+        "Type": "Nexus.Auth.Repository.Params.PlaceParams",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.PlaceController",
+    "Method": "GetById",
+    "RelativePath": "api/v1/Place/GetById",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetById",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.PlaceController",
+    "Method": "GetByIds",
+    "RelativePath": "api/v1/Place/GetByIds",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.PlaceController",
+    "Method": "GetByName",
+    "RelativePath": "api/v1/Place/GetByName",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetByName",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.PlaceController",
+    "Method": "Post",
+    "RelativePath": "api/v1/Place/Post",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Place.PlaceDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.PlaceController",
+    "Method": "Put",
+    "RelativePath": "api/v1/Place/Put",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Place.PlacePutDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.RoleController",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/v1/Role/ChangeStatus",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.ChangeStatusDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.RoleController",
+    "Method": "Delete",
+    "RelativePath": "api/v1/Role/Delete",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetById",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.RoleController",
+    "Method": "GetAll",
+    "RelativePath": "api/v1/Role/GetAll",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageParams",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.PageParams",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Dtos.Generics.PageList\u00601[[Nexus.Auth.Repository.Models.RoleModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.RoleController",
+    "Method": "GetById",
+    "RelativePath": "api/v1/Role/GetById",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetById",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Models.RoleModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.RoleController",
+    "Method": "GetByName",
+    "RelativePath": "api/v1/Role/GetByName",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetByName",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Models.RoleModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.RoleController",
+    "Method": "Post",
+    "RelativePath": "api/v1/Role/Post",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Role.RoleDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Models.RoleModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.RoleController",
+    "Method": "Put",
+    "RelativePath": "api/v1/Role/Put",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Role.RoleIdDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Models.RoleModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.UserController",
+    "Method": "ChangePlace",
+    "RelativePath": "api/v1/User/ChangePlace",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.User.UserPlaceDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Models.UserPlaceModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.UserController",
+    "Method": "ChangeStatus",
+    "RelativePath": "api/v1/User/ChangeStatus",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.ChangeStatusDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.UserController",
+    "Method": "Delete",
+    "RelativePath": "api/v1/User/Delete",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetById",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.UserController",
+    "Method": "GetAll",
+    "RelativePath": "api/v1/User/GetAll",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageParams",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.PageParams",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Dtos.Generics.PageList\u00601[[Nexus.Auth.Repository.Dtos.User.GetAllUserModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.UserController",
+    "Method": "GetById",
+    "RelativePath": "api/v1/User/GetById",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetById",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Models.UserModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.UserController",
+    "Method": "GetByName",
+    "RelativePath": "api/v1/User/GetByName",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.Generics.GetByName",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Models.UserModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.UserController",
+    "Method": "Post",
+    "RelativePath": "api/v1/User/Post",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.User.UserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Models.UserModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.UserController",
+    "Method": "Put",
+    "RelativePath": "api/v1/User/Put",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.User.UserPutDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Models.UserModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Nexus.Auth.Api.Controllers.UserController",
+    "Method": "PutPassword",
+    "RelativePath": "api/v1/User/PutPassword",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Nexus.Auth.Repository.Dtos.User.UserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Nexus.Auth.Repository.Utils.GenericCommandResult\u00601[[Nexus.Auth.Repository.Models.UserModel, Nexus.Auth.Repository, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  }
+]
